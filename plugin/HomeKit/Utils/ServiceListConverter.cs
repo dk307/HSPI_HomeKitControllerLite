@@ -37,7 +37,7 @@ namespace HomeKit.Utils
         }
 
         public override void WriteJson(JsonWriter writer,
-                                       object value, JsonSerializer serializer)
+                                       object? value, JsonSerializer serializer)
         {
             if (value is IImmutableDictionary<ulong, Service> dictionary)
             {
