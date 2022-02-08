@@ -17,6 +17,7 @@ namespace Hspi
 
         protected override void BeforeReturnStatus()
         {
+            this.Status = PluginStatus.Ok();
         }
 
         protected override void Initialize()
