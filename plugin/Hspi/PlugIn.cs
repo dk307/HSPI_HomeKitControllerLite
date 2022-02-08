@@ -1,4 +1,5 @@
-﻿using Hspi.Utils;
+﻿using HomeSeer.PluginSdk;
+using Hspi.Utils;
 using Serilog;
 using System;
 
