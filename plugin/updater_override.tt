@@ -6,7 +6,7 @@
  "Version":"4.0.0.0",
  "Packages":[
   {
-    "PackageName": "Z-Wave Parameters",
+    "PackageName": "HomeKit Controller",
     "EXEFile": "HSPI_HomeKitController.exe",
     "ID": "HomeKitController",
     "Version": "<#=version#>",
@@ -15,7 +15,7 @@
     "Author": "dk307",
     "Price": "Free",
     "ReleaseNotesURL": "https://github.com/dk307/HSPI_HomeKitController",
-    "ShortDescription": "View & update Z-wave device parameters",
+    "ShortDescription": "HomeKit Controller For Homeseer 4",
     "SupportURL": "https://github.com/dk307/HSPI_HomeKitController/issues",
     "Tags": [
       "Free",
