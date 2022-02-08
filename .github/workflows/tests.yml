@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-    SONAR_PROJECT_KEY: "dk307_HSPI_HomeKit"
+    SONAR_PROJECT_KEY: "dk307_HSPI_HomeKitController"
     SONAR_SCANNER_DOWNLOAD_URL: "https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.4.0.40033/sonar-scanner-msbuild-5.4.0.40033-net46.zip"
     DOTCOVER_DOWNLOAD_URL: "https://download.jetbrains.com/resharper/dotUltimate.2021.2.2/JetBrains.dotCover.CommandLineTools.2021.2.2.zip"
     SLN_FILE: "HSPI_HomeKitController.sln"
