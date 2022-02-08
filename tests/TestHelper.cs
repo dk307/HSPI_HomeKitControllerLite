@@ -35,5 +35,13 @@ namespace HSPI_HomeKitControllerTest
             htmlDocument.LoadHtml(html);
             Assert.AreEqual(0, htmlDocument.ParseErrors.Count());
         }
+
+        public static Mock<PlugIn> CreatePlugInMock()
+        {
+            return new Mock<PlugIn>(MockBehavior.Loose)
+            {
+                CallBase = true,
+            };
+        }
     }
 }

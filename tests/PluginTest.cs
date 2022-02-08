@@ -1,6 +1,6 @@
 ﻿using Hspi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+using System.Collections.Generic;
 
 namespace HSPI_HomeKitControllerTest
 {
@@ -15,12 +15,13 @@ namespace HSPI_HomeKitControllerTest
             Assert.AreEqual(plugin.Name, PlugInData.PlugInName);
         }
 
-        private static Mock<PlugIn> CreatePlugInMock()
+        [TestMethod]
+        public void InitFirstTime()
         {
-            return new Mock<PlugIn>(MockBehavior.Loose)
-            {
-                CallBase = true,
-            };
+            var plugin = TestHelper.CreatePlugInMock();
+            TestHelper.SetupHsControllerAndSettings(plugin, new Dictionary<string, string>());
+            Assert.IsTrue(plugin.Object.InitIO());
+            plugin.Object.ShutdownIO();
         }
     }
 }
