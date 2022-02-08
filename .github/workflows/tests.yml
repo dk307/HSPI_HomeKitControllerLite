@@ -100,7 +100,7 @@ jobs:
 
       - name: Build Debug
         shell: powershell
-        run: msbuild.exe ${{ env.SLN_FILE }} /p:platform="Any CPU" /p:configuration="Debug"
+        run: msbuild.exe ${{ env.SLN_FILE }} /p:platform="x86" /p:configuration="Debug"
 
       - name: Upload unit tests binaries
         id: unit-test-binaries
