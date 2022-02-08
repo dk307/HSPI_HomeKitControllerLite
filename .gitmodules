@@ -1,0 +1,3 @@
+[submodule "plugin/shared"]
+	path = plugin/shared
+	url = git@github.com:dk307/HS4PlugInHelper.git

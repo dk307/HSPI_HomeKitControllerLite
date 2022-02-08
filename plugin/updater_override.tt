@@ -1,0 +1,26 @@
+﻿<#@template hostspecific="true"#> 
+<#
+ string version = Host.ResolveParameterValue(null, null, "Version");
+#>
+{ 
+ "Version":"4.0.0.0",
+ "Packages":[
+  {
+    "PackageName": "Z-Wave Parameters",
+    "EXEFile": "HSPI_HomeKitController.exe",
+    "ID": "HomeKitController",
+    "Version": "<#=version#>",
+    "UC": 63,
+    "ZipFile": "HSPI_HomeKitController_<#=version#>.zip",
+    "Author": "dk307",
+    "Price": "Free",
+    "ReleaseNotesURL": "https://github.com/dk307/HSPI_HomeKitController",
+    "ShortDescription": "View & update Z-wave device parameters",
+    "SupportURL": "https://github.com/dk307/HSPI_HomeKitController/issues",
+    "Tags": [
+      "Free",
+      "Beta"
+    ]
+  } 
+]
+}

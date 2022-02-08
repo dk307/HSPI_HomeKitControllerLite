@@ -1,0 +1,6 @@
+﻿HSPI_HomeKitController.exe,.,0
+HSPI_HomeKitController.exe.config,.,0
+.,[DELALL],.\Data\HomeKitController\db
+db.zip,[UNZIPOVER],.\Data\HomeKitController\db
+.,[DELALL],.\bin\HomeKitController
+dlls.zip,[UNZIPOVER],.\bin\HomeKitController
