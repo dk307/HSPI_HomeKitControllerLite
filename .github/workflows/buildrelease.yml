@@ -1,0 +1,79 @@
+name: 'Build Release'
+
+on:  
+  push:
+    branches: [ main ]
+    tags:
+      - "v*.*.*"
+    
+  pull_request:
+    branches: [ main ]
+
+jobs:  
+  build:    
+    runs-on: windows-latest
+    
+    steps:      
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+      
+      - name: Setup VS Dev Environment
+        uses: seanmiddleditch/gha-setup-vsdevenv@v4
+    
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.5
+   
+      - name: Cache Nuget Packages
+        uses: actions/cache@v2
+        with:
+         path: ~/.nuget/packages
+         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+         restore-keys: ${{ runner.os }}-nuget-
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+         versionSpec: '5.5.0'
+
+      - name: Navigate to Workspace
+        run: cd $GITHUB_WORKSPACE
+
+      - name: Restore Packages
+        run: nuget restore HSPI_HomeKitController.sln
+
+      - name: Determine and update version
+        with:
+          updateAssemblyInfo: true
+          updateAssemblyInfoFilename: ./plugin/Properties/AssemblyInfo.cs
+          useConfigFile: true
+          configFilePath: ./.github/gitversion.yml
+        id:   gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+   
+      - name: Build Solution
+        run: msbuild.exe HSPI_HomeKitController.sln /p:platform="x86" /p:configuration="Release"
+
+      - name: Upload Binaries
+        if: github.ref != 'refs/heads/main'
+        uses: actions/upload-artifact@v2
+        with:
+          name: Binaries
+          path: |
+            .\plugin\bin\x86\Release\HSPI_HomeKitController_*.zip
+            .\plugin\bin\x86\Release\updater_override.json
+
+      - name: Release development build
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: "softprops/action-gh-release@v1"
+        with:
+          tag_name: "v${{ steps.gitversion.outputs.majorMinorPatch }}"
+          prerelease: true
+          name: "Development Build"
+          fail_on_unmatched_files: true
+          files: |
+           .\plugin\bin\x86\Release\HSPI_HomeKitController_*.zip
+           .\plugin\bin\x86\Release\updater_override.json
+ 

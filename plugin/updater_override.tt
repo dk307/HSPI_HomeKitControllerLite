@@ -1,0 +1,26 @@
+﻿<#@template hostspecific="true"#> 
+<#
+ string version = Host.ResolveParameterValue(null, null, "Version");
+#>
+{ 
+ "Version":"4.0.0.0",
+ "Packages":[
+  {
+    "PackageName": "HomeKit Controller",
+    "EXEFile": "HSPI_HomeKitController.exe",
+    "ID": "HomeKitController",
+    "Version": "<#=version#>",
+    "UC": 63,
+    "ZipFile": "HSPI_HomeKitController_<#=version#>.zip",
+    "Author": "dk307",
+    "Price": "Free",
+    "ReleaseNotesURL": "https://github.com/dk307/HSPI_HomeKitController",
+    "ShortDescription": "HomeKit Controller For Homeseer 4",
+    "SupportURL": "https://github.com/dk307/HSPI_HomeKitController/issues",
+    "Tags": [
+      "Free",
+      "Beta"
+    ]
+  } 
+]
+}

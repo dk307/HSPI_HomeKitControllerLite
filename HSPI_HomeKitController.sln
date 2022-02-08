@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HSPI_HomeKitController", "plugin\HSPI_HomeKitController.csproj", "{6AFED710-7BB6-40E3-B4CD-4642DA950411}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HSPI_HomeKitControllerTest", "tests\HSPI_HomeKitControllerTest.csproj", "{3189DB00-014C-48F2-BD3E-81615E268641}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6AFED710-7BB6-40E3-B4CD-4642DA950411}.Debug|x86.ActiveCfg = Debug|x86
+		{6AFED710-7BB6-40E3-B4CD-4642DA950411}.Debug|x86.Build.0 = Debug|x86
+		{6AFED710-7BB6-40E3-B4CD-4642DA950411}.Release|x86.ActiveCfg = Release|x86
+		{6AFED710-7BB6-40E3-B4CD-4642DA950411}.Release|x86.Build.0 = Release|x86
+		{3189DB00-014C-48F2-BD3E-81615E268641}.Debug|x86.ActiveCfg = Debug|x86
+		{3189DB00-014C-48F2-BD3E-81615E268641}.Debug|x86.Build.0 = Debug|x86
+		{3189DB00-014C-48F2-BD3E-81615E268641}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FE998417-A98E-4086-B3ED-ED96577CC200}
+	EndGlobalSection
+EndGlobal
