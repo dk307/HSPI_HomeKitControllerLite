@@ -31,7 +31,7 @@ namespace HSPI_HomeKitControllerTest
         {
             string dllPath = Assembly.GetExecutingAssembly().Location;
             var parentDirectory = new DirectoryInfo(Path.GetDirectoryName(dllPath));
-            return Path.Combine(parentDirectory.Parent.Parent.Parent.FullName, "plugin", "bin", "Debug");
+            return Path.Combine(parentDirectory.Parent.Parent.Parent.Parent.FullName, "plugin", "bin", "x86", "Debug");
         }
     }
 }

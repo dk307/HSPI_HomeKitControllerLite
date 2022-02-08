@@ -5,14 +5,15 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+    branches: [ main ]
 
 env:
     SONAR_PROJECT_KEY: "dk307_HSPI_HomeKit"
     SONAR_SCANNER_DOWNLOAD_URL: "https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.4.0.40033/sonar-scanner-msbuild-5.4.0.40033-net46.zip"
     DOTCOVER_DOWNLOAD_URL: "https://download.jetbrains.com/resharper/dotUltimate.2021.2.2/JetBrains.dotCover.CommandLineTools.2021.2.2.zip"
     SLN_FILE: "HSPI_HomeKitController.sln"
-    TEST_FILE_WIN: "tests\\bin\\Debug\\HSPI_HomeKitControllerTest.dll"
-    TEST_FILE_UBUNTU: "./tests/bin/Debug/HSPI_HomeKitControllerTest.dll"
+    TEST_FILE_WIN: "tests\\bin\\x86\\Debug\\HSPI_HomeKitControllerTest.dll"
+    TEST_FILE_UBUNTU: "./tests/bin/x86/Debug/HSPI_HomeKitControllerTest.dll"
 
 jobs:
   build-cache-test-win:
@@ -106,14 +107,14 @@ jobs:
         id: unit-test-binaries
         uses: actions/upload-artifact@v2
         with:
-         path: .\tests\bin\Debug
+         path: .\tests\bin\x86\Debug
          name: Test-Files-${{ github.sha }}
 
       - name: Upload binaries
         id: test-binaries
         uses: actions/upload-artifact@v2
         with:
-         path: .\plugin\bin\Debug
+         path: .\plugin\bin\x86\Debug
          name: Dll-Files-${{ github.sha }}
 
       - name: Run tests
@@ -157,16 +158,16 @@ jobs:
         id: test-binaries
         uses: actions/download-artifact@v2
         with:
-         path: ./plugin/bin/Debug
+         path: ./plugin/bin/x86/Debug
          name: Dll-Files-${{ github.sha }}
 
       - name: Download unit tests binaries
         uses: actions/download-artifact@v2
         with:
-          path: ./tests/bin/Debug
+          path: ./tests/bin/x86/Debug
           name: Test-Files-${{ github.sha }}
 
-      - run: ls -l ./tests/bin/Debug
+      - run: ls -l ./tests/bin/x86/Debug
       - name: Run Unit Tests
         run: dotnet vstest --Parallel --logger:trx ${{ env.TEST_FILE_UBUNTU }}
 
