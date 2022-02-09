@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HomeKitTest
+namespace HSPI_HomeKitControllerTest
 {
     [TestClass]
     public class TLV8Test

@@ -1,8 +1,11 @@
 ﻿using HomeKit.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace HomeKitTest
+namespace HSPI_HomeKitControllerTest
 {
     [TestClass]
     public class ByteBufferWithIndexTest
@@ -34,11 +37,22 @@ namespace HomeKitTest
             data.AddToBack(addedData);
             Assert.AreEqual(addedData.Length, data.Length);
 
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => data.RemoveFromFront(1024));
             var returnData = data.RemoveFromFront(5);
 
             Assert.AreEqual(addedData.Length - 5, data.Length);
 
             CollectionAssert.AreEqual(addedData.AsSpan(0, 5).ToArray(), returnData);
+        }
+
+        [TestMethod]
+        public async Task ReadFromStream()
+        {
+            var data = new ByteBufferWithIndex(5);
+
+            var stream = new MemoryStream(new byte[10]);
+            await data.ReadFromStream(stream, 10, CancellationToken.None);
+            Assert.AreEqual(10, data.Length);
         }
     }
 }

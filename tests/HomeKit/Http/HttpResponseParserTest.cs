@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HomeKitTest
+namespace HSPI_HomeKitControllerTest
 {
     [TestClass]
     public class HttpResponseParserTest

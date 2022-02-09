@@ -68,13 +68,13 @@
     <Compile Include="..\plugin\shared\tests\ExceptionHelperTest.cs">
       <Link>shared\ExceptionHelperTest.cs</Link>
     </Compile>
-    <Compile Include="ByteBufferWithIndexTest.cs" />
-    <Compile Include="HttpResponseParserTest.cs" />
+    <Compile Include="HomeKit\Http\ByteBufferWithIndexTest.cs" />
+    <Compile Include="HomeKit\Http\HttpResponseParserTest.cs" />
     <Compile Include="ShippedDllsTest.cs" />
     <Compile Include="TestHelper.cs" />
-    <Compile Include="PluginTest.cs" />
+    <Compile Include="Hspi\PluginTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TLV8Test.cs" />
+    <Compile Include="HomeKit\TLV8Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
