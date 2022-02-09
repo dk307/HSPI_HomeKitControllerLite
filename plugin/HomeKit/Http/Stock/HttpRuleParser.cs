@@ -481,11 +481,10 @@ namespace System.Net.Http
             return HttpParseResult.InvalidFormat;
         }
 
-        [Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "<Pending>")]
         private static bool IsValidHostName(string host)
         {
             // Also add user info (u@) to make sure 'host' doesn't include user info.
-            return Uri.TryCreate("http://u@" + host + "/", UriKind.Absolute, out _);
+            return Uri.TryCreate("https://u@" + host + "/", UriKind.Absolute, out _);
         }
     }
 }
