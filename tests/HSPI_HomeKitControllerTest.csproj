@@ -70,6 +70,7 @@
     </Compile>
     <Compile Include="HomeKit\Http\ByteBufferWithIndexTest.cs" />
     <Compile Include="HomeKit\Http\HttpResponseParserTest.cs" />
+    <Compile Include="HomeKit\Srp\SrpIntegerTests.cs" />
     <Compile Include="ShippedDllsTest.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="Hspi\PluginTest.cs" />
