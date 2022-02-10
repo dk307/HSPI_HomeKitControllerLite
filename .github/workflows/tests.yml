@@ -34,6 +34,14 @@ jobs:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.5
 
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Python dependencies
+        run: pip install  HAP-python==4.3.0
+
       - name: Set up JDK 11 for Sonarcloud
         uses: actions/setup-java@v1
         with:
