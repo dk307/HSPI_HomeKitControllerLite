@@ -24,9 +24,9 @@ def get_accessory(driver):
     
 parser = argparse.ArgumentParser()
 parser.add_argument("port", type=int)
-parser.add_argument("pincode", type=ascii)
-parser.add_argument("persist_file", type=ascii)
-args = parser.parse_args()    
+parser.add_argument("pincode")
+parser.add_argument("persist_file")
+args = parser.parse_args()
 
 driver = AccessoryDriver(port=args.port, pincode=args.pincode.encode("UTF-8"), persist_file=args.persist_file)
 driver.add_accessory(accessory=get_accessory(driver))

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace HSPI_HomeKitControllerTest
 {
@@ -15,11 +16,11 @@ namespace HSPI_HomeKitControllerTest
 
         public PairingTest()
         {
-            cancellationTokenSource.CancelAfter(60 * 1000);
+            cancellationTokenSource.CancelAfter(120 * 1000);
         }
 
         [TestMethod]
-        public async Task Discover()
+        public async Task DiscoverAndPairing()
         {
             int port = 50001;
             string pin = "233-34-235";
@@ -33,15 +34,24 @@ namespace HSPI_HomeKitControllerTest
 
             do
             {
-                discoveredDevices = await HomeKitDiscover.DiscoverIPs(TimeSpan.FromMilliseconds(200), cancellationTokenSource.Token);
+                discoveredDevices = (await HomeKitDiscover.DiscoverIPs(TimeSpan.FromMilliseconds(200), cancellationTokenSource.Token).ConfigureAwait(false))
+                                    .Where(x => x.DisplayName.StartsWith("Sensor1")).ToList();
             } while (discoveredDevices.Count == 0);
+
 
             Assert.AreEqual(1, discoveredDevices.Count);
             DiscoveredDevice discoveredDevice = discoveredDevices[0];
-            Assert.AreEqual(DeviceStatus.NotPaired, discoveredDevice.Status);
-            Assert.AreEqual(50001, discoveredDevice.Address.Port);
+            Assert.AreEqual(port, discoveredDevice.Address.Port);
             Assert.AreEqual(DeviceCategory.Sensors, discoveredDevice.CategoryIdentifier);
-            Assert.IsTrue(discoveredDevice.DisplayName.StartsWith("Sensor1"));
+
+            var pairing = await InsecureConnection.StartNewPairing(discoveredDevice, 
+                                                                   pin, 
+                                                                   cancellationTokenSource.Token);
+
+            Assert.IsFalse(pairing.AccessoryPairingId.IsEmpty);
+            Assert.IsFalse(pairing.AccessoryPublicKey.IsEmpty);
+            Assert.IsFalse(pairing.ControllerDevicePrivateKey.IsEmpty);
+            Assert.IsFalse(pairing.ControllerDevicePublicKey.IsEmpty);
         }
     }
 }

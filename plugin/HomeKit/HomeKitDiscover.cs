@@ -12,17 +12,7 @@ namespace HomeKit
 {
     internal static class HomeKitDiscover
     {
-        public static async Task<PairingDeviceInfo> Pair(Device deviceInformation,
-                                                         string pin,
-                                                         CancellationToken cancellationToken)
-        {
-            using var connection = new InsecureConnection(deviceInformation);
-            await connection.ConnectAndListen(cancellationToken).ConfigureAwait(false);
-
-            return await connection.StartNewPairing(pin, cancellationToken).ConfigureAwait(false);
-        }
-
-        public static async Task<IList<DiscoveredDevice>> DiscoverIPs(TimeSpan scanTime,
+         public static async Task<IList<DiscoveredDevice>> DiscoverIPs(TimeSpan scanTime,
                                                                       CancellationToken cancellationToken)
         {
             var devices = await ZeroconfResolver.ResolveAsync(DiscoveredDevice.HapProtocol,

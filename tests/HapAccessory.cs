@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 namespace HSPI_HomeKitControllerTest
 {
@@ -27,7 +28,18 @@ namespace HSPI_HomeKitControllerTest
                 RedirectStandardOutput = true,
                 RedirectStandardError = true
             };
+
+
             this.process = Process.Start(start);
+            process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
+            process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+        }
+
+        private void OutputHandler(object sender, DataReceivedEventArgs e)
+        {
+            output.AppendLine(e.Data);
         }
 
         public void Dispose()
@@ -39,5 +51,7 @@ namespace HSPI_HomeKitControllerTest
             catch (Exception)
             { }
         }
+
+        private readonly StringBuilder output = new StringBuilder();
     }
 }
