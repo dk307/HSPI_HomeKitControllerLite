@@ -161,6 +161,14 @@ jobs:
       - name: Navigate to Workspace
         run: cd $GITHUB_WORKSPACE
 
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Python dependencies
+        run: pip install  HAP-python==4.3.0
+
       - name: Download binaries
         id: test-binaries
         uses: actions/download-artifact@v2
