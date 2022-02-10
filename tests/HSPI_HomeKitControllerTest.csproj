@@ -68,9 +68,11 @@
     <Compile Include="..\plugin\shared\tests\ExceptionHelperTest.cs">
       <Link>shared\ExceptionHelperTest.cs</Link>
     </Compile>
+    <Compile Include="HapAccessory.cs" />
     <Compile Include="HomeKit\Http\ByteBufferWithIndexTest.cs" />
     <Compile Include="HomeKit\Http\HttpResponseParserTest.cs" />
     <Compile Include="HomeKit\Srp\SrpIntegerTests.cs" />
+    <Compile Include="HomeKit\PairingTest.cs" />
     <Compile Include="ShippedDllsTest.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="Hspi\PluginTest.cs" />
@@ -194,6 +196,12 @@
       <Project>{6afed710-7bb6-40e3-b4cd-4642da950411}</Project>
       <Name>HSPI_HomeKitController</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="scripts\temperaturesensor.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

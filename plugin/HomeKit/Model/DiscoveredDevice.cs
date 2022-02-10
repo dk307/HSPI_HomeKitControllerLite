@@ -14,7 +14,9 @@ namespace HomeKit.Model
         public DiscoveredDevice(IZeroconfHost zeroconfHost)
         {
             this.DisplayName = zeroconfHost.DisplayName;
-            var service = zeroconfHost.Services[HapProtocol];
+
+            var hapKey = zeroconfHost.Services.Keys.FirstOrDefault(x => x.EndsWith(DiscoveredDevice.HapProtocol));
+            var service = zeroconfHost.Services[hapKey];
             this.Address = new IPEndPoint(IPAddress.Parse(zeroconfHost.IPAddress), service.Port);
 
             var properties = service.Properties.FirstOrDefault();

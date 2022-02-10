@@ -23,7 +23,7 @@ namespace HomeKit
         }
 
         public static async Task<IList<DiscoveredDevice>> DiscoverIPs(TimeSpan scanTime,
-                                                               CancellationToken cancellationToken)
+                                                                      CancellationToken cancellationToken)
         {
             var devices = await ZeroconfResolver.ResolveAsync(DiscoveredDevice.HapProtocol,
                                                               scanTime: scanTime,
@@ -50,9 +50,12 @@ namespace HomeKit
                 return false;
             }
 
-            if (device.Services.TryGetValue(DiscoveredDevice.HapProtocol, out var service))
+            var hapKey = device.Services.Keys.FirstOrDefault(x => x.EndsWith(DiscoveredDevice.HapProtocol));
+
+            if (hapKey != null)
             {
                 //  create a flat list of all properties of  service
+                var service = device.Services[hapKey];
                 var properties = service.Properties.SelectMany(x => x.Keys).ToList();
                 return properties.Contains("c#") &&  // Current configuration number
                        properties.Contains("md") &&  // Model name of the accessory
