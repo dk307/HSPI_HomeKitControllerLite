@@ -17,20 +17,27 @@ namespace HSPI_HomeKitControllerTest
 
             Assert.IsTrue(File.Exists(scriptPath));
 
-            ProcessStartInfo start = new ProcessStartInfo();
-            start.FileName = "python";
-            start.Arguments = string.Format("\"{0}\" {1}", scriptPath, args);
-            start.WorkingDirectory = workingDirectory;
-            start.UseShellExecute = false;
-            start.CreateNoWindow = false;
-            start.RedirectStandardOutput = true;
-            start.RedirectStandardError = true;
+            ProcessStartInfo start = new ProcessStartInfo
+            {
+                FileName = "python",
+                Arguments = string.Format("\"{0}\" {1}", scriptPath, args),
+                WorkingDirectory = workingDirectory,
+                UseShellExecute = false,
+                CreateNoWindow = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
             this.process = Process.Start(start);
         }
 
         public void Dispose()
         {
-            this.process?.Kill();
+            try
+            {
+                this.process?.Kill();
+            }
+            catch (Exception)
+            { }
         }
     }
 }
