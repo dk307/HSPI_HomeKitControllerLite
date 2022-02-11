@@ -52,6 +52,6 @@ namespace HSPI_HomeKitControllerTest
             { }
         }
 
-        private readonly StringBuilder output = new StringBuilder();
+        private readonly StringBuilder output = new();
     }
 }

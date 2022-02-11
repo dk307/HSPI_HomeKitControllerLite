@@ -1,19 +1,18 @@
 ﻿using HomeKit;
 using HomeKit.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace HSPI_HomeKitControllerTest
 {
     [TestClass]
     public class PairingTest
     {
-        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-
         public PairingTest()
         {
             cancellationTokenSource.CancelAfter(120 * 1000);
@@ -28,7 +27,7 @@ namespace HSPI_HomeKitControllerTest
 
             string args = $"{port} {pin} {fileName}";
 
-            using var hapAccessory = new HapAccessory("temperaturesensor.py", args);
+            using var hapAccessory = new HapAccessory("temperature_sensor_unparied.py", args);
 
             IList<DiscoveredDevice> discoveredDevices = null;
 
@@ -38,14 +37,13 @@ namespace HSPI_HomeKitControllerTest
                                     .Where(x => x.DisplayName.StartsWith("Sensor1")).ToList();
             } while (discoveredDevices.Count == 0);
 
-
             Assert.AreEqual(1, discoveredDevices.Count);
             DiscoveredDevice discoveredDevice = discoveredDevices[0];
             Assert.AreEqual(port, discoveredDevice.Address.Port);
             Assert.AreEqual(DeviceCategory.Sensors, discoveredDevice.CategoryIdentifier);
 
-            var pairing = await InsecureConnection.StartNewPairing(discoveredDevice, 
-                                                                   pin, 
+            var pairing = await InsecureConnection.StartNewPairing(discoveredDevice,
+                                                                   pin,
                                                                    cancellationTokenSource.Token);
 
             Assert.IsFalse(pairing.AccessoryPairingId.IsEmpty);
@@ -53,5 +51,7 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsFalse(pairing.ControllerDevicePrivateKey.IsEmpty);
             Assert.IsFalse(pairing.ControllerDevicePublicKey.IsEmpty);
         }
+
+        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
     }
 }

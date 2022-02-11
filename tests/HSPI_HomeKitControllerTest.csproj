@@ -71,8 +71,14 @@
     <Compile Include="HapAccessory.cs" />
     <Compile Include="HomeKit\Http\ByteBufferWithIndexTest.cs" />
     <Compile Include="HomeKit\Http\HttpResponseParserTest.cs" />
+    <Compile Include="HomeKit\SecureConnectionTest.cs" />
     <Compile Include="HomeKit\Srp\SrpIntegerTests.cs" />
     <Compile Include="HomeKit\PairingTest.cs" />
+    <Compile Include="Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
     <Compile Include="ShippedDllsTest.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="Hspi\PluginTest.cs" />
@@ -197,9 +203,23 @@
       <Name>HSPI_HomeKitController</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="scripts\temperaturesensor.py">
+    <EmbeddedResource Include="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="scripts\temperaturesensor_accessory.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\temperaturesensor_controller.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\temperature_sensor_paried.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\temperature_sensor_unparied.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

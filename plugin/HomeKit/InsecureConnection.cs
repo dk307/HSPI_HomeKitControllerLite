@@ -27,7 +27,7 @@ namespace HomeKit
 
             if (completedTask == taskPairing)
             {
-                return await taskPairing;
+                return await taskPairing.ConfigureAwait(false);
             }
             else
             {
