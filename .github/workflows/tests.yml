@@ -169,6 +169,9 @@ jobs:
       - name: Install Python dependencies
         run: pip install  HAP-python==4.3.0
 
+      - name: Install libSodium
+        run: sudo apt-get install -y libsodium-dev
+
       - name: Download binaries
         id: test-binaries
         uses: actions/download-artifact@v2
