@@ -22,7 +22,8 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task AccessoryValue()
         {
-            var (hapAccessory, connection) = await StartTemperatureAccessoryAsync().ConfigureAwait(false);
+            using HapAccessory hapAccessory = CreateTemperaturePairedAccessory();
+            var connection = await StartTemperatureAccessoryAsync().ConfigureAwait(false);
 
             var accessoryData = connection.DeviceInfo;
 
@@ -39,11 +40,24 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task RemovePairing()
         {
-            var (hapAccessory, connection) = await StartTemperatureAccessoryAsync().ConfigureAwait(false);
+            using HapAccessory hapAccessory = CreateTemperaturePairedAccessory();
+            var connection = await StartTemperatureAccessoryAsync().ConfigureAwait(false);
             await connection.RemovePairing(cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
-        private async Task<(HapAccessory, SecureConnection)> StartTemperatureAccessoryAsync()
+        private async Task<SecureConnection> StartTemperatureAccessoryAsync()
+        {
+            string controllerFile = Path.Combine("scripts", "temperaturesensor_controller.txt");
+            var controllerFileData = File.ReadAllText(controllerFile, Encoding.UTF8);
+
+            var pairingInfo = JsonConvert.DeserializeObject<PairingDeviceInfo>(controllerFileData);
+            var connection = new SecureConnection(pairingInfo);
+
+            await connection.ConnectAndListen(cancellationTokenSource.Token).ConfigureAwait(false);
+            return connection;
+        }
+
+        private static HapAccessory CreateTemperaturePairedAccessory()
         {
             int port = 50001;
             string address = "127.0.0.1";
@@ -54,14 +68,7 @@ namespace HSPI_HomeKitControllerTest
 
             string args = $"{port} {address} {fileName2}";
             var hapAccessory = new HapAccessory("temperature_sensor_paried.py", args);
-            string controllerFile = Path.Combine("scripts", "temperaturesensor_controller.txt");
-            var controllerFileData = File.ReadAllText(controllerFile, Encoding.UTF8);
-
-            var pairingInfo = JsonConvert.DeserializeObject<PairingDeviceInfo>(controllerFileData);
-            var connection = new SecureConnection(pairingInfo);
-
-            await connection.ConnectAndListen(cancellationTokenSource.Token).ConfigureAwait(false);
-            return (hapAccessory, connection);
+            return hapAccessory;
         }
     }
 }
