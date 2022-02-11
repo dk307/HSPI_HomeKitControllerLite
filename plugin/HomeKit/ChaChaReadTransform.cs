@@ -38,7 +38,7 @@ namespace HomeKit
 
                 var nonce = new Nonce(new byte[] { 0, 0, 0, 0 }, counterBytes);
                 if (!chaCha20Poly1305.Decrypt(key, nonce, lenBytes,
-                                              blockAndTag, out var plainData) 
+                                              blockAndTag, out var plainData)
                     || plainData == null)
                 {
                     throw new DecryptionFailedException("Decryption failed from Accessory");
