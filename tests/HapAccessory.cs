@@ -29,7 +29,6 @@ namespace HSPI_HomeKitControllerTest
                 RedirectStandardError = true
             };
 
-
             this.process = Process.Start(start);
             process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
             process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
@@ -46,7 +45,12 @@ namespace HSPI_HomeKitControllerTest
         {
             try
             {
-                this.process?.Kill();
+                if (this.process != null)
+                {
+                    if (!this.process.HasExited) { this.process.Kill(); }
+                    this.process.WaitForExit();
+                    this.process.Dispose();
+                }
             }
             catch (Exception)
             { }
