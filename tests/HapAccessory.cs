@@ -77,7 +77,7 @@ namespace HSPI_HomeKitControllerTest
 
         private readonly Process process;
 
-        private readonly Regex startedRegEx = new Regex(@"^\s*\[accessory_driver\]\s*AccessoryDriver\s*for\s*\w+\s*started\ssuccessfully\s*$",
+        private readonly Regex startedRegEx = new(@"^\s*\[accessory_driver\]\s*AccessoryDriver\s*for\s*\w+\s*started\ssuccessfully\s*$",
                                                                 RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
         private readonly TaskCompletionSource<bool> startedSuccessFully = new();

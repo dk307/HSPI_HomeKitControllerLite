@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace System.Net.Http
 {
     internal static class HttpRequestMessageExtensions
@@ -20,7 +22,7 @@ namespace System.Net.Http
                 headersFieldName = "_headers";
                 headersField = typeof(HttpRequestMessage).GetField(headersFieldName, BindingFlags.Instance | BindingFlags.NonPublic);
             }
-            HttpRequestHeaders headers = (HttpRequestHeaders)headersField.GetValue(request);
+            var headers = (HttpRequestHeaders?)headersField?.GetValue(request);
             return headers != null;
         }
 

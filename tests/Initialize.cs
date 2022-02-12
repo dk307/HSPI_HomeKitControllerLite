@@ -6,7 +6,7 @@ using System;
 namespace HSPI_HomeKitControllerTest
 {
     [TestClass]
-    public sealed class Initialize
+    public static class Initialize
     {
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)

@@ -3,36 +3,49 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace HomeKit.Model
 {
-    public enum CharacteristicPermissions
-    {
-        [EnumMember(Value = "pr")]
-        PairedRead,
-
-        [EnumMember(Value = "pw")]
-        PairedWrite,
-
-        [EnumMember(Value = "ev")]
-        Events,
-
-        [EnumMember(Value = "aa")]
-        AdditionalAuthorization,
-
-        [EnumMember(Value = "tw")]
-        TimedWrite,
-
-        [EnumMember(Value = "hd")]
-        Hidden,
-
-        [EnumMember(Value = "wr")]
-        WriteResponse,
-    }
 
     internal sealed record Characteristic
     {
+        public Characteristic(uint iid, 
+                              CharacteristicType type, 
+                              string value, 
+                              IImmutableList<CharacteristicPermissions> permissions, 
+                              bool? eventNotifications, 
+                              string format, 
+                              string description, 
+                              string unit, 
+                              double? minimumValue, 
+                              double? maximumValue, 
+                              double? stepValue, 
+                              int? maximumLength, 
+                              int? maxDataLength, 
+                              IImmutableList<double> validValues, 
+                              IImmutableList<double> validValuesRange, 
+                              long? ttl, 
+                              long? pid)
+        {
+            Iid = iid;
+            Type = type;
+            Value = value;
+            Permissions = permissions;
+            EventNotifications = eventNotifications;
+            Format = format;
+            Description = description;
+            Unit = unit;
+            MinimumValue = minimumValue;
+            MaximumValue = maximumValue;
+            StepValue = stepValue;
+            MaximumLength = maximumLength;
+            MaxDataLength = maxDataLength;
+            ValidValues = validValues;
+            ValidValuesRange = validValuesRange;
+            Ttl = ttl;
+            Pid = pid;
+        }
+
         [JsonProperty("iid", Required = Required.Always)]
         public uint Iid { get; init; }
 

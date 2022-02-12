@@ -141,7 +141,7 @@ namespace HSPI_HomeKitControllerTest
                 waitForResult.Set();
             });
 
-            var _ = parser.ReadAndParse(cancellationTokenSource.Token);
+            _ = parser.ReadAndParse(cancellationTokenSource.Token);
             await waitForResult.WaitAsync(cancellationTokenSource.Token);
 
             return httpResponseMessage;

@@ -117,7 +117,7 @@ namespace HomeKit
                 throw new HttpRequestException("Unexpected response Type for request " + mediaType);
             }
 
-            if (response.Content == null)
+            if (response.Content is null)
             {
                 Log.Error("Unexpected No Body response for {target} for {EndPoint}", mediaType, target, Address);
                 throw new HttpRequestException("Unexpected no body response for request " + mediaType);
@@ -195,7 +195,7 @@ namespace HomeKit
 
         protected void UpdateTransforms(IReadTransform readTransform, IWriteTransform writeTransform)
         {
-            if (httpOperationOnStream == null)
+            if (httpOperationOnStream is null)
             {
                 throw new InvalidOperationException();
             }

@@ -599,7 +599,7 @@ namespace HomeKit.Http
 
             private Stream ConsumeStream()
             {
-                if (consumedStream || stream == null)
+                if (consumedStream || stream is null)
                 {
                     throw new InvalidOperationException("net_http_content_stream_already_read");
                 }

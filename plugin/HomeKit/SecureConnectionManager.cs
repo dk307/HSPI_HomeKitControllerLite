@@ -57,7 +57,7 @@ namespace HomeKit
 
         private SecureConnection GetConnection()
         {
-            if (connection == null)
+            if (connection is null)
             {
                 throw new InvalidOperationException("Not connected to the Device");
             }

@@ -484,7 +484,7 @@ namespace System.Net.Http
         private static bool IsValidHostName(string host)
         {
             // Also add user info (u@) to make sure 'host' doesn't include user info.
-            return Uri.TryCreate("https://u@" + host + "/", UriKind.Absolute, out _);
+            return Uri.TryCreate($"https://u@{host}/", UriKind.Absolute, out _);
         }
     }
 }

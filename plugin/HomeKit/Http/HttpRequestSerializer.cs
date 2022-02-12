@@ -61,7 +61,7 @@ namespace HomeKit.Http
                 WriteHeadersAsync(request.Headers);
             }
 
-            if (request.Content == null)
+            if (request.Content is null)
             {
                 // Write out Content-Length: 0 header to indicate no body,
                 // unless this is a method that never has a body.

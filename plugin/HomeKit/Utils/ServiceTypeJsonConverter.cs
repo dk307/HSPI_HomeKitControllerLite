@@ -30,7 +30,7 @@ namespace HomeKit.Utils
         public override object ReadJson(JsonReader reader, Type objectType,
                                         object? existingValue, JsonSerializer serializer)
         {
-            var str = (string)reader.Value;
+            var str = (string?)reader.Value ?? throw new JsonReaderException();
             return new ServiceType(str);
         }
     }

@@ -254,7 +254,14 @@ namespace HomeKit.Srp
         }
 
         /// <inheritdoc/>
-        public bool Equals(SrpInteger? other) => other != null && Value == other.Value;
+        public bool Equals(SrpInteger? other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+            return Value == other.Value;
+        }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj) => Equals(obj as SrpInteger);
