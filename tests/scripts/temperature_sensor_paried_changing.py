@@ -15,9 +15,12 @@ class TemperatureSensor(Accessory):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         serv_temp = self.add_preload_service('TemperatureSensor')
-        self.char_temp = serv_temp.configure_char('CurrentTemperature', value=49)
+        self.char_temp = serv_temp.configure_char('CurrentTemperature')
+
+    @Accessory.run_at_interval(1)
+    def run(self):
+        self.char_temp.set_value(random.randint(11, 60))
 
 def get_accessory(driver):
     return TemperatureSensor(driver, 'Sensor1')

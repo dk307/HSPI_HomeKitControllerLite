@@ -217,6 +217,9 @@
     <Content Include="scripts\temperaturesensor_controller.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="scripts\temperature_sensor_paried_changing.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="scripts\temperature_sensor_paried.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

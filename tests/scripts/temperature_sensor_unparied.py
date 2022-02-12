@@ -17,10 +17,10 @@ class TemperatureSensor(Accessory):
         super().__init__(*args, **kwargs)
 
         serv_temp = self.add_preload_service('TemperatureSensor')
-        self.char_temp = serv_temp.configure_char('CurrentTemperature')
+        self.char_temp = serv_temp.configure_char('CurrentTemperature', value=89)
 
 def get_accessory(driver):
-    return TemperatureSensor(driver, 'Sensor1')
+    return TemperatureSensor(driver, 'Sensor1', aid=1)
     
 parser = argparse.ArgumentParser()
 parser.add_argument("port", type=int)

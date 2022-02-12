@@ -63,13 +63,20 @@ namespace HSPI_HomeKitControllerTest
 
         private void OutputHandler(object sender, DataReceivedEventArgs e)
         {
-            output.AppendLine(e.Data);
-            Console.WriteLine(e.Data);
-
-            var match = startedRegEx.Match(e.Data);
-            if (match.Success)
+            string data = e.Data;
+            if (data != null)
             {
-                startedSuccessFully.SetResult(true);
+                output.AppendLine(data);
+                Console.WriteLine(data);
+
+                if (!startedSuccessFully.Task.IsCompleted)
+                {
+                    var match = startedRegEx.Match(data);
+                    if (match.Success)
+                    {
+                        startedSuccessFully.SetResult(true);
+                    }
+                }
             }
         }
 

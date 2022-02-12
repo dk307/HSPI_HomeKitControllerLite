@@ -2,6 +2,7 @@
 using HomeKit.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Nito.AsyncEx;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -13,6 +14,7 @@ namespace HSPI_HomeKitControllerTest
     public class SecureConnectionTest
     {
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private CancellationToken Token => cancellationTokenSource.Token;
 
         public SecureConnectionTest()
         {
@@ -23,7 +25,7 @@ namespace HSPI_HomeKitControllerTest
         public async Task AccessoryValue()
         {
             using HapAccessory hapAccessory = CreateTemperaturePairedAccessory();
-            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
             using var connection = await StartTemperatureAccessoryAsync().ConfigureAwait(false);
 
             var accessoryData = connection.DeviceInfo;
@@ -42,10 +44,50 @@ namespace HSPI_HomeKitControllerTest
         public async Task RemovePairing()
         {
             using HapAccessory hapAccessory = CreateTemperaturePairedAccessory();
-            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
             using var connection = await StartTemperatureAccessoryAsync().ConfigureAwait(false);
 
-            await connection.RemovePairing(cancellationTokenSource.Token).ConfigureAwait(false);
+            await connection.RemovePairing(Token).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task SubscribeAllEnqueuesOriginalValueOnSubscribe()
+        {
+            using HapAccessory hapAccessory = CreateTemperaturePairedAccessory();
+            await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
+            using var connection = await StartTemperatureAccessoryAsync().ConfigureAwait(false);
+
+            AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue = new();
+
+            await connection.TrySubscribeAll(changedEventQueue, Token).ConfigureAwait(false);
+
+            var data = await changedEventQueue.DequeueAsync(Token) as AccessoryValueChangedEvent;
+
+            Assert.AreEqual(1UL, data.Aid);
+            Assert.AreEqual(9UL, data.Iid);
+            Assert.AreEqual("49", data.Value);
+        }
+
+        [TestMethod]
+        public async Task SubscribeAllGetsNewValues()
+        {
+            using HapAccessory hapAccessory = CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
+            await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
+            using var connection = await StartTemperatureAccessoryAsync().ConfigureAwait(false);
+
+            AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue = new();
+
+            await connection.TrySubscribeAll(changedEventQueue, Token).ConfigureAwait(false);
+
+            await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false); //original value
+            var eventC = await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false);
+
+            var data = eventC as AccessoryValueChangedEvent;
+
+            Assert.IsNotNull(data);
+            Assert.AreEqual(1UL, data.Aid);
+            Assert.AreEqual(9UL, data.Iid);
+            Assert.IsNotNull(data.Value);
         }
 
         private async Task<SecureConnection> StartTemperatureAccessoryAsync()
@@ -56,12 +98,13 @@ namespace HSPI_HomeKitControllerTest
             var pairingInfo = JsonConvert.DeserializeObject<PairingDeviceInfo>(controllerFileData);
             var connection = new SecureConnection(pairingInfo);
 
-            await connection.ConnectAndListen(cancellationTokenSource.Token).ConfigureAwait(false);
+            await connection.ConnectAndListen(Token).ConfigureAwait(false);
             Assert.IsTrue(connection.Connected);
             return connection;
         }
 
-        private static HapAccessory CreateTemperaturePairedAccessory()
+        private static HapAccessory CreateTemperaturePairedAccessory(
+                            string script = "temperature_sensor_paried.py")
         {
             int port = 50001;
             string address = "0.0.0.0";
@@ -71,7 +114,7 @@ namespace HSPI_HomeKitControllerTest
             File.Copy(fileName, fileName2, true);
 
             string args = $"{port} {address} {fileName2}";
-            var hapAccessory = new HapAccessory("temperature_sensor_paried.py", args);
+            var hapAccessory = new HapAccessory(script, args);
             return hapAccessory;
         }
     }

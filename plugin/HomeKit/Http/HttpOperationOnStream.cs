@@ -4,6 +4,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace HomeKit.Http
 {
     internal sealed class HttpOperationOnStream
@@ -18,7 +20,7 @@ namespace HomeKit.Http
         public async Task<HttpResponseMessage> Request(HttpRequestMessage request,
                                                        CancellationToken token)
         {
-            HttpResponseMessage response = null;
+            HttpResponseMessage? response = null;
             AsyncManualResetEvent waitForResult = new();
             httpResponseParser.AddHttpResponseCallback((result) =>
             {
@@ -69,6 +71,6 @@ namespace HomeKit.Http
 
         private readonly HttpResponseParser httpResponseParser;
         private readonly Stream underlyingStream;
-        private volatile IWriteTransform writeTransform;
+        private volatile IWriteTransform? writeTransform;
     }
 }

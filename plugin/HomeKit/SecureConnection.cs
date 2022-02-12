@@ -18,7 +18,7 @@ namespace HomeKit
     internal abstract record ChangedEvent();
 
     internal sealed record DeviceConnectionChangedEvent(bool Connected) : ChangedEvent;
-    internal sealed record AccessoryValueChangedEvent(ulong Aid, ulong Iid, double Value) : ChangedEvent;
+    internal sealed record AccessoryValueChangedEvent(ulong Aid, ulong Iid, string? Value) : ChangedEvent;
 
     internal sealed class SecureConnection : Connection
     {
@@ -80,6 +80,8 @@ namespace HomeKit
                                         s => s.Characteristics.Values.Where(c => c.SupportsNotifications))
                                         .Select(x => new Subscription(accessory.Aid, x.Iid));
 
+                await SendExistingValuesToQueue(changedEventQueue, neededSubscriptions).ConfigureAwait(false);
+
                 var changedSubscriptions = await ChangeSubscription(neededSubscriptions, true, token).ConfigureAwait(false);
 
                 foreach (var subscription in changedSubscriptions)
@@ -99,6 +101,23 @@ namespace HomeKit
             if (processEventTask?.IsCompleted ?? true)
             {
                 processEventTask = Task.Run(() => ProcessEvents(token), token);
+            }
+        }
+
+        private async Task SendExistingValuesToQueue(AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue, IEnumerable<Subscription> neededSubscriptions)
+        {
+            CheckHasDeviceInfo();
+
+            foreach (var subscription in neededSubscriptions)
+            {
+                var characteristic = DeviceInfo.FindCharacteristic(subscription.Aid, subscription.Iid);
+
+                if (characteristic is not null)
+                {
+                    await changedEventQueue.EnqueueAsync(new AccessoryValueChangedEvent(subscription.Aid,
+                                                                                  characteristic.Iid,
+                                                                                  characteristic.Value)).ConfigureAwait(false);
+                }
             }
         }
 
@@ -210,11 +229,11 @@ namespace HomeKit
                     {
                         var aid = (ulong?)row["aid"];
                         var iid = (ulong?)row["iid"];
-                        var value = (double?)row["value"];
+                        var value = (string?)row["value"];
 
-                        if (aid != null && iid != null && value != null && changedEventQueue != null)
+                        if (aid != null && iid != null && changedEventQueue != null)
                         {
-                            var item = new AccessoryValueChangedEvent(aid.Value, iid.Value, value.Value);
+                            var item = new AccessoryValueChangedEvent(aid.Value, iid.Value, value);
                             await changedEventQueue.EnqueueAsync(item, cancellationToken).ConfigureAwait(false);
                         }
                         else
