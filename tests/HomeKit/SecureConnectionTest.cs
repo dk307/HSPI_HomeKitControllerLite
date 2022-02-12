@@ -23,7 +23,8 @@ namespace HSPI_HomeKitControllerTest
         public async Task AccessoryValue()
         {
             using HapAccessory hapAccessory = CreateTemperaturePairedAccessory();
-            var connection = await StartTemperatureAccessoryAsync().ConfigureAwait(false);
+            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            using var connection = await StartTemperatureAccessoryAsync().ConfigureAwait(false);
 
             var accessoryData = connection.DeviceInfo;
 
@@ -41,7 +42,9 @@ namespace HSPI_HomeKitControllerTest
         public async Task RemovePairing()
         {
             using HapAccessory hapAccessory = CreateTemperaturePairedAccessory();
-            var connection = await StartTemperatureAccessoryAsync().ConfigureAwait(false);
+            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            using var connection = await StartTemperatureAccessoryAsync().ConfigureAwait(false);
+
             await connection.RemovePairing(cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
@@ -54,6 +57,7 @@ namespace HSPI_HomeKitControllerTest
             var connection = new SecureConnection(pairingInfo);
 
             await connection.ConnectAndListen(cancellationTokenSource.Token).ConfigureAwait(false);
+            Assert.IsTrue(connection.Connected);
             return connection;
         }
 
