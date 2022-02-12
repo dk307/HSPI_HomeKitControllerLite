@@ -60,7 +60,7 @@ namespace HSPI_HomeKitControllerTest
         private static HapAccessory CreateTemperaturePairedAccessory()
         {
             int port = 50001;
-            string address = "127.0.0.1";
+            string address = "0.0.0.0";
             string fileName = Path.Combine("scripts", "temperaturesensor_accessory.txt");
             string fileName2 = Path.Combine("scripts", "temperaturesensor_accessory2.txt");
 

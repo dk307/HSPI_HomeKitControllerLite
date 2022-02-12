@@ -39,6 +39,7 @@ namespace HSPI_HomeKitControllerTest
         private void OutputHandler(object sender, DataReceivedEventArgs e)
         {
             output.AppendLine(e.Data);
+            Console.WriteLine(e.Data);
         }
 
         public void Dispose()
@@ -53,7 +54,9 @@ namespace HSPI_HomeKitControllerTest
                 }
             }
             catch (Exception)
-            { }
+            {
+                //ignore all exceptions here
+            }
         }
 
         private readonly StringBuilder output = new();
