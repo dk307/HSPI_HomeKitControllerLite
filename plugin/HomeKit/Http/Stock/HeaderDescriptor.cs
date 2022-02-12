@@ -40,31 +40,12 @@ namespace System.Net.Http.Headers
             _knownHeader == null ?
                 string.Equals(_headerName, other._headerName, StringComparison.OrdinalIgnoreCase) :
                 _knownHeader == other._knownHeader;
+
         public override int GetHashCode() => _knownHeader?.GetHashCode() ?? StringComparer.OrdinalIgnoreCase.GetHashCode(_headerName);
+
         public static bool operator ==(HeaderDescriptor left, HeaderDescriptor right) => left.Equals(right);
+
         public static bool operator !=(HeaderDescriptor left, HeaderDescriptor right) => !left.Equals(right);
-
-        // Returns false for invalid header name.
-        public static bool TryGet(string headerName, out HeaderDescriptor descriptor)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(headerName));
-
-            KnownHeader knownHeader = KnownHeaders.TryGetKnownHeader(headerName);
-            if (knownHeader != null)
-            {
-                descriptor = new HeaderDescriptor(knownHeader);
-                return true;
-            }
-
-            if (!HttpRuleParser.IsToken(headerName))
-            {
-                descriptor = default;
-                return false;
-            }
-
-            descriptor = new HeaderDescriptor(headerName);
-            return true;
-        }
 
         // Returns false for invalid header name.
         public static bool TryGet(ReadOnlySpan<byte> headerName, out HeaderDescriptor descriptor)
