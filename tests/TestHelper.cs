@@ -10,6 +10,7 @@ using System.Reflection;
 
 namespace HSPI_HomeKitControllerTest
 {
+
     internal static class TestHelper
     {
         public static Mock<IHsController> SetupHsControllerAndSettings(Mock<PlugIn> mockPlugin,

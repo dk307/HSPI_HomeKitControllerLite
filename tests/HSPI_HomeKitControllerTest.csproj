@@ -74,6 +74,7 @@
     <Compile Include="HomeKit\SecureConnectionTest.cs" />
     <Compile Include="HomeKit\Srp\SrpIntegerTests.cs" />
     <Compile Include="HomeKit\PairingTest.cs" />
+    <Compile Include="Initialize.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
