@@ -1,7 +1,7 @@
 ﻿using HomeKit;
+using HomeKit.Exceptions;
 using HomeKit.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +26,36 @@ namespace HSPI_HomeKitControllerTest
             string fileName = Guid.NewGuid().ToString("N") + ".obj";
 
             string args = $"{port} {pin} {fileName}";
-
             using var hapAccessory = new HapAccessory("temperature_sensor_unparied.py", args);
+            DiscoveredDevice discoveredDevice = await DiscoverAndVerify(port).ConfigureAwait(false);
 
+            var pairing = await InsecureConnection.StartNewPairing(discoveredDevice,
+                                                                   pin,
+                                                                   cancellationTokenSource.Token);
+
+            Assert.IsFalse(pairing.AccessoryPairingId.IsEmpty);
+            Assert.IsFalse(pairing.AccessoryPublicKey.IsEmpty);
+            Assert.IsFalse(pairing.ControllerDevicePrivateKey.IsEmpty);
+            Assert.IsFalse(pairing.ControllerDevicePublicKey.IsEmpty);
+        }
+
+        [TestMethod]
+        public async Task DiscoverAndPairingFailure()
+        {
+            int port = 50001;
+            string pin = "233-34-245";
+            string fileName = Guid.NewGuid().ToString("N") + ".obj";
+
+            string args = $"{port} {pin} {fileName}";
+            using var hapAccessory = new HapAccessory("temperature_sensor_unparied.py", args);
+            DiscoveredDevice discoveredDevice = await DiscoverAndVerify(port).ConfigureAwait(false);
+
+            await Assert.ThrowsExceptionAsync<PairingException>(() => InsecureConnection.StartNewPairing(discoveredDevice,
+                                                     "123-45-687",
+                                                     cancellationTokenSource.Token));
+        }
+        private async Task<DiscoveredDevice> DiscoverAndVerify(int port)
+        {
             IList<DiscoveredDevice> discoveredDevices = null;
 
             do
@@ -41,15 +68,7 @@ namespace HSPI_HomeKitControllerTest
             DiscoveredDevice discoveredDevice = discoveredDevices[0];
             Assert.AreEqual(port, discoveredDevice.Address.Port);
             Assert.AreEqual(DeviceCategory.Sensors, discoveredDevice.CategoryIdentifier);
-
-            var pairing = await InsecureConnection.StartNewPairing(discoveredDevice,
-                                                                   pin,
-                                                                   cancellationTokenSource.Token);
-
-            Assert.IsFalse(pairing.AccessoryPairingId.IsEmpty);
-            Assert.IsFalse(pairing.AccessoryPublicKey.IsEmpty);
-            Assert.IsFalse(pairing.ControllerDevicePrivateKey.IsEmpty);
-            Assert.IsFalse(pairing.ControllerDevicePublicKey.IsEmpty);
+            return discoveredDevice;
         }
 
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();

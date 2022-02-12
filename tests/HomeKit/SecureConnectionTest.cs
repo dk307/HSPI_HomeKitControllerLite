@@ -65,7 +65,7 @@ namespace HSPI_HomeKitControllerTest
 
             Assert.AreEqual(1UL, data.Aid);
             Assert.AreEqual(9UL, data.Iid);
-            Assert.AreEqual("49", data.Value);
+            Assert.AreEqual(49.0D, data.Value);
         }
 
         [TestMethod]

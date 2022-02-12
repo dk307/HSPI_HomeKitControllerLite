@@ -18,7 +18,7 @@ namespace HomeKit
     internal abstract record ChangedEvent();
 
     internal sealed record DeviceConnectionChangedEvent(bool Connected) : ChangedEvent;
-    internal sealed record AccessoryValueChangedEvent(ulong Aid, ulong Iid, string? Value) : ChangedEvent;
+    internal sealed record AccessoryValueChangedEvent(ulong Aid, ulong Iid, object? Value) : ChangedEvent;
 
     internal sealed class SecureConnection : Connection
     {

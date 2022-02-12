@@ -4,6 +4,8 @@ using Newtonsoft.Json.Converters;
 using System.Collections.Immutable;
 using System.Linq;
 
+#nullable enable
+
 namespace HomeKit.Model
 {
 
@@ -11,7 +13,7 @@ namespace HomeKit.Model
     {
         public Characteristic(uint iid, 
                               CharacteristicType type, 
-                              string? value, 
+                              object? value, 
                               IImmutableList<CharacteristicPermissions> permissions, 
                               bool? eventNotifications, 
                               string format, 
@@ -54,7 +56,7 @@ namespace HomeKit.Model
         public CharacteristicType Type { get; init; }
 
         [JsonProperty("value")]
-        public string? Value { get; init; }
+        public object? Value { get; init; }
 
         [JsonProperty("perms", Required = Required.Always, ItemConverterType = typeof(StringEnumConverter))]
         public IImmutableList<CharacteristicPermissions> Permissions { get; init; }
