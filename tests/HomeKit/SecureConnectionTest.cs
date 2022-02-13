@@ -19,10 +19,11 @@ namespace HSPI_HomeKitControllerTest
         }
 
         private CancellationToken Token => cancellationTokenSource.Token;
+
         [TestMethod]
         public async Task AccessoryValue()
         {
-            using HapAccessory hapAccessory = CreateTemperaturePairedAccessory();
+            using HapAccessory hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
             await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
             using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
 
@@ -41,7 +42,7 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task CancelTest()
         {
-            using var hapAccessory = CreateTemperaturePairedAccessory();
+            using var hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
             await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
 
             var controllerCancellationTokenSource = new CancellationTokenSource();
@@ -59,7 +60,7 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task DisconnectTest()
         {
-            var hapAccessory = CreateTemperaturePairedAccessory();
+            var hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
             await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
             using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
 
@@ -73,7 +74,7 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task RemovePairing()
         {
-            using HapAccessory hapAccessory = CreateTemperaturePairedAccessory();
+            using HapAccessory hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
             await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
             using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
 
@@ -83,7 +84,7 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task SubscribeAllEnqueuesOriginalValueOnSubscribe()
         {
-            using HapAccessory hapAccessory = CreateTemperaturePairedAccessory();
+            using HapAccessory hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
             await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
             using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
 
@@ -101,7 +102,7 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task SubscribeAllGetsNewValues()
         {
-            using HapAccessory hapAccessory = CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
+            using HapAccessory hapAccessory = TestHelper.CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
             await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
             using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
 
@@ -120,28 +121,10 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsNotNull(data.Value);
         }
 
-        private static HapAccessory CreateTemperaturePairedAccessory(
-                            string script = "temperature_sensor_paried.py")
-        {
-            int port = 50001;
-            string address = "0.0.0.0";
-            string fileName = Path.Combine("scripts", "temperaturesensor_accessory.txt");
-            string fileName2 = Path.Combine("scripts", "temperaturesensor_accessory2.txt");
-
-            File.Copy(fileName, fileName2, true);
-
-            string args = $"{port} {address} {fileName2}";
-            var hapAccessory = new HapAccessory(script, args);
-            return hapAccessory;
-        }
-
         private static async Task<SecureConnection>
             StartTemperatureAccessoryAsync(CancellationToken token)
         {
-            string controllerFile = Path.Combine("scripts", "temperaturesensor_controller.txt");
-            var controllerFileData = File.ReadAllText(controllerFile, Encoding.UTF8);
-
-            var pairingInfo = JsonConvert.DeserializeObject<PairingDeviceInfo>(controllerFileData);
+            var pairingInfo = TestHelper.GetTemperatureSensorParingInfo();
             var connection = new SecureConnection(pairingInfo);
 
             await connection.ConnectAndListen(token).ConfigureAwait(false);
@@ -149,6 +132,7 @@ namespace HSPI_HomeKitControllerTest
             return connection;
         }
 
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+ 
+        private readonly CancellationTokenSource cancellationTokenSource = new();
     }
 }
