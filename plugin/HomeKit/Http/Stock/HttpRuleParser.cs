@@ -12,7 +12,6 @@ namespace System.Net.Http
     internal static class HttpRuleParser
     {
         private static readonly bool[] s_tokenChars = CreateTokenChars();
-        private const int maxNestedCount = 5;
 
         internal const char CR = (char)13;
         internal const char LF = (char)10;
@@ -126,11 +125,10 @@ namespace System.Net.Http
             return Encoding.ASCII.GetString(input.ToArray());
         }
 
-          internal static string DateToString(DateTimeOffset dateTime)
+        internal static string DateToString(DateTimeOffset dateTime)
         {
             // Format according to RFC1123; 'r' uses invariant info (DateTimeFormatInfo.InvariantInfo).
             return dateTime.ToUniversalTime().ToString("r", CultureInfo.InvariantCulture);
         }
-
     }
 }

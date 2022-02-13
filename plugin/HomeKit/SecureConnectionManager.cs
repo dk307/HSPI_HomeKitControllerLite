@@ -14,19 +14,27 @@ namespace HomeKit
                                            AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
                                            CancellationToken token)
         {
+            this.displayName = info.DeviceInformation.DisplayName;
             Hspi.Utils.TaskHelper.StartAsyncWithErrorChecking(
-                $"{info.DeviceInformation.DisplayName} connection",
+                $"{displayName} connection",
                 () => ConnectionAndListenDeviceImpl(info, changedEventQueue, token), token);
         }
 
-        public async Task UnPair(CancellationToken token)
+        public SecureConnection Connection
         {
-            var secureHomeKitConnection = GetConnection();
-            await secureHomeKitConnection.RemovePairing(token);
+            get
+            {
+                var connectionCopy = connection;
+                if (connectionCopy is null)
+                {
+                    throw new InvalidOperationException($"Not connected to the Homekit Device {displayName}");
+                }
+                return connectionCopy;
+            }
         }
 
         private static async ValueTask EnqueueConnectionEvent(AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
-                                                              bool connection)
+                                                                      bool connection)
         {
             // dont use cancel event here
             await changedEventQueue.EnqueueAsync(new DeviceConnectionChangedEvent(connection)).ConfigureAwait(false);
@@ -55,15 +63,7 @@ namespace HomeKit
             }
         }
 
-        private SecureConnection GetConnection()
-        {
-            if (connection is null)
-            {
-                throw new InvalidOperationException("Not connected to the Device");
-            }
-            return connection;
-        }
-
-        private SecureConnection? connection;
+        private volatile SecureConnection? connection;
+        private string? displayName;
     }
 }

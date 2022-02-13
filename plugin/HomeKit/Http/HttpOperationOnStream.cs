@@ -59,6 +59,8 @@ namespace HomeKit.Http
 
         public async Task StartListening(CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+            token.Register(() => underlyingStream.Dispose());
             await httpResponseParser.ReadAndParse(token).ConfigureAwait(false);
         }
 

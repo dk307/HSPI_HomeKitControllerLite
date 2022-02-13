@@ -38,6 +38,8 @@ namespace HSPI_HomeKitControllerTest
             process.BeginErrorReadLine();
         }
 
+        ~HapAccessory() => Dispose();
+
         public void Dispose()
         {
             try

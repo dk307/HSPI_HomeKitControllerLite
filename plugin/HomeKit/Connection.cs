@@ -39,7 +39,7 @@ namespace HomeKit
                 catch (Exception)
                 {
                     // Connected check throws
-                    return true;
+                    return false;
                 }
             }
         }
@@ -187,7 +187,7 @@ namespace HomeKit
         }
 
         protected async Task StartListening(HttpOperationOnStream value,
-                                                      CancellationToken token)
+                                            CancellationToken token)
         {
             httpOperationOnStream = value;
             await httpOperationOnStream.StartListening(token).ConfigureAwait(false);
