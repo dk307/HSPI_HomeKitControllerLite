@@ -37,16 +37,16 @@ namespace HomeKit
                     var connected =  client?.Connected ?? false;
 
                     // Detect if client disconnected
-                    if (connected && 
-                        client!.Client.Poll(0, SelectMode.SelectRead))
-                    {
-                        var buff = new byte[1];
-                        if (client.Client.Receive(buff, SocketFlags.Peek) == 0)
-                        {
-                            // Client disconnected
-                            return false;
-                        }
-                    }
+                    //if (connected && 
+                    //    client!.Client.Poll(0, SelectMode.SelectRead))
+                    //{
+                    //    var buff = new byte[1];
+                    //    if (client.Client.Receive(buff, SocketFlags.Peek) == 0)
+                    //    {
+                    //        // Client disconnected
+                    //        return false;
+                    //    }
+                    //}
                     return connected;
                 }
                 catch (Exception)
