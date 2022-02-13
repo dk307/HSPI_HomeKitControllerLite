@@ -37,15 +37,11 @@ namespace HomeKit
                     var connected =  client?.Connected ?? false;
 
                     // Detect if client disconnected
-                    //if (connected && 
-                    //    client!.Client.Poll(0, SelectMode.SelectRead))
+                    //if (connected &&
+                    //    client!.Client.Available &&
+                    //    client.Client.Poll(0, SelectMode.SelectRead))
                     //{
-                    //    var buff = new byte[1];
-                    //    if (client.Client.Receive(buff, SocketFlags.Peek) == 0)
-                    //    {
-                    //        // Client disconnected
-                    //        return false;
-                    //    }
+                    //    return true;
                     //}
                     return connected;
                 }
@@ -74,6 +70,8 @@ namespace HomeKit
 
             Log.Information("Connecting to {Name} at {EndPoint}", DisplayName, Address);
             await client.ConnectAsync(Address.Address, Address.Port).ConfigureAwait(false);
+
+            client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
 
             Log.Information("Connected to {EndPoint}", Address);
 

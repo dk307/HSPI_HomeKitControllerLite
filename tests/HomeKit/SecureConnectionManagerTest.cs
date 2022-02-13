@@ -37,6 +37,7 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsTrue(connected.Connected);
 
             Assert.IsTrue(manager.Connection.Connected);
+            cancellationTokenSource.Cancel();
         }
 
         [TestMethod]
@@ -75,6 +76,7 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsTrue(connected.Connected);
 
             Assert.IsTrue(manager.Connection.Connected);
+            cancellationTokenSource.Cancel();
         }
 
         private CancellationToken Token => cancellationTokenSource.Token;
