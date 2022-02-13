@@ -23,19 +23,18 @@ namespace HomeKit
     internal sealed class SecureConnection : Connection
     {
         public SecureConnection(PairingDeviceInfo pairingInfo)
-            : base(pairingInfo.DeviceInformation)
+            : base(pairingInfo.DeviceInformation, pairingInfo.EnableKeepAliveForConnection)
         {
             this.pairingInfo = pairingInfo;
         }
 
         public DeviceReportedInfo? DeviceReportedInfo { get; private set; }
 
-        public override async Task<Task> ConnectAndListen(bool enableKeepAlive,
-                                                          CancellationToken token)
+        public override async Task<Task> ConnectAndListen(CancellationToken token)
         {
             using var _ = await connectionLock.LockAsync(token).ConfigureAwait(false);
 
-            var listenTask = await base.ConnectAndListen(enableKeepAlive, token).ConfigureAwait(false);
+            var listenTask = await base.ConnectAndListen(token).ConfigureAwait(false);
             try
             {
                 var pairing = new Pairing(this);

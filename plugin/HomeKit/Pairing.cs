@@ -396,7 +396,8 @@ namespace HomeKit
                                    accessoryPublicKey.ToImmutableArray(),
                                    pairingId,
                                    iosDeviceLtskPrivateBytes.ToImmutableArray(),
-                                   iosDevicePublicBytes.ToImmutableArray());
+                                   iosDevicePublicBytes.ToImmutableArray(),
+                                   true);
         }
 
         private async Task<ILookup<TlvType, TlvValue>> PostTlv(IEnumerable<TlvValue> tlvData,

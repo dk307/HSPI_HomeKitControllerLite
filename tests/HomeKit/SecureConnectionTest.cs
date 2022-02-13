@@ -64,6 +64,7 @@ namespace HSPI_HomeKitControllerTest
 
             hapAccessory.Dispose();
 
+
             Assert.IsFalse(connection.Connected);
             await Assert.ThrowsExceptionAsync<IOException>(() => connection.RemovePairing(Token));
         }
@@ -124,7 +125,7 @@ namespace HSPI_HomeKitControllerTest
             var pairingInfo = TestHelper.GetTemperatureSensorParingInfo();
             var connection = new SecureConnection(pairingInfo);
 
-            await connection.ConnectAndListen(true, token).ConfigureAwait(false);
+            await connection.ConnectAndListen(token).ConfigureAwait(false);
             Assert.IsTrue(connection.Connected);
             return connection;
         }

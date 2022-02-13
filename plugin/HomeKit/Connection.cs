@@ -22,9 +22,10 @@ namespace HomeKit
 {
     internal abstract class Connection : IDisposable
     {
-        protected Connection(Device deviceInformation)
+        protected Connection(Device deviceInformation, bool enableDevicePolling)
         {
             this.homeKitDeviceInformation = deviceInformation;
+            this.enableDevicePolling = enableDevicePolling;
         }
 
         public IPEndPoint Address => homeKitDeviceInformation.Address;
@@ -60,8 +61,7 @@ namespace HomeKit
         protected AsyncProducerConsumerQueue<HttpResponseMessage> EventQueue => eventQueue;
         protected NetworkStream UnderLyingStream => client?.GetStream() ?? throw new InvalidOperationException("Client not connected");
 
-        public virtual async Task<Task> ConnectAndListen(bool enableKeepAlive,
-                                                         CancellationToken token)
+        public virtual async Task<Task> ConnectAndListen(CancellationToken token)
         {
             client = new TcpClient()
             {
@@ -72,7 +72,7 @@ namespace HomeKit
             Log.Information("Connecting to {Name} at {EndPoint}", DisplayName, Address);
             await client.ConnectAsync(Address.Address, Address.Port).ConfigureAwait(false);
 
-            if (enableKeepAlive)
+            if (this.enableDevicePolling)
             {
                 SetSocketKeepAlive(TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
             }
@@ -293,6 +293,7 @@ namespace HomeKit
         private const string TlvContentType = "application/pairing+tlv8";
         private readonly AsyncProducerConsumerQueue<HttpResponseMessage> eventQueue = new();
         private readonly Device homeKitDeviceInformation;
+        private readonly bool enableDevicePolling;
         private readonly AsyncLock streamLock = new();
         private TcpClient? client;
         private HttpOperationOnStream? httpOperationOnStream;

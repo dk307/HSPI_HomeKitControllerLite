@@ -10,7 +10,7 @@ namespace HomeKit
     internal sealed class InsecureConnection : Connection
     {
         private InsecureConnection(Device deviceInformation)
-            : base(deviceInformation)
+            : base(deviceInformation, false)
         {
         }
 
@@ -20,7 +20,7 @@ namespace HomeKit
         {
             using var connection = new InsecureConnection(deviceInformation);
             var pairing = new Pairing(connection);
-            var taskListen = await connection.ConnectAndListen(false, cancellationToken).ConfigureAwait(false);
+            var taskListen = await connection.ConnectAndListen(cancellationToken).ConfigureAwait(false);
             var taskPairing = pairing.StartNewPairing(pin, cancellationToken);
 
             var completedTask = await Task.WhenAny(taskListen, taskPairing).ConfigureAwait(false);

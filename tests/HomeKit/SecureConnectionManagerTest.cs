@@ -23,7 +23,7 @@ namespace HSPI_HomeKitControllerTest
             var pairingInfo = TestHelper.GetTemperatureSensorParingInfo();
             AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue = new();
             var manager = new SecureConnectionManager();
-            manager.ConnectAndListenDevice(pairingInfo, changedEventQueue, true, Token);
+            manager.ConnectAndListenDevice(pairingInfo, changedEventQueue, Token);
 
             //not connected
             var notConnected = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false)) as DeviceConnectionChangedEvent;
@@ -52,7 +52,7 @@ namespace HSPI_HomeKitControllerTest
             var pairingInfo = TestHelper.GetTemperatureSensorParingInfo();
             AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue = new();
             var manager = new SecureConnectionManager();
-            manager.ConnectAndListenDevice(pairingInfo, changedEventQueue, true, Token);
+            manager.ConnectAndListenDevice(pairingInfo, changedEventQueue, Token);
 
             //Consume initial events
             _ = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false));
