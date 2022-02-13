@@ -15,7 +15,7 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
-        public async Task SimpleConnection()
+        public async Task SimpleConnectionAndCancel()
         {
             using var hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
             await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
@@ -37,7 +37,10 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsTrue(connected.Connected);
 
             Assert.IsTrue(manager.Connection.Connected);
+
             cancellationTokenSource.Cancel();
+
+            Assert.IsFalse(manager.Connection.Connected);
         }
 
         [TestMethod]

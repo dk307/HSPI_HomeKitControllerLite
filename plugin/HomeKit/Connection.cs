@@ -34,7 +34,7 @@ namespace HomeKit
             {
                 try
                 {
-                    var connected =  client?.Connected ?? false;
+                    var connected = client?.Connected ?? false;
 
                     // Detect if client disconnected
                     if (connected &&
@@ -82,8 +82,21 @@ namespace HomeKit
             GC.SuppressFinalize(this);
         }
 
-        public async Task<R?> HandleJsonRequest<T, R>(HttpMethod httpMethod,
-                          T? value,
+        protected void Disconnect()
+        {
+            this.client?.Close();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                client?.Dispose();
+            }
+        }
+
+        protected async Task<R?> HandleJsonRequest<T, R>(HttpMethod httpMethod,
+                                          T? value,
                           string target,
                           string contentType = JsonContentType,
                           CancellationToken cancellationToken = default) where R : class
@@ -135,7 +148,7 @@ namespace HomeKit
             return JsonConvert.DeserializeObject<R>(responseData);
         }
 
-        public async Task<IEnumerable<TlvValue>> PostTlv(IEnumerable<TlvValue> tlvList,
+        internal async Task<IEnumerable<TlvValue>> PostTlv(IEnumerable<TlvValue> tlvList,
                                   string target,
                                   string contentType = TlvContentType,
                                   CancellationToken cancellationToken = default)
@@ -163,7 +176,7 @@ namespace HomeKit
             return Tlv8.Decode(responseData);
         }
 
-        public async Task<HttpResponseMessage> Request(HttpMethod httpMethod,
+        protected async Task<HttpResponseMessage> Request(HttpMethod httpMethod,
                                   string target,
                                   byte[]? content = null,
                                   string? contentType = null,
@@ -189,11 +202,6 @@ namespace HomeKit
             return await Request(request, token).ConfigureAwait(false);
         }
 
-        protected void Disconnect()
-        {
-            this.client?.Close();
-        }
-
         protected async Task StartListening(HttpOperationOnStream value,
                                             CancellationToken token)
         {
@@ -208,14 +216,6 @@ namespace HomeKit
                 throw new InvalidOperationException();
             }
             this.httpOperationOnStream.UpdateTransforms(readTransform, writeTransform);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                client?.Dispose();
-            }
         }
 
         [MemberNotNull(nameof(client))]

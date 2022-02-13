@@ -25,7 +25,7 @@ namespace HSPI_HomeKitControllerTest
             await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
             using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
 
-            var accessoryData = connection.DeviceInfo;
+            var accessoryData = connection.DeviceReportedInfo;
 
             Assert.AreEqual(1, accessoryData.Accessories.Count);
             Assert.AreEqual("default", accessoryData.Accessories[0].SerialNumber);

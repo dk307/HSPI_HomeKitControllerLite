@@ -20,6 +20,8 @@ namespace HomeKit.Http
         public async Task<HttpResponseMessage> Request(HttpRequestMessage request,
                                                        CancellationToken token)
         {
+            // this lock prevents multiple requests in progress
+            using var requestInProgress = await requestLock.LockAsync(token).ConfigureAwait(false);
             HttpResponseMessage? response = null;
             AsyncManualResetEvent waitForResult = new();
             httpResponseParser.AddHttpResponseCallback((result) =>
@@ -71,6 +73,7 @@ namespace HomeKit.Http
             httpResponseParser.SetDataTransform(readTransform);
         }
 
+        private readonly AsyncLock requestLock = new();
         private readonly HttpResponseParser httpResponseParser;
         private readonly Stream underlyingStream;
         private volatile IWriteTransform? writeTransform;

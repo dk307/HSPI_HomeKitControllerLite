@@ -17,7 +17,9 @@ namespace HomeKit
             this.displayName = info.DeviceInformation.DisplayName;
             Hspi.Utils.TaskHelper.StartAsyncWithErrorChecking(
                 $"{displayName} connection",
-                () => ConnectionAndListenDeviceImpl(info, changedEventQueue, token), token);
+                () => ConnectionAndListenDeviceImpl(info, changedEventQueue, token),
+                token,
+                TimeSpan.FromSeconds(1));
         }
 
         public SecureConnection Connection
@@ -41,8 +43,8 @@ namespace HomeKit
         }
 
         private async Task ConnectionAndListenDeviceImpl(PairingDeviceInfo info,
-                                                        AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
-                                                        CancellationToken token)
+                                                         AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
+                                                         CancellationToken token)
         {
             try
             {

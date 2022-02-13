@@ -28,7 +28,7 @@ namespace HomeKit
             this.pairingInfo = pairingInfo;
         }
 
-        public DeviceReportedInfo? DeviceInfo { get; private set; }
+        public DeviceReportedInfo? DeviceReportedInfo { get; private set; }
 
         public override async Task<Task> ConnectAndListen(CancellationToken token)
         {
@@ -47,7 +47,7 @@ namespace HomeKit
 
                 UpdateTransforms(chaChaReadStream, chaChaWriteStream);
 
-                DeviceInfo = await GetAccessories(token).ConfigureAwait(false);
+                DeviceReportedInfo = await GetAccessories(token).ConfigureAwait(false);
                 Log.Debug("Encrypted connection complete for {Name}", DisplayName);
                 return listenTask;
             }
@@ -60,6 +60,8 @@ namespace HomeKit
 
         public async Task RemovePairing(CancellationToken token)
         {
+            CheckHasDeviceInfo();
+
             await TryUnsubscribeAll(token).ConfigureAwait(false);
 
             var pairing = new Pairing(this);
@@ -70,11 +72,10 @@ namespace HomeKit
         public async Task TrySubscribeAll(AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
                                           CancellationToken token)
         {
-            CheckHasDeviceInfo();
-
             using var _ = await connectionLock.LockAsync(token).ConfigureAwait(false);
+            CheckHasDeviceInfo();
             Interlocked.Exchange(ref this.changedEventQueue, changedEventQueue);
-            foreach (var accessory in this.DeviceInfo.Accessories)
+            foreach (var accessory in this.DeviceReportedInfo.Accessories)
             {
                 var neededSubscriptions = accessory.Services.Values.SelectMany(
                                         s => s.Characteristics.Values.Where(c => c.SupportsNotifications))
@@ -110,7 +111,7 @@ namespace HomeKit
 
             foreach (var subscription in neededSubscriptions)
             {
-                var characteristic = DeviceInfo.FindCharacteristic(subscription.Aid, subscription.Iid);
+                var characteristic = DeviceReportedInfo.FindCharacteristic(subscription.Aid, subscription.Iid);
 
                 if (characteristic is not null)
                 {
@@ -189,10 +190,10 @@ namespace HomeKit
             return doneSubscriptions;
         }
 
-        [MemberNotNull(nameof(DeviceInfo))]
+        [MemberNotNull(nameof(DeviceReportedInfo))]
         private void CheckHasDeviceInfo()
         {
-            if (DeviceInfo == null)
+            if (DeviceReportedInfo == null)
             {
                 throw new InvalidOperationException("Connection Never Made");
             }
