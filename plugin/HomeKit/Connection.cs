@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -59,7 +60,8 @@ namespace HomeKit
         protected AsyncProducerConsumerQueue<HttpResponseMessage> EventQueue => eventQueue;
         protected NetworkStream UnderLyingStream => client?.GetStream() ?? throw new InvalidOperationException("Client not connected");
 
-        public virtual async Task<Task> ConnectAndListen(CancellationToken token)
+        public virtual async Task<Task> ConnectAndListen(bool enableKeepAlive,
+                                                         CancellationToken token)
         {
             client = new TcpClient()
             {
@@ -69,6 +71,11 @@ namespace HomeKit
 
             Log.Information("Connecting to {Name} at {EndPoint}", DisplayName, Address);
             await client.ConnectAsync(Address.Address, Address.Port).ConfigureAwait(false);
+
+            if (enableKeepAlive)
+            {
+                SetSocketKeepAlive(TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+            }
 
             Log.Information("Connected to {EndPoint}", Address);
 
@@ -146,6 +153,18 @@ namespace HomeKit
 
             var responseData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             return JsonConvert.DeserializeObject<R>(responseData);
+        }
+
+        private void SetSocketKeepAlive(TimeSpan keepAliveTime,
+                                        TimeSpan keepAliveInterval)
+        {
+            int size = Marshal.SizeOf((uint)0);
+            byte[] keepAlive = new byte[size * 3];
+
+            Buffer.BlockCopy(BitConverter.GetBytes((uint)1), 0, keepAlive, 0, size);
+            Buffer.BlockCopy(BitConverter.GetBytes((uint)keepAliveTime.TotalMilliseconds), 0, keepAlive, size, size);
+            Buffer.BlockCopy(BitConverter.GetBytes((uint)keepAliveInterval.TotalMilliseconds), 0, keepAlive, size * 2, size);
+            client.Client.IOControl(IOControlCode.KeepAliveValues, keepAlive, null);
         }
 
         internal async Task<IEnumerable<TlvValue>> PostTlv(IEnumerable<TlvValue> tlvList,

@@ -30,11 +30,12 @@ namespace HomeKit
 
         public DeviceReportedInfo? DeviceReportedInfo { get; private set; }
 
-        public override async Task<Task> ConnectAndListen(CancellationToken token)
+        public override async Task<Task> ConnectAndListen(bool enableKeepAlive,
+                                                          CancellationToken token)
         {
             using var _ = await connectionLock.LockAsync(token).ConfigureAwait(false);
 
-            var listenTask = await base.ConnectAndListen(token).ConfigureAwait(false);
+            var listenTask = await base.ConnectAndListen(enableKeepAlive, token).ConfigureAwait(false);
             try
             {
                 var pairing = new Pairing(this);

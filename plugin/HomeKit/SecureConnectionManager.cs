@@ -12,12 +12,13 @@ namespace HomeKit
     {
         public void ConnectAndListenDevice(PairingDeviceInfo info,
                                            AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
+                                           bool enableKeepAlive,
                                            CancellationToken token)
         {
             this.displayName = info.DeviceInformation.DisplayName;
             Hspi.Utils.TaskHelper.StartAsyncWithErrorChecking(
                 $"{displayName} connection",
-                () => ConnectionAndListenDeviceImpl(info, changedEventQueue, token),
+                () => ConnectionAndListenDeviceImpl(info, changedEventQueue, enableKeepAlive, token),
                 token,
                 TimeSpan.FromSeconds(1));
         }
@@ -44,13 +45,14 @@ namespace HomeKit
 
         private async Task ConnectionAndListenDeviceImpl(PairingDeviceInfo info,
                                                          AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
+                                                         bool enableKeepAlive,
                                                          CancellationToken token)
         {
             try
             {
                 await EnqueueConnectionEvent(changedEventQueue, false).ConfigureAwait(false);
                 SecureConnection secureHomeKitConnection = new(info);
-                var listenTask = await secureHomeKitConnection.ConnectAndListen(token).ConfigureAwait(false);
+                var listenTask = await secureHomeKitConnection.ConnectAndListen(enableKeepAlive, token).ConfigureAwait(false);
                 Interlocked.Exchange(ref connection, secureHomeKitConnection);
                 await secureHomeKitConnection.TrySubscribeAll(changedEventQueue, token);
 

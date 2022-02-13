@@ -124,7 +124,7 @@ namespace HSPI_HomeKitControllerTest
             var pairingInfo = TestHelper.GetTemperatureSensorParingInfo();
             var connection = new SecureConnection(pairingInfo);
 
-            await connection.ConnectAndListen(token).ConfigureAwait(false);
+            await connection.ConnectAndListen(true, token).ConfigureAwait(false);
             Assert.IsTrue(connection.Connected);
             return connection;
         }
