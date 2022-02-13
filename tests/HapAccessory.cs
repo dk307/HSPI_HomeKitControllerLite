@@ -46,7 +46,10 @@ namespace HSPI_HomeKitControllerTest
             {
                 if (this.process != null)
                 {
-                    if (!this.process.HasExited) { this.process.Kill(); }
+                    if (!this.process.HasExited) {
+                        Console.WriteLine("Killing Accessory process");
+                        this.process.Kill(); 
+                    }
                     this.process.WaitForExit();
                     this.process.Dispose();
                 }
