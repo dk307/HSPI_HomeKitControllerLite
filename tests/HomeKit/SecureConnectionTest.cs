@@ -1,10 +1,8 @@
 ﻿using HomeKit;
-using HomeKit.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Nito.AsyncEx;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -67,7 +65,6 @@ namespace HSPI_HomeKitControllerTest
             hapAccessory.Dispose();
 
             Assert.IsFalse(connection.Connected);
-
             await Assert.ThrowsExceptionAsync<IOException>(() => connection.RemovePairing(Token));
         }
 
@@ -132,7 +129,6 @@ namespace HSPI_HomeKitControllerTest
             return connection;
         }
 
- 
         private readonly CancellationTokenSource cancellationTokenSource = new();
     }
 }
