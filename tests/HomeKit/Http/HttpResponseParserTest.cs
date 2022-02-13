@@ -83,21 +83,28 @@ namespace HSPI_HomeKitControllerTest
             await TestResponse(data, Array.Empty<byte>(), expected);
         }
 
-        [TestMethod]
-        public async Task TestChunkedResponse()
-        {
-            string data = "HTTP/1.1 200 OK\r\nContent-Type: application/hap+json\r\n" +
-                          "Transfer-Encoding: chunked\r\n\r\n";
-
-            string body = "5f\r\n{\"characteristics\":[{\"aid\":1,\"iid\":10,\"value\":35}," +
+        [DataTestMethod]
+        [DataRow("HTTP/1.1 200 OK\r\nContent-Type: application/hap+json\r\nTransfer-Encoding: chunked\r\n\r\n",
+                 "5f\r\n{\"characteristics\":[{\"aid\":1,\"iid\":10,\"value\":35}," +
                            "{\"aid\":1,\"iid\":13,\"value\":36.0999984741211}]}\r\n" +
-                           "0\r\n\r\n";
-
+                           "0\r\n\r\n",
+                "{\"characteristics\":[{\"aid\":1,\"iid\":10,\"value\":35},{\"aid\":1,\"iid\":13,\"value\":36.0999984741211}]}",
+                DisplayName = "Single chuncked body")]
+        [DataRow("HTTP/1.1 200 OK\r\nContent-Type: application/hap+json\r\nTransfer-Encoding: chunked\r\n\r\n",
+                 "2\r\n{\"\r\n" +
+                 "1\r\nc\r\n" +
+                 "5c\r\nharacteristics\":[{\"aid\":1,\"iid\":10,\"value\":35}," +
+                           "{\"aid\":1,\"iid\":13,\"value\":36.0999984741211}]}\r\n" +
+                           "0\r\n\r\n",
+                "{\"characteristics\":[{\"aid\":1,\"iid\":10,\"value\":35},{\"aid\":1,\"iid\":13,\"value\":36.0999984741211}]}",
+                DisplayName = "Multiple chuncked body")]
+        public async Task TestChunkedResponse(string data, string body, string expectedBody)
+        {
             var expected = new HttpResponseMessage()
             {
                 Version = HttpVersion.Version11,
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("{\"characteristics\":[{\"aid\":1,\"iid\":10,\"value\":35},{\"aid\":1,\"iid\":13,\"value\":36.0999984741211}]}", Encoding.UTF8),
+                Content = new StringContent(expectedBody, Encoding.UTF8),
             };
 
             expected.Headers.TransferEncodingChunked = true;
@@ -106,6 +113,7 @@ namespace HSPI_HomeKitControllerTest
 
             await TestResponse(data, body, expected);
         }
+
         private static async Task CheckResponseSame(HttpResponseMessage expected,
                                                     HttpResponseMessage httpResponseMessage)
         {
