@@ -38,6 +38,8 @@ namespace HSPI_HomeKitControllerTest
 
             Assert.IsTrue(manager.Connection.Connected);
 
+            Assert.IsTrue(await manager.Connection.Ping(Token));
+
             cancellationTokenSource.Cancel();
 
             Assert.IsFalse(manager.Connection.Connected);
@@ -60,6 +62,9 @@ namespace HSPI_HomeKitControllerTest
             _ = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false));
 
             hapAccessory1.Dispose();
+
+            // it might be some time before client detects the time, so force connection
+            Assert.IsFalse(await manager.Connection.Ping(Token));
 
             Assert.IsFalse(manager.Connection.Connected);
 

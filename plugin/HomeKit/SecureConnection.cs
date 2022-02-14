@@ -60,6 +60,35 @@ namespace HomeKit
             }
         }
 
+        public async Task<bool> Ping(CancellationToken token)
+        {
+            Log.Debug("Pinging {Name}", DisplayName);
+            CheckHasDeviceInfo();
+
+            foreach (var accessory in this.DeviceReportedInfo.Accessories)
+            {
+                var id = accessory.FindCharacteristic(ServiceType.AccessoryInformation,
+                                                      CharacteristicType.Name);
+                if (id != null)
+                {
+                    try
+                    {
+                        await this.HandleJsonRequest<JObject, JObject>(HttpMethod.Get,
+                                                                       null,
+                                                                       CharacteristicsTarget,
+                                                                       Invariant($"id={accessory.Aid}.{id.Iid}"),
+                                                                       cancellationToken: token);
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                }
+            }
+            throw new InvalidOperationException("No Readable Value found");
+        }
+
         public async Task RemovePairing(CancellationToken token)
         {
             CheckHasDeviceInfo();
@@ -70,15 +99,6 @@ namespace HomeKit
             await pairing.RemovePairing(pairingInfo, token).ConfigureAwait(false);
             Log.Information("Removed Pairing for {Name}", DisplayName);
         }
-
-        //public async Task Ping(CancellationToken token)
-        //{
-        //    CheckHasDeviceInfo();
-
-        //    Log.Debug("Pinging {Name}", DisplayName);
-
-        //}
-
         internal record AidIidPair(ulong Aid, ulong Iid);
 
         public async Task<Task> TrySubscribeAll(AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,

@@ -59,6 +59,8 @@ namespace HomeKit
                 //listen and process events
                 var finishedTask = await Task.WhenAny(listenTask, eventProcessTask).ConfigureAwait(false);
                 await finishedTask.ConfigureAwait(false);
+                await listenTask.ConfigureAwait(false);
+                await eventProcessTask.ConfigureAwait(false);
             }
             finally
             {
