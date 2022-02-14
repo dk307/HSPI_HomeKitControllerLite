@@ -80,8 +80,6 @@ namespace HSPI_HomeKitControllerTest
             using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
 
             await connection.RemovePairing(Token).ConfigureAwait(false);
-
-            Assert.IsFalse(await connection.Ping(Token));
         }
 
         [TestMethod]

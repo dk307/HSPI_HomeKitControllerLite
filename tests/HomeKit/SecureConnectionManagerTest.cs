@@ -46,7 +46,6 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
-        [Ignore]
         public async Task ReconnectionAfterDisconnect()
         {
             var hapAccessory1 = TestHelper.CreateTemperaturePairedAccessory();
@@ -64,11 +63,11 @@ namespace HSPI_HomeKitControllerTest
 
             hapAccessory1.Dispose();
 
+            Assert.IsFalse(manager.Connection.Connected);
+
             // it might be some time before client detects the time,
             // so force connection
             Assert.IsFalse(await manager.Connection.Ping(Token));
-
-            Assert.IsFalse(manager.Connection.Connected);
 
             using var hapAccessory2 = TestHelper.CreateTemperaturePairedAccessory();
             await hapAccessory2.WaitForSuccessStart(Token).ConfigureAwait(false);
