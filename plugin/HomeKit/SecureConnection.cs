@@ -78,10 +78,13 @@ namespace HomeKit
                                                                        CharacteristicsTarget,
                                                                        Invariant($"id={accessory.Aid}.{id.Iid}"),
                                                                        cancellationToken: token);
+                        Log.Debug("Ping to {Name} succeeded", DisplayName);
+
                         return true;
                     }
                     catch (Exception)
                     {
+                        Log.Warning("Ping to {Name} failed", DisplayName);
                         return false;
                     }
                 }
@@ -99,6 +102,7 @@ namespace HomeKit
             await pairing.RemovePairing(pairingInfo, token).ConfigureAwait(false);
             Log.Information("Removed Pairing for {Name}", DisplayName);
         }
+
         internal record AidIidPair(ulong Aid, ulong Iid);
 
         public async Task<Task> TrySubscribeAll(AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
