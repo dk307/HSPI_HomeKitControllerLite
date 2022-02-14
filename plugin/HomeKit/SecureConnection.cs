@@ -81,8 +81,8 @@ namespace HomeKit
 
         internal record AidIidPair(ulong Aid, ulong Iid);
 
-        public async Task TrySubscribeAll(AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
-                                          CancellationToken token)
+        public async Task<Task> TrySubscribeAll(AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
+                                            CancellationToken token)
         {
             using var _ = await connectionLock.LockAsync(token).ConfigureAwait(false);
             CheckHasDeviceInfo();
@@ -116,6 +116,8 @@ namespace HomeKit
             {
                 processEventTask = Task.Run(() => ProcessEvents(token), token);
             }
+
+            return processEventTask;
         }
 
         public async Task TryUnsubscribeAll(CancellationToken token)

@@ -52,12 +52,13 @@ namespace HomeKit
                 SecureConnection secureHomeKitConnection = new(info);
                 var listenTask = await secureHomeKitConnection.ConnectAndListen(token).ConfigureAwait(false);
                 Interlocked.Exchange(ref connection, secureHomeKitConnection);
-                await secureHomeKitConnection.TrySubscribeAll(changedEventQueue, token);
+                var eventProcessTask = await secureHomeKitConnection.TrySubscribeAll(changedEventQueue, token);
 
                 await EnqueueConnectionEvent(changedEventQueue, true).ConfigureAwait(false);
 
                 //listen and process events
-                await listenTask.ConfigureAwait(false);
+                var finishedTask = await Task.WhenAny(listenTask, eventProcessTask).ConfigureAwait(false);
+                await finishedTask.ConfigureAwait(false);
             }
             finally
             {
