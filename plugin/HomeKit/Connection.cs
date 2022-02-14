@@ -30,30 +30,6 @@ namespace HomeKit
 
         public IPEndPoint Address => homeKitDeviceInformation.Address;
 
-        public virtual bool Connected
-        {
-            get
-            {
-                try
-                {
-                    var connected = client?.Connected ?? false;
-
-                    // Detect if client disconnected
-                    if (connected &&
-                        !(client!.Client.Poll(1, SelectMode.SelectRead) && client.Client.Available == 0))
-                    {
-                        return true;
-                    }
-                    return connected;
-                }
-                catch (Exception)
-                {
-                    // Connected check throws
-                    return false;
-                }
-            }
-        }
-
         public DeviceFeature DeviceFeature => homeKitDeviceInformation.Feature;
         public Device DeviceInformation => homeKitDeviceInformation;
         public string DisplayName => homeKitDeviceInformation.DisplayName;

@@ -52,7 +52,7 @@ namespace HSPI_HomeKitControllerTest
             // only cancel the controller
             controllerCancellationTokenSource.Cancel();
 
-            Assert.IsFalse(connection.Connected);
+            Assert.IsFalse(await connection.Ping(Token));
         }
 
         [TestMethod]
@@ -68,7 +68,6 @@ namespace HSPI_HomeKitControllerTest
             // so force connection write
             Assert.IsFalse(await connection.Ping(Token));
 
-            Assert.IsFalse(connection.Connected);
             await Assert.ThrowsExceptionAsync<IOException>(() => connection.RemovePairing(Token));
         }
 
@@ -129,7 +128,6 @@ namespace HSPI_HomeKitControllerTest
             var connection = new SecureConnection(pairingInfo);
 
             await connection.ConnectAndListen(token).ConfigureAwait(false);
-            Assert.IsTrue(connection.Connected);
             return connection;
         }
 

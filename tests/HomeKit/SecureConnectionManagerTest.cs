@@ -36,13 +36,12 @@ namespace HSPI_HomeKitControllerTest
             var connected = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false)) as DeviceConnectionChangedEvent;
             Assert.IsTrue(connected.Connected);
 
-            Assert.IsTrue(manager.Connection.Connected);
 
             Assert.IsTrue(await manager.Connection.Ping(Token));
 
             cancellationTokenSource.Cancel();
 
-            Assert.IsFalse(manager.Connection.Connected);
+            Assert.IsFalse(await manager.Connection.Ping(Token));
         }
 
         [TestMethod]
@@ -68,8 +67,6 @@ namespace HSPI_HomeKitControllerTest
             // so force connection
             Assert.IsFalse(await manager.Connection.Ping(Token));
 
-            Assert.IsFalse(manager.Connection.Connected);
-
             using var hapAccessory2 = TestHelper.CreateTemperaturePairedAccessory();
             await hapAccessory2.WaitForSuccessStart(Token).ConfigureAwait(false);
 
@@ -85,7 +82,7 @@ namespace HSPI_HomeKitControllerTest
             var connected = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false)) as DeviceConnectionChangedEvent;
             Assert.IsTrue(connected.Connected);
 
-            Assert.IsTrue(manager.Connection.Connected);
+            Assert.IsTrue(await manager.Connection.Ping(Token));
             cancellationTokenSource.Cancel();
         }
 
