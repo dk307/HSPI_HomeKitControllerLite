@@ -8,25 +8,24 @@ using System.Linq;
 
 namespace HomeKit.Model
 {
-
     internal sealed record Characteristic
     {
-        public Characteristic(uint iid, 
-                              CharacteristicType type, 
-                              object? value, 
-                              IImmutableList<CharacteristicPermissions> permissions, 
-                              bool? eventNotifications, 
-                              string format, 
-                              string description, 
-                              string unit, 
-                              double? minimumValue, 
-                              double? maximumValue, 
-                              double? stepValue, 
-                              int? maximumLength, 
-                              int? maxDataLength, 
-                              IImmutableList<double> validValues, 
-                              IImmutableList<double> validValuesRange, 
-                              long? ttl, 
+        public Characteristic(uint iid,
+                              CharacteristicType type,
+                              object? value,
+                              IImmutableList<CharacteristicPermissions> permissions,
+                              bool? eventNotifications,
+                              string format,
+                              string description,
+                              string unit,
+                              double? minimumValue,
+                              double? maximumValue,
+                              double? stepValue,
+                              int? maximumLength,
+                              int? maxDataLength,
+                              IImmutableList<double> validValues,
+                              IImmutableList<double> validValuesRange,
+                              long? ttl,
                               long? pid)
         {
             Iid = iid;

@@ -40,7 +40,7 @@ namespace HomeKit
                 new TlvValue( TlvType.PublicKey, iosKeyPublic),
             };
 
-            var step1ResponseDict = await PostTlv(tlvDataStep1, PairVerifyTarget, cancellationToken)
+            var step1ResponseDict = await PostTlv(tlvDataStep1, PairVerifyTarget, string.Empty, cancellationToken)
                                           .ConfigureAwait(false);
 
             HandlePairingResponse<VerifyPairingException>("Step1", step1ResponseDict, Tlv8.M2);
@@ -129,7 +129,7 @@ namespace HomeKit
                     new TlvValue( TlvType.EncryptedData, encryptedDataWithAuthTag)
                 };
 
-            var step11ResponseDict = await PostTlv(requestTlv, PairVerifyTarget, cancellationToken)
+            var step11ResponseDict = await PostTlv(requestTlv, PairVerifyTarget, string.Empty, cancellationToken)
                                                   .ConfigureAwait(false);
 
             HandlePairingResponse<VerifyPairingException>("Step11", step11ResponseDict, Tlv8.M4);
@@ -150,7 +150,7 @@ namespace HomeKit
                 new TlvValue( TlvType.Identifier, pairingInfo.ControllerPairingIdAsBytes),
             };
 
-            var responseDict = await PostTlv(tlvValues, PairingTarget, cancellationToken)
+            var responseDict = await PostTlv(tlvValues, PairingTarget, string.Empty, cancellationToken)
                                           .ConfigureAwait(false);
 
             HandlePairingResponse<PairingException>("Step", responseDict, Tlv8.M2);
@@ -286,7 +286,7 @@ namespace HomeKit
                 new TlvValue( TlvType.Method, authRequired ? Tlv8.PairSetupWithAuth : Tlv8.PairSetup),
             };
 
-            var step1ResponseDict = await PostTlv(tlvDataStep1, PairingSetupTarget, cancellationToken)
+            var step1ResponseDict = await PostTlv(tlvDataStep1, PairingSetupTarget, string.Empty, cancellationToken)
                                 .ConfigureAwait(false);
 
             HandlePairingResponse<PairingException>("Step1", step1ResponseDict, Tlv8.M2);
@@ -305,7 +305,7 @@ namespace HomeKit
                 new TlvValue( TlvType.Proof, proof.ToByteArray()),
             };
 
-            var step2ResponseDict = await PostTlv(tlvDataStep2, PairingSetupTarget, cancellationToken).ConfigureAwait(false);
+            var step2ResponseDict = await PostTlv(tlvDataStep2, PairingSetupTarget, string.Empty, cancellationToken).ConfigureAwait(false);
             HandlePairingResponse<PairingException>("Step3", step2ResponseDict, Tlv8.M4);
             return step2ResponseDict;
         }
@@ -355,7 +355,7 @@ namespace HomeKit
                 new TlvValue( TlvType.EncryptedData, encrypted_data_with_auth_tag),
              };
 
-            var step3ResponseDict = await PostTlv(tlvDataStep3, PairingSetupTarget, cancellationToken)
+            var step3ResponseDict = await PostTlv(tlvDataStep3, PairingSetupTarget, string.Empty, cancellationToken)
                                          .ConfigureAwait(false);
 
             HandlePairingResponse<PairingException>(stepName, step3ResponseDict, Tlv8.M6);
@@ -402,9 +402,10 @@ namespace HomeKit
 
         private async Task<ILookup<TlvType, TlvValue>> PostTlv(IEnumerable<TlvValue> tlvData,
                                                                string target,
+                                                               string query,
                                                                CancellationToken cancellationToken)
         {
-            var stepResponse = await connection.PostTlv(tlvData, target, cancellationToken: cancellationToken)
+            var stepResponse = await connection.PostTlv(tlvData, target, query, cancellationToken: cancellationToken)
                                 .ConfigureAwait(false);
 
             var step2ResponseDict = stepResponse.ToLookup(x => x.Type);

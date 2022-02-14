@@ -64,6 +64,8 @@ namespace HSPI_HomeKitControllerTest
 
             hapAccessory.Dispose();
 
+            // it might be some time before client detects the time
+
 
             Assert.IsFalse(connection.Connected);
             await Assert.ThrowsExceptionAsync<IOException>(() => connection.RemovePairing(Token));

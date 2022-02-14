@@ -157,10 +157,12 @@
     <Compile Include="HomeKit\InsecureConnection.cs" />
     <Compile Include="HomeKit\Model\Accessory.cs" />
     <Compile Include="HomeKit\Model\AccessoryError.cs" />
+    <Compile Include="HomeKit\Model\AidIidValue.cs" />
     <Compile Include="HomeKit\Model\BaseGuidType.cs" />
     <Compile Include="HomeKit\Model\Characteristic.cs" />
     <Compile Include="HomeKit\Model\CharacteristicPermissions.cs" />
     <Compile Include="HomeKit\Model\CharacteristicType.cs" />
+    <Compile Include="HomeKit\Model\CharacteristicsValuesList.cs" />
     <Compile Include="HomeKit\Model\Device.cs" />
     <Compile Include="HomeKit\Model\DeviceCategory.cs" />
     <Compile Include="HomeKit\Model\DeviceFeature.cs" />

@@ -1,4 +1,5 @@
 ﻿using HomeKit.Model;
+using Hspi.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Nito.AsyncEx;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.FormattableString;
 
 #nullable enable
 
@@ -69,6 +71,16 @@ namespace HomeKit
             Log.Information("Removed Pairing for {Name}", DisplayName);
         }
 
+        //public async Task Ping(CancellationToken token)
+        //{
+        //    CheckHasDeviceInfo();
+
+        //    Log.Debug("Pinging {Name}", DisplayName);
+
+        //}
+
+        internal record AidIidPair(ulong Aid, ulong Iid);
+
         public async Task TrySubscribeAll(AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
                                           CancellationToken token)
         {
@@ -79,15 +91,16 @@ namespace HomeKit
             {
                 var neededSubscriptions = accessory.Services.Values.SelectMany(
                                         s => s.Characteristics.Values.Where(c => c.SupportsNotifications))
-                                        .Select(x => new Subscription(accessory.Aid, x.Iid));
-
-                await SendExistingValuesToQueue(changedEventQueue, neededSubscriptions).ConfigureAwait(false);
+                                        .Select(x => new AidIidPair(accessory.Aid, x.Iid));
 
                 var changedSubscriptions = await ChangeSubscription(neededSubscriptions, true, token).ConfigureAwait(false);
 
-                foreach (var subscription in changedSubscriptions)
+                // refresh all subscribed values as we may have missed some changes by the time we subscribed
+                await RefreshValues(neededSubscriptions, token).ConfigureAwait(false);
+
+                foreach (var AidIidPair in changedSubscriptions)
                 {
-                    subscriptionsToDevice.Add(subscription);
+                    subscriptionsToDevice.Add(AidIidPair);
                 }
 
                 if (neededSubscriptions.Count() != changedSubscriptions.Count)
@@ -105,23 +118,6 @@ namespace HomeKit
             }
         }
 
-        private async Task SendExistingValuesToQueue(AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue, IEnumerable<Subscription> neededSubscriptions)
-        {
-            CheckHasDeviceInfo();
-
-            foreach (var subscription in neededSubscriptions)
-            {
-                var characteristic = DeviceReportedInfo.FindCharacteristic(subscription.Aid, subscription.Iid);
-
-                if (characteristic is not null)
-                {
-                    await changedEventQueue.EnqueueAsync(new AccessoryValueChangedEvent(subscription.Aid,
-                                                                                  characteristic.Iid,
-                                                                                  characteristic.Value)).ConfigureAwait(false);
-                }
-            }
-        }
-
         public async Task TryUnsubscribeAll(CancellationToken token)
         {
             using var _ = await connectionLock.LockAsync(token).ConfigureAwait(false);
@@ -129,39 +125,39 @@ namespace HomeKit
             {
                 var changedSubscriptions = await ChangeSubscription(accessories, false, token).ConfigureAwait(false);
 
-                foreach (var subscription in changedSubscriptions)
+                foreach (var AidIidPair in changedSubscriptions)
                 {
-                    subscriptionsToDevice.Remove(subscription);
+                    subscriptionsToDevice.Remove(AidIidPair);
                 }
             }
 
             Log.Information("Unsubscribed for events from {Name}", DisplayName);
         }
 
-        private async ValueTask<HashSet<Subscription>> ChangeSubscription(IEnumerable<Subscription> subscriptions,
+        private async ValueTask<HashSet<AidIidPair>> ChangeSubscription(IEnumerable<AidIidPair> subscriptions,
                                                                           bool subscribe,
                                                                           CancellationToken token)
         {
-            var doneSubscriptions = new HashSet<Subscription>();
+            var doneSubscriptions = new HashSet<AidIidPair>();
             JObject request = new();
 
             JArray characteristicsRequest = new();
-            foreach (var subscription in subscriptions)
+            foreach (var AidIidPair in subscriptions)
             {
                 var requestData = new JObject
                 {
-                    { "aid", subscription.Aid  },
-                    { "iid", subscription.Iid  },
+                    { "aid", AidIidPair.Aid  },
+                    { "iid", AidIidPair.Iid  },
                     { "ev", subscribe? 1: 0 }
                 };
-                doneSubscriptions.Add(subscription);
+                doneSubscriptions.Add(AidIidPair);
                 characteristicsRequest.Add(requestData);
             }
 
             request["characteristics"] = characteristicsRequest;
 
             var result = await HandleJsonRequest<JObject, JObject>(HttpMethod.Put, request,
-                                                     "/characteristics",
+                                                     "/characteristics", string.Empty,
                                                      cancellationToken: token).ConfigureAwait(false);
 
             if (result != null)
@@ -177,11 +173,11 @@ namespace HomeKit
                         var iid = (ulong?)row["iid"];
                         var status = (string?)row["status"];
 
-                        Log.Warning("Subscription to aid:{aid} iid:{iid} failed with {status} for {Name}",
+                        Log.Warning("AidIidPair to aid:{aid} iid:{iid} failed with {status} for {Name}",
                                         aid, iid, status, DisplayName);
                         if (aid != null && iid != null)
                         {
-                            doneSubscriptions.Remove(new Subscription(aid.Value, iid.Value));
+                            doneSubscriptions.Remove(new AidIidPair(aid.Value, iid.Value));
                         }
                     }
                 }
@@ -199,12 +195,19 @@ namespace HomeKit
             }
         }
 
-        private sealed record Subscription(ulong Aid, ulong Iid);
+        private async Task EnqueueResults(CharacteristicsValuesList result, CancellationToken cancellationToken)
+        {
+            foreach (var value in result.Values)
+            {
+                var item = new AccessoryValueChangedEvent(value.Aid, value.Iid, value.Value);
+                await changedEventQueue.EnqueueAsync(item, cancellationToken).ConfigureAwait(false);
+            }
+        }
 
         private async ValueTask<DeviceReportedInfo> GetAccessories(CancellationToken token)
         {
             var info = await HandleJsonRequest<JObject, DeviceReportedInfo>(HttpMethod.Get, null,
-                                                             "/accessories",
+                                                             "/accessories", string.Empty,
                                                              cancellationToken: token).ConfigureAwait(false);
             if (info == null)
             {
@@ -220,35 +223,37 @@ namespace HomeKit
                 var eventMessage = await EventQueue.DequeueAsync(cancellationToken).ConfigureAwait(false);
                 var jsonEventMessage = await eventMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                var eventJsonObject = JsonConvert.DeserializeObject<JObject>(jsonEventMessage);
-
-                var characteristics = eventJsonObject?["characteristics"] as JArray;
-
-                if (characteristics != null)
+                try
                 {
-                    foreach (JToken row in characteristics)
-                    {
-                        var aid = (ulong?)row["aid"];
-                        var iid = (ulong?)row["iid"];
-                        var value = (string?)row["value"];
-
-                        if (aid != null && iid != null && changedEventQueue != null)
-                        {
-                            var item = new AccessoryValueChangedEvent(aid.Value, iid.Value, value);
-                            await changedEventQueue.EnqueueAsync(item, cancellationToken).ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            Log.Warning("Failed to Process event {event} for {Name}", jsonEventMessage, DisplayName);
-                        }
-                    }
+                    var result = JsonConvert.DeserializeObject<CharacteristicsValuesList>(jsonEventMessage);
+                    await EnqueueResults(result, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning("Failed to Process event with {message} for {Name} with {error}",
+                                jsonEventMessage, DisplayName, ex.GetFullMessage());
                 }
             }
         }
 
-        private readonly PairingDeviceInfo pairingInfo;
+        private async Task RefreshValues(IEnumerable<AidIidPair> pairs,
+                                                                                                 CancellationToken token)
+        {
+            var data = string.Join(",", pairs.Select(x => Invariant($"{x.Aid}.{x.Iid}")));
+
+            var result = await this.HandleJsonRequest<JObject, CharacteristicsValuesList>(HttpMethod.Get,
+                                                                             null,
+                                                                             CharacteristicsTarget,
+                                                                             "id=" + data,
+                                                                             cancellationToken: token);
+
+            await EnqueueResults(result, token).ConfigureAwait(false);
+        }
+
+        private const string CharacteristicsTarget = "/characteristics";
         private readonly AsyncLock connectionLock = new();
-        private readonly HashSet<Subscription> subscriptionsToDevice = new();
+        private readonly PairingDeviceInfo pairingInfo;
+        private readonly HashSet<AidIidPair> subscriptionsToDevice = new();
         private AsyncProducerConsumerQueue<ChangedEvent>? changedEventQueue;
         private Task? processEventTask;
     }

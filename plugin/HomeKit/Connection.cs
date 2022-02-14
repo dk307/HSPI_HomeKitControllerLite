@@ -103,8 +103,9 @@ namespace HomeKit
         }
 
         protected async Task<R?> HandleJsonRequest<T, R>(HttpMethod httpMethod,
-                                          T? value,
+                          T? value,
                           string target,
+                          string query,
                           string contentType = JsonContentType,
                           CancellationToken cancellationToken = default) where R : class
         {
@@ -119,7 +120,7 @@ namespace HomeKit
                 bytesContent = Encoding.UTF8.GetBytes(content);
             }
 
-            var response = await Request(httpMethod, target,
+            var response = await Request(httpMethod, target, query,
                                          bytesContent, contentType, cancellationToken).ConfigureAwait(false);
 
             if (response.StatusCode == HttpStatusCode.NoContent)
@@ -169,12 +170,13 @@ namespace HomeKit
 
         internal async Task<IEnumerable<TlvValue>> PostTlv(IEnumerable<TlvValue> tlvList,
                                   string target,
+                                  string query,
                                   string contentType = TlvContentType,
                                   CancellationToken cancellationToken = default)
         {
             var content = Tlv8.Encode(tlvList);
 
-            var response = await Request(HttpMethod.Post, target,
+            var response = await Request(HttpMethod.Post, target, query,
                           content, contentType, cancellationToken).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
@@ -197,6 +199,7 @@ namespace HomeKit
 
         protected async Task<HttpResponseMessage> Request(HttpMethod httpMethod,
                                   string target,
+                                  string query,
                                   byte[]? content = null,
                                   string? contentType = null,
                                   CancellationToken token = default)
@@ -205,6 +208,7 @@ namespace HomeKit
             {
                 Port = Address.Port,
                 Path = target,
+                Query = query,
                 Host = Address.Address.ToString()
             };
 
