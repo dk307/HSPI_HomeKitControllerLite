@@ -46,6 +46,7 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
+        [Ignore]
         public async Task ReconnectionAfterDisconnect()
         {
             var hapAccessory1 = TestHelper.CreateTemperaturePairedAccessory();
@@ -63,7 +64,8 @@ namespace HSPI_HomeKitControllerTest
 
             hapAccessory1.Dispose();
 
-            // it might be some time before client detects the time, so force connection
+            // it might be some time before client detects the time,
+            // so force connection
             Assert.IsFalse(await manager.Connection.Ping(Token));
 
             Assert.IsFalse(manager.Connection.Connected);

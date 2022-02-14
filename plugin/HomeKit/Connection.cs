@@ -74,7 +74,9 @@ namespace HomeKit
 
             if (this.enableDevicePolling)
             {
-                SetSocketKeepAlive(TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+                var keepAliveTime = TimeSpan.FromSeconds(30);
+                var keepAliveInterval = TimeSpan.FromSeconds(30);
+                SetSocketKeepAlive(keepAliveTime, keepAliveInterval);
             }
 
             Log.Information("Connected to {EndPoint}", Address);

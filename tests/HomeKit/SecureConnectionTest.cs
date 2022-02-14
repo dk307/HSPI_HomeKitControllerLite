@@ -64,7 +64,8 @@ namespace HSPI_HomeKitControllerTest
 
             hapAccessory.Dispose();
 
-            // it might be some time before client detects the time, so force connection
+            // it might be some time before client detects the time,
+            // so force connection write
             Assert.IsFalse(await connection.Ping(Token));
 
             Assert.IsFalse(connection.Connected);
