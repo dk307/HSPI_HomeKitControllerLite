@@ -191,7 +191,7 @@ namespace HSPI_HomeKitControllerTest
                          int maxResponseChunkSize)
         {
             var headerBytes = Encoding.UTF8.GetBytes(serverData);
-            MemoryStream stream = new MemoryStream();
+            MemoryStream stream = new();
             stream.Write(headerBytes, 0, headerBytes.Length);
             stream.Write(bodyBytes, 0, bodyBytes.Length);
 
@@ -224,7 +224,7 @@ namespace HSPI_HomeKitControllerTest
         }
 
 
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource cancellationTokenSource = new();
     }
 
 }

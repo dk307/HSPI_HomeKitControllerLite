@@ -9,7 +9,6 @@ namespace System.Net.Http
     internal static class HttpRequestMessageExtensions
     {
         [Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "<Pending>")]
-        [Diagnostics.CodeAnalysis.SuppressMessage("Major Bug", "S2259:Null pointers should not be dereferenced", Justification = "<Pending>")]
         public static bool HasHeaders(this HttpRequestMessage request)
         {
             // Note: The field name is _headers in .NET core

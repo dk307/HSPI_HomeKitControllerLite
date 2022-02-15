@@ -12,6 +12,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace HomeKit.Http
 {
 
@@ -275,9 +277,6 @@ namespace HomeKit.Http
                                                   ulong length,
                                                   CancellationToken cancellationToken)
         {
-            Debug.Assert(destination != null);
-            Debug.Assert(length > 0);
-
             int remaining = ReadLength - readOffset;
             if (remaining > 0)
             {
@@ -616,7 +615,7 @@ namespace HomeKit.Http
 
             private CancellationToken cancellationToken;
             private bool consumedStream;
-            private Stream stream;
+            private Stream? stream;
         }
 
         private static readonly byte[] Event10Bytes = Encoding.ASCII.GetBytes("EVENT/1.0");
@@ -628,6 +627,6 @@ namespace HomeKit.Http
         private readonly INetworkReadStream stream;
         private readonly AsyncProducerConsumerQueue<HttpResponseMessage> eventQueue;
         private int readOffset = 0;
-        private volatile IReadTransform readTransform;
+        private volatile IReadTransform? readTransform;
     }
 }

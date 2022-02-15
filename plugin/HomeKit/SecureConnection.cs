@@ -186,25 +186,19 @@ namespace HomeKit
                                                      "/characteristics", string.Empty,
                                                      cancellationToken: token).ConfigureAwait(false);
 
-            if (result != null)
+            if (result != null && result["characteristics"] is JArray characteristics)
             {
-                // some failed
-                var characteristics = result["characteristics"] as JArray;
-
-                if (characteristics != null)
+                foreach (JToken row in characteristics)
                 {
-                    foreach (JToken row in characteristics)
-                    {
-                        var aid = (ulong?)row["aid"];
-                        var iid = (ulong?)row["iid"];
-                        var status = (string?)row["status"];
+                    var aid = (ulong?)row["aid"];
+                    var iid = (ulong?)row["iid"];
+                    var status = (string?)row["status"];
 
-                        Log.Warning("AidIidPair to aid:{aid} iid:{iid} failed with {status} for {Name}",
-                                        aid, iid, status, DisplayName);
-                        if (aid != null && iid != null)
-                        {
-                            doneSubscriptions.Remove(new AidIidPair(aid.Value, iid.Value));
-                        }
+                    Log.Warning("AidIidPair to aid:{aid} iid:{iid} failed with {status} for {Name}",
+                                    aid, iid, status, DisplayName);
+                    if (aid != null && iid != null)
+                    {
+                        doneSubscriptions.Remove(new AidIidPair(aid.Value, iid.Value));
                     }
                 }
             }
@@ -272,8 +266,14 @@ namespace HomeKit
                                                                              CharacteristicsTarget,
                                                                              "id=" + data,
                                                                              cancellationToken: token);
-
-            await EnqueueResults(result, token).ConfigureAwait(false);
+            if (result != null)
+            {
+                await EnqueueResults(result, token).ConfigureAwait(false);
+            }
+            else
+            {
+                Log.Warning("Failed to refresh values {values} for {name}", data, DisplayName);
+            }
         }
 
         private const string CharacteristicsTarget = "/characteristics";
