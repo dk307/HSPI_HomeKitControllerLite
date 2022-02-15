@@ -68,10 +68,25 @@
     <Compile Include="..\plugin\shared\tests\ExceptionHelperTest.cs">
       <Link>shared\ExceptionHelperTest.cs</Link>
     </Compile>
+    <Compile Include="HapAccessory.cs" />
+    <Compile Include="HomeKit\Http\ByteBufferWithIndexTest.cs" />
+    <Compile Include="HomeKit\Http\HttpResponseParserTest.cs" />
+    <Compile Include="HomeKit\Http\MockNetworkReadStream.cs" />
+    <Compile Include="HomeKit\SecureConnectionManagerTest.cs" />
+    <Compile Include="HomeKit\SecureConnectionTest.cs" />
+    <Compile Include="HomeKit\Srp\SrpIntegerTests.cs" />
+    <Compile Include="HomeKit\PairingTest.cs" />
+    <Compile Include="Initialize.cs" />
+    <Compile Include="Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
     <Compile Include="ShippedDllsTest.cs" />
     <Compile Include="TestHelper.cs" />
-    <Compile Include="PluginTest.cs" />
+    <Compile Include="Hspi\PluginTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="HomeKit\TLV8Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -190,6 +205,29 @@
       <Project>{6afed710-7bb6-40e3-b4cd-4642da950411}</Project>
       <Name>HSPI_HomeKitController</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="scripts\temperaturesensor_accessory.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\temperaturesensor_controller.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\temperature_sensor_paried_changing.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\temperature_sensor_paried.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\temperature_sensor_unparied.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
