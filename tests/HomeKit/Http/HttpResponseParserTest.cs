@@ -102,6 +102,20 @@ namespace HSPI_HomeKitControllerTest
             await TestResponse(data, Array.Empty<byte>(), expected);
         }
 
+        [TestMethod]
+        public async Task WrongHttpVersionResponse()
+        {
+            string data = "HTTP/1.0 204 No content\r\n\r\n";
+
+            var expected = new HttpResponseMessage()
+            {
+                Version = HttpVersion.Version11,
+                StatusCode = HttpStatusCode.NoContent,
+            };
+
+            await Assert.ThrowsExceptionAsync<HttpRequestException>(() => TestResponse(data, Array.Empty<byte>(), expected));
+        }
+
         [DataTestMethod]
         [DataRow("HTTP/1.1 200 OK\r\nContent-Type: application/hap+json\r\nTransfer-Encoding: chunked\r\n\r\n",
                  "5f\r\n{\"characteristics\":[{\"aid\":1,\"iid\":10,\"value\":35}," +
@@ -168,8 +182,13 @@ namespace HSPI_HomeKitControllerTest
                 waitForResult.Set();
             });
 
-            _ = parser.ReadAndParse(cancellationTokenSource.Token);
-            await waitForResult.WaitAsync(cancellationTokenSource.Token);
+            var readTask = parser.ReadAndParse(cancellationTokenSource.Token);
+            var waitTask = waitForResult.WaitAsync(cancellationTokenSource.Token);
+
+            var finishedTask = await Task.WhenAny(readTask, waitTask).ConfigureAwait(false);
+
+            await finishedTask.ConfigureAwait(false);
+            await waitTask.ConfigureAwait(false);
 
             return httpResponseMessage;
         }

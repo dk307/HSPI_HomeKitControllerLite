@@ -17,6 +17,8 @@ namespace HomeKit.Http
             this.underlyingStream = underlyingStream;
         }
 
+        private const int CalltimeoutMilliseconds = 30 * 1000;
+
         public async Task<HttpResponseMessage> Request(HttpRequestMessage request,
                                                        CancellationToken token)
         {
@@ -48,22 +50,35 @@ namespace HomeKit.Http
 
             // Create timer task
             CancellationTokenSource timerToken = new();
-            timerToken.CancelAfter(30 * 1000);
+            timerToken.CancelAfter(CalltimeoutMilliseconds);
 
             var cancellationTokenSource =
                     CancellationTokenSource.CreateLinkedTokenSource(timerToken.Token, token);
 
-            await waitForResult.WaitAsync(cancellationTokenSource.Token).ConfigureAwait(false);
+            var waitTask = waitForResult.WaitAsync(cancellationTokenSource.Token);
+
+            var finishedTask = Task.WhenAny(waitTask, readAndParseTask);
+
+            // this allow to throw error if parsing fails.
+            await finishedTask.ConfigureAwait(false);
+
+            if (response == null)
+            {
+                throw new InvalidDataException("http response unexpected null");
+            }
 
             response.RequestMessage = request;
             return response;
         }
 
+        private Task readAndParseTask;
+
         public async Task StartListening(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             token.Register(() => underlyingStream.Dispose());
-            await httpResponseParser.ReadAndParse(token).ConfigureAwait(false);
+            readAndParseTask = httpResponseParser.ReadAndParse(token);
+            await readAndParseTask.ConfigureAwait(false);
         }
 
         public void UpdateTransforms(IReadTransform readTransform,
