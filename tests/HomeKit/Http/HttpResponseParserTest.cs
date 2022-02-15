@@ -21,6 +21,25 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
+        public async Task EventBeforeContent()
+        {
+            string data = "EVENT/1.0 200 OK\r\nContent-Type: application/hap+json\r\nTransfer-Encoding: chunked\r\n\r\n" +
+                          "5f\r\n{\"characteristics\":[{\"aid\":1,\"iid\":10,\"value\":35}," +
+                          "{\"aid\":1,\"iid\":13,\"value\":36.0999984741211}]}\r\n" +
+                          "0\r\n\r\n" +
+                          "HTTP/1.1 204 No content\r\n\r\n";
+
+            var expected = new HttpResponseMessage()
+            {
+                Version = HttpVersion.Version11,
+                StatusCode = HttpStatusCode.NoContent,
+            };
+
+            var queue = await TestResponse(data, Array.Empty<byte>(), expected);
+            await queue.DequeueAsync(CancellationToken.None);
+        }
+
+        [TestMethod]
         public async Task InternalServerErrorWithStatusBody()
         {
             string data = "HTTP/1.1 500 Internal Server Error\r\n" +
@@ -163,9 +182,9 @@ namespace HSPI_HomeKitControllerTest
             await TestResponse(serverData, bodyBytes, expected);
         }
 
-        private async Task TestResponse(string serverData,
-                                        byte[] bodyBytes,
-                                        HttpResponseMessage expected)
+        private async Task<AsyncProducerConsumerQueue<HttpResponseMessage>>
+            TestResponse(string serverData, byte[] bodyBytes,
+                         HttpResponseMessage expected)
         {
             var headerBytes = Encoding.UTF8.GetBytes(serverData);
             MemoryStream stream = new MemoryStream();
@@ -179,6 +198,7 @@ namespace HSPI_HomeKitControllerTest
 
             await CheckResponseSame(expected, httpResponseMessage);
             cancellationTokenSource.Cancel();
+            return eventQueue;
         }
 
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
