@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,7 +40,7 @@ namespace HomeKit.Http
             return data;
         }
 
-        public async ValueTask ReadFromStream(Stream stream, int count,
+        public async ValueTask ReadFromStream(INetworkReadStream stream, int count,
                                          CancellationToken cancellationToken)
         {
             if (buffer.Length < (index + count))
@@ -52,7 +51,7 @@ namespace HomeKit.Http
             await ReadFromStream(stream, cancellationToken).ConfigureAwait(false);
         }
 
-        public async ValueTask ReadFromStream(Stream stream, CancellationToken cancellationToken)
+        public async ValueTask ReadFromStream(INetworkReadStream stream, CancellationToken cancellationToken)
         {
             index += await stream.ReadAsync(buffer,
                                             index,

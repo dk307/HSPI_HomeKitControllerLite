@@ -71,6 +71,7 @@
     <Compile Include="HapAccessory.cs" />
     <Compile Include="HomeKit\Http\ByteBufferWithIndexTest.cs" />
     <Compile Include="HomeKit\Http\HttpResponseParserTest.cs" />
+    <Compile Include="HomeKit\Http\MockNetworkReadStream.cs" />
     <Compile Include="HomeKit\SecureConnectionManagerTest.cs" />
     <Compile Include="HomeKit\SecureConnectionTest.cs" />
     <Compile Include="HomeKit\Srp\SrpIntegerTests.cs" />

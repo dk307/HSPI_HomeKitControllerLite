@@ -14,9 +14,15 @@ using System.Threading.Tasks;
 
 namespace HomeKit.Http
 {
+
+    interface INetworkReadStream
+    {
+        Task<int> ReadAsync(byte[] buffer, int index, int v, CancellationToken cancellationToken);
+    }
+
     internal sealed class HttpResponseParser
     {
-        public HttpResponseParser(Stream stream,
+        public HttpResponseParser(INetworkReadStream stream,
                                   AsyncProducerConsumerQueue<HttpResponseMessage> eventQueue)
         {
             this.stream = stream;
@@ -619,7 +625,7 @@ namespace HomeKit.Http
         private readonly int InitialReadBufferSize = 4096;
         private readonly ByteBufferWithIndex rawReadBuffer;
         private readonly ByteBufferWithIndex readBuffer;
-        private readonly Stream stream;
+        private readonly INetworkReadStream stream;
         private readonly AsyncProducerConsumerQueue<HttpResponseMessage> eventQueue;
         private int readOffset = 0;
         private volatile IReadTransform readTransform;

@@ -20,8 +20,10 @@ namespace HSPI_HomeKitControllerTest
             cancellationTokenSource.CancelAfter(30 * 1000);
         }
 
-        [TestMethod]
-        public async Task EventBeforeContent()
+        [DataTestMethod]
+        [DataRow(10)]
+        [DataRow(4096)]
+        public async Task EventBeforeContent(int maxResponseChunkSize)
         {
             string data = "EVENT/1.0 200 OK\r\nContent-Type: application/hap+json\r\nTransfer-Encoding: chunked\r\n\r\n" +
                           "5f\r\n{\"characteristics\":[{\"aid\":1,\"iid\":10,\"value\":35}," +
@@ -35,7 +37,7 @@ namespace HSPI_HomeKitControllerTest
                 StatusCode = HttpStatusCode.NoContent,
             };
 
-            var queue = await TestResponse(data, Array.Empty<byte>(), expected);
+            var queue = await TestResponse(data, Array.Empty<byte>(), expected, maxResponseChunkSize);
             await queue.DequeueAsync(CancellationToken.None);
         }
 
@@ -58,11 +60,13 @@ namespace HSPI_HomeKitControllerTest
             expected.Content.Headers.ContentLength = 17;
             expected.Content.Headers.ContentType = new MediaTypeHeaderValue("application/hap+json");
 
-            await TestResponse(data, body, expected);
+            await TestResponse(data, body, expected, int.MaxValue);
         }
 
-        [TestMethod]
-        public async Task JsonData()
+        [DataTestMethod]
+        [DataRow(10)]
+        [DataRow(4096)]
+        public async Task JsonData(int maxResponseChunkSize)
         {
             string data = "HTTP/1.1 200 OK\r\n" +
                           "Content-Type: application/hap+json\r\n" +
@@ -85,7 +89,7 @@ namespace HSPI_HomeKitControllerTest
             expected.Content.Headers.ContentLength = 95;
             expected.Content.Headers.ContentType = new MediaTypeHeaderValue("application/hap+json");
 
-            await TestResponse(data, body, expected);
+            await TestResponse(data, body, expected, maxResponseChunkSize);
         }
 
         [TestMethod]
@@ -99,7 +103,7 @@ namespace HSPI_HomeKitControllerTest
                 StatusCode = HttpStatusCode.NoContent,
             };
 
-            await TestResponse(data, Array.Empty<byte>(), expected);
+            await TestResponse(data, Array.Empty<byte>(), expected, int.MaxValue);
         }
 
         [TestMethod]
@@ -113,7 +117,7 @@ namespace HSPI_HomeKitControllerTest
                 StatusCode = HttpStatusCode.NoContent,
             };
 
-            await Assert.ThrowsExceptionAsync<HttpRequestException>(() => TestResponse(data, Array.Empty<byte>(), expected));
+            await Assert.ThrowsExceptionAsync<HttpRequestException>(() => TestResponse(data, Array.Empty<byte>(), expected, int.MaxValue));
         }
 
         [DataTestMethod]
@@ -122,6 +126,7 @@ namespace HSPI_HomeKitControllerTest
                            "{\"aid\":1,\"iid\":13,\"value\":36.0999984741211}]}\r\n" +
                            "0\r\n\r\n",
                 "{\"characteristics\":[{\"aid\":1,\"iid\":10,\"value\":35},{\"aid\":1,\"iid\":13,\"value\":36.0999984741211}]}",
+                 int.MaxValue,
                 DisplayName = "Single chuncked body")]
         [DataRow("HTTP/1.1 200 OK\r\nContent-Type: application/hap+json\r\nTransfer-Encoding: chunked\r\n\r\n",
                  "2\r\n{\"\r\n" +
@@ -130,8 +135,9 @@ namespace HSPI_HomeKitControllerTest
                            "{\"aid\":1,\"iid\":13,\"value\":36.0999984741211}]}\r\n" +
                            "0\r\n\r\n",
                 "{\"characteristics\":[{\"aid\":1,\"iid\":10,\"value\":35},{\"aid\":1,\"iid\":13,\"value\":36.0999984741211}]}",
+                10,
                 DisplayName = "Multiple chuncked body")]
-        public async Task TestChunkedResponse(string data, string body, string expectedBody)
+        public async Task TestChunkedResponse(string data, string body, string expectedBody, int maxResponseChunkSize)
         {
             var expected = new HttpResponseMessage()
             {
@@ -144,7 +150,7 @@ namespace HSPI_HomeKitControllerTest
             expected.Content.Headers.ContentLength = null;
             expected.Content.Headers.ContentType = new MediaTypeHeaderValue("application/hap+json");
 
-            await TestResponse(data, body, expected);
+            await TestResponse(data, body, expected, maxResponseChunkSize);
         }
 
         private static async Task CheckResponseSame(HttpResponseMessage expected,
@@ -169,11 +175,33 @@ namespace HSPI_HomeKitControllerTest
             }
         }
 
-        private async Task<HttpResponseMessage> ReadAndParseResponse(MemoryStream stream,
-                                        AsyncProducerConsumerQueue<HttpResponseMessage> eventQueue)
+        private async Task TestResponse(string serverData,
+                                        string body,
+                                        HttpResponseMessage expected,
+                                        int maxResponseChunkSize)
         {
+            var bodyBytes = Encoding.UTF8.GetBytes(body);
+            await TestResponse(serverData, bodyBytes, expected, maxResponseChunkSize);
+        }
+
+        private async Task<AsyncProducerConsumerQueue<HttpResponseMessage>>
+            TestResponse(string serverData, 
+                         byte[] bodyBytes, 
+                         HttpResponseMessage expected,
+                         int maxResponseChunkSize)
+        {
+            var headerBytes = Encoding.UTF8.GetBytes(serverData);
+            MemoryStream stream = new MemoryStream();
+            stream.Write(headerBytes, 0, headerBytes.Length);
+            stream.Write(bodyBytes, 0, bodyBytes.Length);
+
+            stream.Position = 0;
+
+            var eventQueue = new AsyncProducerConsumerQueue<HttpResponseMessage>();
             HttpResponseMessage httpResponseMessage = null;
-            var parser = new HttpResponseParser(stream, eventQueue);
+
+            MockNetworkReadStream readStream = new(stream, maxResponseChunkSize);
+            var parser = new HttpResponseParser(readStream, eventQueue);
 
             var waitForResult = new AsyncManualResetEvent();
             parser.AddHttpResponseCallback((result) =>
@@ -190,36 +218,13 @@ namespace HSPI_HomeKitControllerTest
             await finishedTask.ConfigureAwait(false);
             await waitTask.ConfigureAwait(false);
 
-            return httpResponseMessage;
-        }
-
-        private async Task TestResponse(string serverData,
-                                        string body,
-                                        HttpResponseMessage expected)
-        {
-            var bodyBytes = Encoding.UTF8.GetBytes(body);
-            await TestResponse(serverData, bodyBytes, expected);
-        }
-
-        private async Task<AsyncProducerConsumerQueue<HttpResponseMessage>>
-            TestResponse(string serverData, byte[] bodyBytes,
-                         HttpResponseMessage expected)
-        {
-            var headerBytes = Encoding.UTF8.GetBytes(serverData);
-            MemoryStream stream = new MemoryStream();
-            stream.Write(headerBytes, 0, headerBytes.Length);
-            stream.Write(bodyBytes, 0, bodyBytes.Length);
-
-            stream.Position = 0;
-
-            var eventQueue = new AsyncProducerConsumerQueue<HttpResponseMessage>();
-            var httpResponseMessage = await ReadAndParseResponse(stream, eventQueue);
-
             await CheckResponseSame(expected, httpResponseMessage);
             cancellationTokenSource.Cancel();
             return eventQueue;
         }
 
+
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
     }
+
 }

@@ -51,7 +51,7 @@ namespace HSPI_HomeKitControllerTest
             var data = new ByteBufferWithIndex(5);
 
             var stream = new MemoryStream(new byte[10]);
-            await data.ReadFromStream(stream, 10, CancellationToken.None);
+            await data.ReadFromStream(new MockNetworkReadStream(stream), 10, CancellationToken.None);
             Assert.AreEqual(10, data.Length);
         }
     }

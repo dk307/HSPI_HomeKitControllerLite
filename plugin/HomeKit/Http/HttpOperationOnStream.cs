@@ -13,11 +13,9 @@ namespace HomeKit.Http
         public HttpOperationOnStream(Stream underlyingStream,
                                      AsyncProducerConsumerQueue<HttpResponseMessage> eventQueue)
         {
-            this.httpResponseParser = new HttpResponseParser(underlyingStream, eventQueue);
+            this.httpResponseParser = new HttpResponseParser(new NetworkReadStream(underlyingStream), eventQueue);
             this.underlyingStream = underlyingStream;
         }
-
-        private const int CalltimeoutMilliseconds = 30 * 1000;
 
         public async Task<HttpResponseMessage> Request(HttpRequestMessage request,
                                                        CancellationToken token)
@@ -71,8 +69,6 @@ namespace HomeKit.Http
             return response;
         }
 
-        private Task readAndParseTask;
-
         public async Task StartListening(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
@@ -88,9 +84,26 @@ namespace HomeKit.Http
             httpResponseParser.SetDataTransform(readTransform);
         }
 
-        private readonly AsyncLock requestLock = new();
+        private sealed class NetworkReadStream : INetworkReadStream
+        {
+            private readonly Stream stream;
+
+            public NetworkReadStream(Stream stream)
+            {
+                this.stream = stream;
+            }
+
+            public async Task<int> ReadAsync(byte[] buffer, int index, int v, CancellationToken cancellationToken)
+            {
+                return await stream.ReadAsync(buffer, index, v, cancellationToken);
+            }
+        }
+
+        private const int CalltimeoutMilliseconds = 30 * 1000;
         private readonly HttpResponseParser httpResponseParser;
+        private readonly AsyncLock requestLock = new();
         private readonly Stream underlyingStream;
+        private Task? readAndParseTask;
         private volatile IWriteTransform? writeTransform;
     }
 }
