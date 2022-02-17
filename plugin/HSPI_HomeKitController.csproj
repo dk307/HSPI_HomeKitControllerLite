@@ -184,6 +184,7 @@
     <Compile Include="HomeKit\Utils\IPEndPointJsonConverter.cs" />
     <Compile Include="HomeKit\Utils\ServiceListConverter.cs" />
     <Compile Include="HomeKit\Utils\ServiceTypeJsonConverter.cs" />
+    <Compile Include="Hspi\AddDeviceHandler.cs" />
     <Compile Include="Hspi\HSPI.cs" />
     <Compile Include="Hspi\PlugIn.cs" />
     <Compile Include="Hspi\PlugInData.cs" />

@@ -54,6 +54,8 @@ namespace HSPI_HomeKitControllerTest
                                                      "123-45-687",
                                                      cancellationTokenSource.Token));
         }
+
+
         private async Task<DiscoveredDevice> DiscoverAndVerify(int port)
         {
             IList<DiscoveredDevice> discoveredDevices = null;

@@ -27,6 +27,9 @@ namespace Hspi
             {
                 Log.Information("Plugin Starting");
 
+                // Device Add Page
+                HomeSeerSystem.RegisterDeviceIncPage(PlugInData.PlugInId, "AddDevice.html", "Pair HomeKit Device");
+
                 Log.Information("Plugin Started");
             }
             catch (Exception ex)
@@ -40,6 +43,16 @@ namespace Hspi
         {
             Log.Information("Shutting down");
             base.OnShutdown();
+        }
+
+        public override string PostBackProc(string page, string data, string user, int userRights)
+        {
+            Log.Debug("PostBackProc for {page} with {data}", page, data);
+            return page switch
+            {
+                AddDeviceHandler.PageName => AddDeviceHandler.PostBackProc(data, ShutdownCancellationToken),
+                _ => base.PostBackProc(page, data, user, userRights),
+            };
         }
     }
 }
