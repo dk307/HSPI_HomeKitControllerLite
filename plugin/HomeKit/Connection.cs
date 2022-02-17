@@ -28,7 +28,7 @@ namespace HomeKit
             this.enableDevicePolling = enableDevicePolling;
         }
 
-        public IPEndPoint Address => homeKitDeviceInformation.Address;
+        public IPEndPoint? Address { get; private set; }
 
         public virtual bool Connected
         {
@@ -63,6 +63,18 @@ namespace HomeKit
 
         public virtual async Task<Task> ConnectAndListen(CancellationToken token)
         {
+            var discoveredInfo = await HomeKitDiscover.DiscoverDeviceById(
+                                              homeKitDeviceInformation.Id,
+                                              TimeSpan.FromSeconds(10),
+                                              token);
+
+            if (discoveredInfo == null)
+            {
+                Log.Warning("Did find {name} on the network. Using default address.", DisplayName);
+            }
+
+            Address = discoveredInfo?.Address ?? homeKitDeviceInformation.Address;
+
             client = new TcpClient()
             {
                 NoDelay = true,

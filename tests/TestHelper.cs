@@ -27,15 +27,12 @@ namespace HSPI_HomeKitControllerTest
         public static HapAccessory CreateTemperaturePairedAccessory(
                     string script = "temperature_sensor_paried.py")
         {
-            int port = 50001;
-            string address = "0.0.0.0";
             string fileName = Path.Combine("scripts", "temperaturesensor_accessory.txt");
             string fileName2 = Path.Combine("scripts", "temperaturesensor_accessory2.txt");
 
             File.Copy(fileName, fileName2, true);
 
-            string args = $"{port} {address} {fileName2}";
-            var hapAccessory = new HapAccessory(script, args);
+            var hapAccessory = new HapAccessory(script, fileName2);
             return hapAccessory;
         }
 
@@ -47,6 +44,7 @@ namespace HSPI_HomeKitControllerTest
             var pairingInfo = JsonConvert.DeserializeObject<PairingDeviceInfo>(controllerFileData);
             return pairingInfo;
         }
+
         public static Mock<IHsController> SetupHsControllerAndSettings(Mock<PlugIn> mockPlugin,
 
                                                          Dictionary<string, string> settingsFromIni)
