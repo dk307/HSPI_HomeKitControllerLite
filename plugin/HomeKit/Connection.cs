@@ -71,7 +71,8 @@ namespace HomeKit
 
             if (discoveredInfo == null)
             {
-                Log.Warning("Did find {name} on the network. Using default address.", DisplayName);
+                Log.Warning("Did find {name} on the network. Using default address:{address}.", 
+                             DisplayName, fallbackAddress);
             }
 
             Address = discoveredInfo?.Address ?? fallbackAddress;

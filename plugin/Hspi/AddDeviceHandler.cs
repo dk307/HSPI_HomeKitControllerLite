@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Hspi
 {
     internal static class AddDeviceHandler

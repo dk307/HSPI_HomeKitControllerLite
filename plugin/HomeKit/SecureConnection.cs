@@ -18,10 +18,7 @@ using static System.FormattableString;
 
 namespace HomeKit
 {
-    internal abstract record ChangedEvent();
-
-    internal sealed record DeviceConnectionChangedEvent(bool Connected) : ChangedEvent;
-    internal sealed record AccessoryValueChangedEvent(ulong Aid, ulong Iid, object? Value) : ChangedEvent;
+    internal sealed record AccessoryValueChangedArgs(ulong Aid, ulong Iid, object? Value);
 
     internal sealed class SecureConnection : Connection
     {
@@ -31,6 +28,9 @@ namespace HomeKit
             this.pairingInfo = pairingInfo;
         }
 
+        public delegate void AccessoryValueChangedHandler(object sender, AccessoryValueChangedArgs e);
+
+        public event AccessoryValueChangedHandler? AccessoryValueChangedEvent;
         public DeviceReportedInfo? DeviceReportedInfo { get; private set; }
 
         public override async Task<Task> ConnectAndListen(IPEndPoint fallbackAddress, CancellationToken token)
@@ -106,12 +106,10 @@ namespace HomeKit
 
         internal record AidIidPair(ulong Aid, ulong Iid);
 
-        public async Task<Task> TrySubscribeAll(AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
-                                            CancellationToken token)
+        public async Task<Task> TrySubscribeAll(CancellationToken token)
         {
             using var _ = await connectionLock.LockAsync(token).ConfigureAwait(false);
             CheckHasDeviceInfo();
-            Interlocked.Exchange(ref this.changedEventQueue, changedEventQueue);
             foreach (var accessory in this.DeviceReportedInfo.Accessories)
             {
                 var neededSubscriptions = accessory.Services.Values.SelectMany(
@@ -216,12 +214,12 @@ namespace HomeKit
             }
         }
 
-        private async Task EnqueueResults(CharacteristicsValuesList result, CancellationToken cancellationToken)
+        private void EnqueueResults(CharacteristicsValuesList result)
         {
             foreach (var value in result.Values)
             {
-                var item = new AccessoryValueChangedEvent(value.Aid, value.Iid, value.Value);
-                await changedEventQueue.EnqueueAsync(item, cancellationToken).ConfigureAwait(false);
+                var item = new AccessoryValueChangedArgs(value.Aid, value.Iid, value.Value);
+                AccessoryValueChangedEvent?.Invoke(this, item);
             }
         }
 
@@ -247,7 +245,7 @@ namespace HomeKit
                 try
                 {
                     var result = JsonConvert.DeserializeObject<CharacteristicsValuesList>(jsonEventMessage);
-                    await EnqueueResults(result, cancellationToken).ConfigureAwait(false);
+                    EnqueueResults(result);
                 }
                 catch (Exception ex)
                 {
@@ -269,7 +267,7 @@ namespace HomeKit
                                                                              cancellationToken: token);
             if (result != null)
             {
-                await EnqueueResults(result, token).ConfigureAwait(false);
+                EnqueueResults(result);
             }
             else
             {
@@ -281,7 +279,6 @@ namespace HomeKit
         private readonly AsyncLock connectionLock = new();
         private readonly PairingDeviceInfo pairingInfo;
         private readonly HashSet<AidIidPair> subscriptionsToDevice = new();
-        private AsyncProducerConsumerQueue<ChangedEvent>? changedEventQueue;
         private Task? processEventTask;
     }
 }

@@ -22,22 +22,19 @@ namespace HSPI_HomeKitControllerTest
             await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
 
             var pairingInfo = TestHelper.GetTemperatureSensorParingInfo();
-            AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue = new();
             var manager = new SecureConnectionManager();
+            AsyncProducerConsumerQueue<DeviceConnectionChangedArgs> changedEventQueue = new();
+            manager.DeviceConnectionChangedEvent += (s, e) => changedEventQueue.Enqueue(e);
             manager.ConnectAndListenDevice(pairingInfo,
                                            new IPEndPoint(IPAddress.Any, 0),
-                                           changedEventQueue,
                                            Token);
 
             //not connected
-            var notConnected = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false)) as DeviceConnectionChangedEvent;
+            var notConnected = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false));
             Assert.IsFalse(notConnected.Connected);
 
-            // Initial value
-            _ = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false));
-
             //connected
-            var connected = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false)) as DeviceConnectionChangedEvent;
+            var connected = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false));
             Assert.IsTrue(connected.Connected);
 
             Assert.IsTrue(manager.Connection.Connected);
@@ -55,16 +52,16 @@ namespace HSPI_HomeKitControllerTest
             var hapAccessory1 = TestHelper.CreateTemperaturePairedAccessory();
             await hapAccessory1.WaitForSuccessStart(Token).ConfigureAwait(false);
 
-            var pairingInfo = TestHelper.GetTemperatureSensorParingInfo();
-            AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue = new();
             var manager = new SecureConnectionManager();
+            AsyncProducerConsumerQueue<DeviceConnectionChangedArgs> changedEventQueue = new();
+            manager.DeviceConnectionChangedEvent += (s, e) => changedEventQueue.Enqueue(e);
+
+            var pairingInfo = TestHelper.GetTemperatureSensorParingInfo();
             manager.ConnectAndListenDevice(pairingInfo,
                                            new IPEndPoint(IPAddress.Any, 0),
-                                           changedEventQueue,
                                            Token);
 
             //Consume initial events
-            _ = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false));
             _ = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false));
             _ = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false));
 
@@ -72,23 +69,20 @@ namespace HSPI_HomeKitControllerTest
 
             Assert.IsFalse(manager.Connection.Connected);
 
-            // it might be some time before client detects the time,
+            // it might be some time before client detects the disconnect,
             // so force connection
             Assert.IsFalse(await manager.Connection.Ping(Token));
+
 
             using var hapAccessory2 = TestHelper.CreateTemperaturePairedAccessory();
             await hapAccessory2.WaitForSuccessStart(Token).ConfigureAwait(false);
 
             //not connected
-            var notConnected = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false)) as DeviceConnectionChangedEvent;
+            var notConnected = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false));
             Assert.IsFalse(notConnected.Connected);
 
-            // Initial value
-            _ = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false));
-            _ = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false));
-
             //connected
-            var connected = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false)) as DeviceConnectionChangedEvent;
+            var connected = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false));
             Assert.IsTrue(connected.Connected);
 
             Assert.IsTrue(manager.Connection.Connected);

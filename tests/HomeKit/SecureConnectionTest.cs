@@ -90,11 +90,12 @@ namespace HSPI_HomeKitControllerTest
             await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
             using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
 
-            AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue = new();
+            AsyncProducerConsumerQueue<AccessoryValueChangedArgs> changedEventQueue = new();
+            connection.AccessoryValueChangedEvent += (s, e) => changedEventQueue.Enqueue(e);
 
-            await connection.TrySubscribeAll(changedEventQueue, Token).ConfigureAwait(false);
+            await connection.TrySubscribeAll(Token).ConfigureAwait(false);
 
-            var data = await changedEventQueue.DequeueAsync(Token) as AccessoryValueChangedEvent;
+            var data = await changedEventQueue.DequeueAsync(Token);
 
             Assert.AreEqual(1UL, data.Aid);
             Assert.AreEqual(9UL, data.Iid);
@@ -108,14 +109,13 @@ namespace HSPI_HomeKitControllerTest
             await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
             using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
 
-            AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue = new();
+            AsyncProducerConsumerQueue<AccessoryValueChangedArgs> changedEventQueue = new();
+            connection.AccessoryValueChangedEvent += (s, e) => changedEventQueue.Enqueue(e);
 
-            await connection.TrySubscribeAll(changedEventQueue, Token).ConfigureAwait(false);
+            await connection.TrySubscribeAll(Token).ConfigureAwait(false);
 
             await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false); //original value
-            var eventC = await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false);
-
-            var data = eventC as AccessoryValueChangedEvent;
+            var data = await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false);
 
             Assert.IsNotNull(data);
             Assert.AreEqual(1UL, data.Aid);

@@ -191,6 +191,7 @@
     <Compile Include="Hspi\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\Hspi\CompilerHelper.cs" />
+    <Compile Include="Shared\Hspi\DeviceData\HSDeviceHelper.cs" />
     <Compile Include="Shared\Hspi\HSPIBase.cs" />
     <Compile Include="Shared\Hspi\Logger2.cs" />
     <Compile Include="Shared\Hspi\Utils\ExceptionHelper.cs" />
