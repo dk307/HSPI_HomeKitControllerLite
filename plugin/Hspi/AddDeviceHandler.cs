@@ -31,6 +31,9 @@ namespace Hspi
 
                     case "pair":
                         return await Pair(requestObject, cancellationToken).ConfigureAwait(false);
+
+                    default:
+                        throw new ArgumentException("Unknown Action");
                 }
             }
             catch (Exception ex)
@@ -38,8 +41,6 @@ namespace Hspi
                 var result = new Result { ErrorMessage = ex.GetFullMessage() };
                 return JsonConvert.SerializeObject(result);
             }
-
-            return string.Empty;
         }
 
         private static async ValueTask<string> Pair(JObject requestObject, CancellationToken cancellationToken)
