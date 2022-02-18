@@ -1,6 +1,7 @@
 ﻿using HomeKit.Model;
 using Nito.AsyncEx;
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,13 +12,14 @@ namespace HomeKit
     internal sealed class SecureConnectionManager
     {
         public void ConnectAndListenDevice(PairingDeviceInfo info,
+                                           IPEndPoint fallbackEndPoint,
                                            AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
                                            CancellationToken token)
         {
             this.displayName = info.DeviceInformation.DisplayName;
             Hspi.Utils.TaskHelper.StartAsyncWithErrorChecking(
                 $"{displayName} connection",
-                () => ConnectionAndListenDeviceImpl(info, changedEventQueue, token),
+                () => ConnectionAndListenDeviceImpl(info, fallbackEndPoint, changedEventQueue, token),
                 token,
                 TimeSpan.FromSeconds(1));
         }
@@ -43,6 +45,7 @@ namespace HomeKit
         }
 
         private async Task ConnectionAndListenDeviceImpl(PairingDeviceInfo info,
+                                                         IPEndPoint fallbackEndPoint,
                                                          AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
                                                          CancellationToken token)
         {
@@ -50,7 +53,7 @@ namespace HomeKit
             {
                 await EnqueueConnectionEvent(changedEventQueue, false).ConfigureAwait(false);
                 SecureConnection secureHomeKitConnection = new(info);
-                var listenTask = await secureHomeKitConnection.ConnectAndListen(token).ConfigureAwait(false);
+                var listenTask = await secureHomeKitConnection.ConnectAndListen(fallbackEndPoint, token).ConfigureAwait(false);
                 Interlocked.Exchange(ref connection, secureHomeKitConnection);
                 var eventProcessTask = await secureHomeKitConnection.TrySubscribeAll(changedEventQueue, token);
 

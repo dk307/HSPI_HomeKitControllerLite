@@ -61,7 +61,8 @@ namespace HomeKit
         protected AsyncProducerConsumerQueue<HttpResponseMessage> EventQueue => eventQueue;
         protected NetworkStream UnderLyingStream => client?.GetStream() ?? throw new InvalidOperationException("Client not connected");
 
-        public virtual async Task<Task> ConnectAndListen(CancellationToken token)
+        public virtual async Task<Task> ConnectAndListen(IPEndPoint fallbackAddress,
+                                                         CancellationToken token)
         {
             var discoveredInfo = await HomeKitDiscover.DiscoverDeviceById(
                                               homeKitDeviceInformation.Id,
@@ -73,7 +74,7 @@ namespace HomeKit
                 Log.Warning("Did find {name} on the network. Using default address.", DisplayName);
             }
 
-            Address = discoveredInfo?.Address ?? homeKitDeviceInformation.Address;
+            Address = discoveredInfo?.Address ?? fallbackAddress;
 
             client = new TcpClient()
             {

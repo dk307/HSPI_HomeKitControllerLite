@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,11 +33,11 @@ namespace HomeKit
 
         public DeviceReportedInfo? DeviceReportedInfo { get; private set; }
 
-        public override async Task<Task> ConnectAndListen(CancellationToken token)
+        public override async Task<Task> ConnectAndListen(IPEndPoint fallbackAddress, CancellationToken token)
         {
             using var _ = await connectionLock.LockAsync(token).ConfigureAwait(false);
 
-            var listenTask = await base.ConnectAndListen(token).ConfigureAwait(false);
+            var listenTask = await base.ConnectAndListen(fallbackAddress, token).ConfigureAwait(false);
             try
             {
                 var pairing = new Pairing(this);

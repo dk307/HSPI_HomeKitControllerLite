@@ -14,13 +14,14 @@ namespace HomeKit
         {
         }
 
-        public static async Task<PairingDeviceInfo> StartNewPairing(Device deviceInformation,
+        public static async Task<PairingDeviceInfo> StartNewPairing(DiscoveredDevice deviceInformation,
                                                                     string pin,
                                                                     CancellationToken cancellationToken)
         {
             using var connection = new InsecureConnection(deviceInformation);
             var pairing = new Pairing(connection);
-            var taskListen = await connection.ConnectAndListen(cancellationToken).ConfigureAwait(false);
+            var taskListen = await connection.ConnectAndListen(deviceInformation.Address, 
+                                                               cancellationToken).ConfigureAwait(false);
             var taskPairing = pairing.StartNewPairing(pin, cancellationToken);
 
             var completedTask = await Task.WhenAny(taskListen, taskPairing).ConfigureAwait(false);

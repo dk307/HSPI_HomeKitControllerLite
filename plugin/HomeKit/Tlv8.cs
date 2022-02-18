@@ -30,13 +30,13 @@ namespace HomeKit
 
     internal enum TlvErrorCode
     {
-        UNKNOWN = 0x01,
-        AUTHENTICATION = 0x02, // setup code or signature verification failed
-        BACKOFF = 0x03, // // client must look at retry delay tlv item
-        MAX_PEERS = 0x04, // server cannot accept any more pairings
-        MAX_TRIES = 0x05, // server reached maximum number of authentication attempts
-        UNAVAILABLE = 0x06, // server pairing method is unavailable
-        BUSY = 0x07 // cannot accept pairing request at this time
+        Unknown = 0x01,
+        Authentication = 0x02, // setup code or signature verification failed
+        Backoff = 0x03, // // client must look at retry delay tlv item
+        MaximumPeers = 0x04, // server cannot accept any more pairings
+        MaximumRetries = 0x05, // server reached maximum number of authentication attempts
+        Unavailable = 0x06, // server pairing method is unavailable
+        Busy = 0x07 // cannot accept pairing request at this time
     }
 
     public sealed record TlvValue

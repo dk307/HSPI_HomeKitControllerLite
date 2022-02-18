@@ -26,7 +26,7 @@ namespace HomeKit
             {
                 if (IsValidHomeKitDevice(host) && device == null)
                 {
-                    var deviceFound = new DiscoveredDevice(host);
+                    var deviceFound = DiscoveredDevice.FromZeroConfigHost(host);
                     if (deviceFound.Id == id)
                     {
                         device = deviceFound;
@@ -57,7 +57,7 @@ namespace HomeKit
                                                               cancellationToken: cancellationToken).ConfigureAwait(false);
 
             var homekitDevices = devices.SkipWhile(x => !IsValidHomeKitDevice(x))
-                                        .Select(x => new DiscoveredDevice(x));
+                                        .Select(x => DiscoveredDevice.FromZeroConfigHost(x));
 
             // devices can show up multiple times
             var consolidatedHomekitDevices = new List<DiscoveredDevice>();

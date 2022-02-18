@@ -1,6 +1,7 @@
 ﻿using HomeKit;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nito.AsyncEx;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +24,10 @@ namespace HSPI_HomeKitControllerTest
             var pairingInfo = TestHelper.GetTemperatureSensorParingInfo();
             AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue = new();
             var manager = new SecureConnectionManager();
-            manager.ConnectAndListenDevice(pairingInfo, changedEventQueue, Token);
+            manager.ConnectAndListenDevice(pairingInfo,
+                                           new IPEndPoint(IPAddress.Any, 0),
+                                           changedEventQueue,
+                                           Token);
 
             //not connected
             var notConnected = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false)) as DeviceConnectionChangedEvent;
@@ -54,7 +58,10 @@ namespace HSPI_HomeKitControllerTest
             var pairingInfo = TestHelper.GetTemperatureSensorParingInfo();
             AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue = new();
             var manager = new SecureConnectionManager();
-            manager.ConnectAndListenDevice(pairingInfo, changedEventQueue, Token);
+            manager.ConnectAndListenDevice(pairingInfo,
+                                           new IPEndPoint(IPAddress.Any, 0),
+                                           changedEventQueue,
+                                           Token);
 
             //Consume initial events
             _ = (await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false));

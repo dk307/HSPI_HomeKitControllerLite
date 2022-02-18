@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Nito.AsyncEx;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -128,7 +129,7 @@ namespace HSPI_HomeKitControllerTest
             var pairingInfo = TestHelper.GetTemperatureSensorParingInfo();
             var connection = new SecureConnection(pairingInfo);
 
-            await connection.ConnectAndListen(token).ConfigureAwait(false);
+            await connection.ConnectAndListen(new IPEndPoint(IPAddress.Any, 0), token).ConfigureAwait(false);
             Assert.IsTrue(connection.Connected);
             return connection;
         }
