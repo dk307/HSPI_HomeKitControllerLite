@@ -20,7 +20,6 @@ namespace System.Net.Http
             { HttpMethod.Trace, HttpMethod.Trace }
         };
 
-        [Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "<Pending>")]
         static HttpMethodUtils()
         {
             PropertyInfo connectProperty = typeof(HttpMethod).GetProperty("Connect", BindingFlags.Static | BindingFlags.NonPublic);

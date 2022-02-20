@@ -17,8 +17,5 @@ namespace Hspi
         /// </summary>
         public const string PlugInName = @"HomeKit Controller";
 
-        public static readonly string DevicePlugInDataNamedKey = PlugInId.ToLowerInvariant() + ".plugindata";
-
-        public static readonly string DevicePlugInDataTypeKey = PlugInId.ToLowerInvariant() + ".plugindatatype";
     }
 }

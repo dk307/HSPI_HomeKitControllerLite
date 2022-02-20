@@ -15,9 +15,9 @@ namespace HomeKit.Model
                               object? value,
                               IImmutableList<CharacteristicPermissions> permissions,
                               bool? eventNotifications,
-                              string format,
+                              CharacteristicFormat format,
                               string description,
-                              string unit,
+                              CharacteristicUnit? unit,
                               double? minimumValue,
                               double? maximumValue,
                               double? stepValue,
@@ -64,12 +64,15 @@ namespace HomeKit.Model
         public bool? EventNotifications { get; init; }
 
         [JsonProperty("format", Required = Required.Always)]
-        public string Format { get; init; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CharacteristicFormat Format { get; init; }
 
         [JsonProperty("description")]
         public string Description { get; init; }
+
         [JsonProperty("unit")]
-        public string Unit { get; init; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CharacteristicUnit? Unit { get; init; }
 
         [JsonProperty("minValue")]
         public double? MinimumValue { get; init; }
@@ -87,10 +90,10 @@ namespace HomeKit.Model
         public int? MaxDataLength { get; init; }
 
         [JsonProperty("valid-values")]
-        public IImmutableList<double> ValidValues { get; init; }
+        public IImmutableList<double>? ValidValues { get; init; }
 
         [JsonProperty("valid-values-range")]
-        public IImmutableList<double> ValidValuesRange { get; init; }
+        public IImmutableList<double>? ValidValuesRange { get; init; }
 
         [JsonProperty("TTL")]
         public long? Ttl { get; init; }

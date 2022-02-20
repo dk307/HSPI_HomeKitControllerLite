@@ -9,6 +9,8 @@ using System.Collections.Immutable;
 
 namespace HomeKit.Utils
 {
+
+
     internal sealed class CharacteristicListConverter : JsonConverter
     {
         public override object ReadJson(JsonReader reader, 

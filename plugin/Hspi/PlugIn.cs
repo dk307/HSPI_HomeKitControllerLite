@@ -50,7 +50,7 @@ namespace Hspi
             Log.Debug("PostBackProc for {page} with {data}", page, data);
             return page switch
             {
-                AddDeviceHandler.PageName => AddDeviceHandler.PostBackProc(data, ShutdownCancellationToken),
+                AddDeviceHandler.PageName => AddDeviceHandler.PostBackProc(data, HomeSeerSystem, ShutdownCancellationToken),
                 _ => base.PostBackProc(page, data, user, userRights),
             };
         }

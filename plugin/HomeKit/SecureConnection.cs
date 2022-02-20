@@ -31,7 +31,12 @@ namespace HomeKit
         public delegate void AccessoryValueChangedHandler(object sender, AccessoryValueChangedArgs e);
 
         public event AccessoryValueChangedHandler? AccessoryValueChangedEvent;
-        public DeviceReportedInfo? DeviceReportedInfo { get; private set; }
+
+        public DeviceReportedInfo? DeviceReportedInfo
+        {
+            get => deviceReportedInfo;
+            private set => deviceReportedInfo = value;
+        }
 
         public override async Task<Task> ConnectAndListen(IPEndPoint fallbackAddress, CancellationToken token)
         {
@@ -280,5 +285,6 @@ namespace HomeKit
         private readonly PairingDeviceInfo pairingInfo;
         private readonly HashSet<AidIidPair> subscriptionsToDevice = new();
         private Task? processEventTask;
+        private DeviceReportedInfo? deviceReportedInfo;
     }
 }
