@@ -17,6 +17,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using static Hspi.DeviceData.HsHomeKitDevice;
+using static System.FormattableString;
 
 #nullable enable
 
@@ -24,14 +26,162 @@ namespace Hspi.DeviceData
 {
     internal sealed class HomeKitDeviceFactory
     {
-        public enum DeviceType
+        public static int CreateHsDevice(IHsController hsController,
+                                         PairingDeviceInfo pairingDeviceInfo,
+                                         IPEndPoint fallbackAddress,
+                                         Accessory accessory)
         {
-            Root = 0,
-            OnlineStatus = 1,
-            Characteristics = 2
+            var extraData = CreateRootPlugInExtraData(pairingDeviceInfo,
+                                                      fallbackAddress,
+                                                      accessory.Aid);
+
+            string friendlyName = pairingDeviceInfo.DeviceInformation.DisplayName ??
+                                  accessory.Name ??
+                                  pairingDeviceInfo.DeviceInformation.Model ??
+                                  Invariant($"HomeKit Device - {pairingDeviceInfo.DeviceInformation.Id}");
+
+            var (deviceType, subFeatureType) = DetermineRootDeviceType(pairingDeviceInfo.DeviceInformation);
+            var newDeviceData = DeviceFactory.CreateDevice(PlugInData.PlugInId)
+                                             .WithName(friendlyName)
+                                             .AsType(deviceType, subFeatureType)
+                                             .WithLocation(PlugInData.PlugInName)
+                                             .WithMiscFlags(EMiscFlag.SetDoesNotChangeLastChange)
+                                             .WithExtraData(extraData)
+                                             .PrepareForHs();
+
+            int refId = hsController.CreateDevice(newDeviceData);
+            Log.Information("Created Device {friendlyName}", friendlyName);
+            return refId;
         }
 
-        public static NewFeatureData CreateFeature(HsDevice hsDevice,
+        private static void AddPlugExtraValue(NewFeatureData data,
+                                          string key,
+                                          string value)
+        {
+            if (data.Feature[EProperty.PlugExtraData] is not PlugExtraData plugExtraData)
+            {
+                plugExtraData = new PlugExtraData();
+            }
+            plugExtraData.AddNamed(key, value);
+            data.Feature[EProperty.PlugExtraData] = plugExtraData;
+        }
+
+        private static void AddRangedGraphicsAndStatus(NewFeatureData newData,
+                                                       ServiceType serviceType,
+                                                       Characteristic characteristic,
+                                                       bool writable,
+                                                       HSMapping.HSMapping? mapping)
+        {
+            double minValue = characteristic.MinimumValue ??
+                              characteristic.ValidValuesRange?[0] ??
+                              double.MinValue;
+            double maxValue = characteristic.MaximumValue ??
+                              characteristic.ValidValuesRange?[1] ??
+                              double.MaxValue;
+
+            var rangeOptions = mapping?.RangeOptions;
+            var rangeIcon = rangeOptions?.Icon;
+
+            if (rangeIcon != null)
+            {
+                StatusGraphic statusGraphic = new(CreateImagePath(rangeIcon),
+                                                  minValue,
+                                                  maxValue);
+                AddStatusGraphic(newData, statusGraphic);
+            }
+
+            if (writable)
+            {
+                int controlUse = rangeOptions?.EControlUses?.FirstOrDefault(x => x.ServiceIId == serviceType.Id)?.Value ?? (int)EControlUse.NotSpecified;
+                StatusControl statusControl = new(EControlType.TextBoxNumber)
+                {
+                    ControlUse = (EControlUse)controlUse,
+                    TargetRange = new ValueRange(minValue, maxValue),
+                };
+
+                AddStatusControl(newData, statusControl);
+            }
+        }
+
+        private static void AddStatusControl(NewFeatureData newData, StatusControl statusControl)
+        {
+            var statusControls = (StatusControlCollection)newData.Feature[EProperty.StatusControls];
+            statusControls.Add(statusControl);
+        }
+
+        private static void AddStatusGraphic(NewFeatureData newData, StatusGraphic statusGraphic)
+        {
+            var statusGraphics = (StatusGraphicCollection)newData.Feature[EProperty.StatusGraphics];
+            statusGraphics.Add(statusGraphic);
+        }
+
+        private static void AddUnitSuffix(IHsController hsController,
+                                          NewFeatureData data,
+                                          Characteristic characteristic)
+        {
+            if (characteristic.Unit != null)
+            {
+                var unitAttribute = EnumHelper.GetAttribute<UnitAttribute>(characteristic.Unit);
+                var suffix = unitAttribute?.Unit;
+                if (characteristic.Unit == CharacteristicUnit.Celsius)
+                {
+                    var scaleF = Convert.ToBoolean(hsController.GetINISetting("Settings", "gGlobalTempScaleF", "True").Trim());
+                    if (scaleF)
+                    {
+                        suffix = "F";
+                        AddPlugExtraValue(data, CToFNeededPlugExtraTag, "1");
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(suffix))
+                {
+                    data.Feature.Add(EProperty.AdditionalStatusData, new List<string>() { suffix! });
+                    if (data.Feature[EProperty.StatusGraphics] is StatusGraphicCollection graphics)
+                    {
+                        foreach (var statusGraphic in graphics.Values)
+                        {
+                            statusGraphic.HasAdditionalData = true;
+
+                            if (statusGraphic.IsRange)
+                            {
+                                statusGraphic.TargetRange.Suffix = " " + HsFeature.GetAdditionalDataToken(0);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void AddValidValuesGraphicsAndStatus(NewFeatureData newData,
+                                                    ServiceType serviceType,
+                                                    Characteristic characteristic,
+                                                    bool writable,
+                                                    HSMapping.HSMapping? mapping)
+        {
+            foreach (var value in characteristic.ValidValues)
+            {
+                var buttonMapping = mapping?.ButtonOptions?.FirstOrDefault(x => x.Value == value);
+                StatusGraphic statusGraphic = new(CreateImagePath(buttonMapping?.Icon ?? "default.png"),
+                                                  value,
+                                                  buttonMapping?.Name ?? value.ToString(CultureInfo.InvariantCulture));
+                AddStatusGraphic(newData, statusGraphic);
+
+                if (writable)
+                {
+                    int controlUse = buttonMapping?.EControlUses?.FirstOrDefault(x => x.ServiceIId == serviceType.Id)?.Value ?? (int)EControlUse.NotSpecified;
+                    StatusControl statusControl = new(EControlType.Button)
+                    {
+                        ControlUse = (EControlUse)controlUse,
+                        Label = buttonMapping?.Name ?? value.ToString(CultureInfo.InvariantCulture),
+                        TargetValue = value,
+                    };
+                    AddStatusControl(newData, statusControl);
+                }
+            }
+        }
+
+        private static NewFeatureData CreateFeature(IHsController hsController,
+                                                                                                           int refId,
                                                    ServiceType serviceType,
                                                    Characteristic characteristic)
         {
@@ -51,7 +201,7 @@ namespace Hspi.DeviceData
             featureFactory = SetName(characteristic, featureFactory, mapping);
             featureFactory = SetFeatureType(serviceType, featureFactory, mapping);
 
-            var newData = featureFactory.PrepareForHsDevice(hsDevice.Ref);
+            var newData = featureFactory.PrepareForHsDevice(refId);
 
             if (characteristic.Format != CharacteristicFormat.String)
             {
@@ -66,143 +216,23 @@ namespace Hspi.DeviceData
                 }
             }
 
-            AddUnitSuffix(newData, characteristic);
+            AddUnitSuffix(hsController, newData, characteristic);
             return newData;
         }
 
-        public static int CreateHsDevice(IHsController hsController,
-                                 PairingDeviceInfo pairingDeviceInfo,
-                                 IPEndPoint fallbackAddress,
-                                 Accessory accessory)
+        private static string CreateImagePath(string featureName)
         {
-            var extraData = CreateRootPlugInExtraData(pairingDeviceInfo,
-                                                      fallbackAddress,
-                                                      accessory.Aid);
-
-            string friendlyName = pairingDeviceInfo.DeviceInformation.DisplayName ??
-                                  accessory.Name ??
-                                  pairingDeviceInfo.DeviceInformation.Model ??
-                                  "HomeKit Device";
-
-            var (deviceType, subFeatureType) = DetermineRootDeviceType(pairingDeviceInfo.DeviceInformation);
-            var newDeviceData = DeviceFactory.CreateDevice(PlugInData.PlugInId)
-                         .WithName(friendlyName)
-                         .AsType(deviceType, subFeatureType)
-                         .WithLocation(PlugInData.PlugInName)
-                         .WithMiscFlags(EMiscFlag.SetDoesNotChangeLastChange)
-                         .WithExtraData(extraData)
-                         .PrepareForHs();
-
-            int refId = hsController.CreateDevice(newDeviceData);
-            Log.Information("Created Device {friendlyName}", friendlyName);
-            return refId;
+            return Path.ChangeExtension(Path.Combine(PlugInData.PlugInId, "images", featureName), "png");
         }
 
-        private static PlugExtraData CreatePlugInExtraforDeviceType(DeviceType deviceType, ulong? iid = null)
+        private static PlugExtraData CreatePlugInExtraforDeviceType(DeviceType deviceType,
+                                                                    ulong? iid = null)
         {
             var plugExtra = new PlugExtraData();
             DeviceTypeData value = new(deviceType, iid);
             plugExtra.AddNamed(DeviceTypePlugExtraTag,
                                JsonConvert.SerializeObject(value));
             return plugExtra;
-        }
-
-        private static void AddRangedGraphicsAndStatus(NewFeatureData newData,
-                                               ServiceType serviceType,
-                                               Characteristic characteristic,
-                                               bool writable,
-                                               HSMapping.HSMapping? mapping)
-        {
-            double minValue = characteristic.MinimumValue ??
-                              characteristic.ValidValuesRange?[0] ??
-                              double.MinValue;
-            double maxValue = characteristic.MaximumValue ??
-                              characteristic.ValidValuesRange?[1] ??
-                              double.MaxValue;
-
-            var rangeOptions = mapping?.RangeOptions;
-            var rangeIcon = rangeOptions?.Icon;
-
-            if (rangeIcon != null)
-            {
-                var statusGraphics = (StatusGraphicCollection)newData.Feature[EProperty.StatusGraphics];
-                statusGraphics.Add(new StatusGraphic(CreateImagePath(rangeIcon),
-                                                     minValue, maxValue));
-            }
-
-            if (writable)
-            {
-                var statusControls = (StatusControlCollection)newData.Feature[EProperty.StatusControls];
-
-                int controlUse = rangeOptions?.EControlUses?.FirstOrDefault(x => x.ServiceIId == serviceType.Id)?.Value ?? (int)EControlUse.NotSpecified;
-                statusControls.Add(new StatusControl(EControlType.TextBoxNumber)
-                {
-                    ControlUse = (EControlUse)controlUse,
-                    TargetRange = new ValueRange(minValue, maxValue),
-                });
-            }
-        }
-
-        private static void AddUnitSuffix(NewFeatureData data,
-                                         Characteristic characteristic)
-        {
-            if (characteristic.Unit != null)
-            {
-                var unitAttribute = EnumHelper.GetAttribute<UnitAttribute>(characteristic.Unit);
-                var suffix = unitAttribute?.Unit;
-
-                if (!string.IsNullOrWhiteSpace(suffix))
-                {
-                    data.Feature.Add(EProperty.AdditionalStatusData, new List<string>() { suffix! });
-
-                    if (data.Feature[EProperty.StatusGraphics] is StatusGraphicCollection graphics)
-                    {
-                        foreach (var statusGraphic in graphics.Values)
-                        {
-                            statusGraphic.HasAdditionalData = true;
-
-                            if (statusGraphic.IsRange)
-                            {
-                                statusGraphic.TargetRange.Suffix = " " + HsFeature.GetAdditionalDataToken(0);
-                                statusGraphic.TargetRange.DecimalPlaces = 3;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private static void AddValidValuesGraphicsAndStatus(NewFeatureData newData,
-                                                    ServiceType serviceType,
-                                                    Characteristic characteristic,
-                                                    bool writable,
-                                                    HSMapping.HSMapping? mapping)
-        {
-            foreach (var value in characteristic.ValidValues)
-            {
-                var statusGraphics = (StatusGraphicCollection)newData.Feature[EProperty.StatusGraphics];
-                var buttonMapping = mapping?.ButtonOptions?.FirstOrDefault(x => x.Value == value);
-                statusGraphics.Add(new StatusGraphic(CreateImagePath(buttonMapping?.Icon ?? "default.png"),
-                                                     value,
-                                                     buttonMapping?.Name ?? value.ToString(CultureInfo.InvariantCulture)));
-
-                if (writable)
-                {
-                    var statusControls = (StatusControlCollection)newData.Feature[EProperty.StatusControls];
-                    int controlUse = buttonMapping?.EControlUses?.FirstOrDefault(x => x.ServiceIId == serviceType.Id)?.Value ?? (int)EControlUse.NotSpecified;
-                    statusControls.Add(new StatusControl(EControlType.Button)
-                    {
-                        ControlUse = (EControlUse)controlUse,
-                        Label = buttonMapping?.Name ?? value.ToString(CultureInfo.InvariantCulture),
-                        TargetValue = value,
-                    });
-                }
-            }
-        }
-
-        private static string CreateImagePath(string featureName)
-        {
-            return Path.ChangeExtension(Path.Combine(PlugInData.PlugInId, "images", featureName), "png");
         }
 
         private static PlugExtraData CreateRootPlugInExtraData(PairingDeviceInfo pairingDeviceInfo,
@@ -250,8 +280,8 @@ namespace Hspi.DeviceData
         }
 
         private static FeatureFactory SetFeatureType(ServiceType serviceType,
-                                                                                                             FeatureFactory featureFactory,
-                                     HSMapping.HSMapping? mapping)
+                                                     FeatureFactory featureFactory,
+                                                     HSMapping.HSMapping? mapping)
         {
             var deviceTypeFromMapping = mapping?.DeviceTypes?.FirstOrDefault(x => x.ServiceIId == serviceType.Id);
 
@@ -261,8 +291,8 @@ namespace Hspi.DeviceData
         }
 
         private static FeatureFactory SetName(Characteristic characteristic,
-                                      FeatureFactory featureFactory,
-                                      HSMapping.HSMapping? mapping)
+                                              FeatureFactory featureFactory,
+                                              HSMapping.HSMapping? mapping)
         {
             featureFactory = featureFactory.WithName(mapping?.Name ??
                                                      characteristic.Description ??
@@ -275,7 +305,7 @@ namespace Hspi.DeviceData
         {
             foreach (var feature in device.Features)
             {
-                if (GetDeviceTypeFromPlugInData(feature.PlugExtraData)?.DeviceType == DeviceType.OnlineStatus)
+                if (GetDeviceTypeFromPlugInData(feature.PlugExtraData)?.Type == DeviceType.OnlineStatus)
                 {
                     return feature.Ref;
                 }
@@ -293,38 +323,15 @@ namespace Hspi.DeviceData
             return hsController.CreateFeatureForDevice(newFeatureData);
         }
 
-        public const string AidPlugExtraTag = "aid";
-
-        public const string DeviceTypePlugExtraTag = "device.type";
-
-        public const string FallbackAddressPlugExtraTag = "fallback.address";
-
-        public const string PairInfoPlugExtraTag = "pairing.info";
-
         private const double OffValue = 0;
-
         private const double OnValue = 1;
-
         private const string StatusOffline = "Offline";
-
         private const string StatusOnline = "Online";
 
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
-                                                                                                                                                                                                   {
-                                                                                                                                                                                                       string json = Encoding.UTF8.GetString(Resource.HSMappings);
-                                                                                                                                                                                                       return JsonHelper.DeserializeObject<HSMappings>(json);
-                                                                                                                                                                                                   }, true);
-
-        private sealed record DeviceTypeData
-        {
-            public DeviceType DeviceType { get; init; }
-            public ulong? Iid { get; init; }
-
-            public DeviceTypeData(DeviceType deviceType, ulong? iid = null)
-            {
-                DeviceType = deviceType;
-                Iid = iid;
-            }
-        }
+                                               {
+                                                   string json = Encoding.UTF8.GetString(Resource.HSMappings);
+                                                   return JsonHelper.DeserializeObject<HSMappings>(json);
+                                               }, true);
     }
 }

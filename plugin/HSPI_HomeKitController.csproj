@@ -121,6 +121,8 @@
     <Compile Include="HomeKit\Exceptions\AccessoryDisconnectedException.cs" />
     <Compile Include="HomeKit\Exceptions\AccessoryException.cs" />
     <Compile Include="HomeKit\Exceptions\DecryptionFailedException.cs" />
+    <Compile Include="Hspi\DeviceData\HsHomeKitDevice.cs" />
+    <Compile Include="Hspi\Exceptions\HsDeviceInvalidException.cs" />
     <Compile Include="HomeKit\Exceptions\PairingException.cs" />
     <Compile Include="HomeKit\Exceptions\VerifyPairingException.cs" />
     <Compile Include="HomeKit\HomeKitDiscover.cs" />
@@ -188,6 +190,7 @@
     <Compile Include="HomeKit\Utils\ServiceTypeJsonConverter.cs" />
     <Compile Include="HomeKit\Utils\UnitAttribute.cs" />
     <Compile Include="Hspi\AddDeviceHandler.cs" />
+    <Compile Include="Hspi\DeviceData\DeviceTypeData.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\ButtonOption.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\HSMapping.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\HSMappingDeviceType.cs" />

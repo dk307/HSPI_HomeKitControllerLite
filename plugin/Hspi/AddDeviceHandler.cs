@@ -5,10 +5,12 @@ using Hspi.DeviceData;
 using Hspi.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Serilog;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.FormattableString;
 
 #nullable enable
 
@@ -32,18 +34,13 @@ namespace Hspi
             try
             {
                 var requestObject = JsonConvert.DeserializeObject<JObject>(data);
-                string? action = (string)requestObject["action"];
-                switch (action)
+                var action = requestObject["action"]?.ToString();
+                return action switch
                 {
-                    case "search":
-                        return await Discover(cancellationToken).ConfigureAwait(false);
-
-                    case "pair":
-                        return await Pair(hsController, requestObject, cancellationToken).ConfigureAwait(false);
-
-                    default:
-                        throw new ArgumentException("Unknown Action");
-                }
+                    "search" => await Discover(cancellationToken).ConfigureAwait(false),
+                    "pair" => await Pair(hsController, requestObject, cancellationToken).ConfigureAwait(false),
+                    _ => throw new ArgumentException("Unknown Action"),
+                };
             }
             catch (Exception ex)
             {
@@ -56,8 +53,13 @@ namespace Hspi
                                                     JObject requestObject,
                                                     CancellationToken cancellationToken)
         {
-            var pincode = (string)requestObject["pincode"];
-            var discoveredDevice = requestObject["data"].ToObject<DiscoveredDevice>();
+            var pincode = requestObject["pincode"]?.ToString();
+            var discoveredDevice = requestObject["data"]?.ToObject<DiscoveredDevice>();
+
+            if ((pincode == null) || (discoveredDevice == null))
+            {
+                throw new ArgumentException("Invalid data for pairing");
+            }
             var pairingInfo = await InsecureConnection.StartNewPairing(discoveredDevice, pincode, cancellationToken).ConfigureAwait(false);
 
             using SecureConnection secureConnection = new(pairingInfo);
@@ -65,11 +67,19 @@ namespace Hspi
             await secureConnection.ConnectAndListen(discoveredDevice.Address, cancellationToken).ConfigureAwait(false);
 
             var accessoryInfo = secureConnection.DeviceReportedInfo;
+            var accessory1Aid = accessoryInfo?.Accessories.FirstOrDefault(x => x.Aid == 1);
+            if (accessory1Aid == null)
+            {
+                Log.Error("No Aid 1 accessor found for {name}", discoveredDevice.DisplayName);
+                throw new InvalidOperationException(Invariant($"No Aid 1 accessory found for {discoveredDevice.DisplayName}"));
+            }
 
-            HomeKitDeviceFactory.CreateHsDevice(hsController,
-                                                pairingInfo,
-                                                discoveredDevice.Address,
-                                                accessoryInfo.Accessories[0]);
+            int refId = HomeKitDeviceFactory.CreateHsDevice(hsController,
+                                                            pairingInfo,
+                                                            discoveredDevice.Address,
+                                                            accessory1Aid);
+
+            Log.Information("Created {refId} for {name}", refId, discoveredDevice.DisplayName);
 
             var result = new Result();
             return JsonConvert.SerializeObject(result);

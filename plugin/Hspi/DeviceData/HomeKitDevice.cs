@@ -1,41 +1,43 @@
-﻿using HomeKit.Model;
-using HomeKit.Utils;
-using HomeSeer.PluginSdk;
-using HomeSeer.PluginSdk.Devices;
-using HomeSeer.PluginSdk.Devices.Identification;
-using Newtonsoft.Json;
+﻿using HomeSeer.PluginSdk;
 using Nito.AsyncEx;
-using Serilog;
-using System.IO;
-using System.Net;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using static System.FormattableString;
 
 #nullable enable
 
 namespace Hspi.DeviceData
 {
-    internal sealed partial class HomeKitDevice
+
+    internal sealed class HomeKitDevice
     {
         public HomeKitDevice(IHsController hsController,
-                             int refId,
+                             IEnumerable<int> refIds,
                              CancellationToken cancellationToken)
         {
             this.hsController = hsController;
-            this.RefId = refId;
+            RefIds = refIds;
             this.cancellationToken = cancellationToken;
-            //Utils.TaskHelper.StartAsyncWithErrorChecking(Invariant($"Device Start {refId}"),
-            //                                             UpdateDeviceProperties,
-            //                                             cancellationToken,
-            //                                             TimeSpan.FromSeconds(15));
+            string name = String.Join(",", refIds.Select(x => x.ToString(CultureInfo.InvariantCulture)));
+            Utils.TaskHelper.StartAsyncWithErrorChecking(Invariant($"Device Start {name}"),
+                                                         UpdateDeviceProperties,
+                                                         cancellationToken,
+                                                         TimeSpan.FromSeconds(15));
         }
 
-        public int RefId { get; }
+        private async Task UpdateDeviceProperties()
+        {
+            using var _ = await featureLock.EnterAsync(cancellationToken).ConfigureAwait(false);
+        }
 
-
-
+        public IEnumerable<int> RefIds { get; }
 
         private readonly IHsController hsController;
-        private CancellationToken cancellationToken;
-        private readonly AsyncMonitor featureLock = new AsyncMonitor();
+        private readonly CancellationToken cancellationToken;
+        private readonly AsyncMonitor featureLock = new();
     }
 }
