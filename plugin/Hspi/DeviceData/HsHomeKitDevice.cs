@@ -1,17 +1,14 @@
-﻿using HomeKit.Model;
-using HomeKit.Utils;
-using HomeSeer.PluginSdk;
+﻿using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
 using Hspi.Exceptions;
 using Newtonsoft.Json;
-using System.Net;
 using static System.FormattableString;
 
 #nullable enable
 
 namespace Hspi.DeviceData
 {
-    internal sealed class HsHomeKitDevice
+    internal class HsHomeKitDevice
     {
         public HsHomeKitDevice(IHsController controller, int refId)
         {
@@ -19,63 +16,43 @@ namespace Hspi.DeviceData
             RefId = refId;
         }
 
-        public enum DeviceType
-        {
-            Root = 0,
-            OnlineStatus = 1,
-            Characteristics = 2
-        }
+        public string Name => HS.GetNameByRef(RefId);
 
         public int RefId { get; init; }
 
-        private IHsController HS { get; init; }
+        protected IHsController HS { get; init; }
 
-        public ulong GetAid()
+        protected T GetPlugExtraData<T>(string tag, params JsonConverter[] converters)
         {
-            return GetPlugExtraData<ulong>(AidPlugExtraTag);
+            return GetPlugExtraData<T>(HS, RefId, tag, converters);
         }
 
-        public bool GetCToFNeeded()
+        protected static T GetPlugExtraData<T>(IHsController hsController,
+                                               int refId,
+                                               string tag,
+                                               params JsonConverter[] converters)
         {
-            var plugInExtra = HS.GetPropertyByRef(RefId, EProperty.PlugExtraData) as PlugExtraData;
-            var stringData = plugInExtra?[CToFNeededPlugExtraTag];
-            return (stringData != null);
+            if (hsController.GetPropertyByRef(refId, EProperty.PlugExtraData) is not PlugExtraData plugInExtra)
+            {
+                throw new HsDeviceInvalidException("PlugExtraData is null");
+            }
+            return GetPlugExtraData<T>(plugInExtra, tag, converters);
         }
 
-        public IPEndPoint GetFallBackAddress()
+        protected static T GetPlugExtraData<T>(PlugExtraData? plugInExtra,
+                                               string tag,
+                                               params JsonConverter[] converters)
         {
-            return GetPlugExtraData<IPEndPoint>(FallbackAddressPlugExtraTag, new IPEndPointJsonConverter());
-        }
-        public PairingDeviceInfo GetPairingInfo()
-        {
-            return GetPlugExtraData<PairingDeviceInfo>(PairInfoPlugExtraTag);
-        }
-
-        public T GetPlugExtraData<T>(string tag, params JsonConverter[] converters)
-        {
-            var plugInExtra = HS.GetPropertyByRef(RefId, EProperty.PlugExtraData) as PlugExtraData;
             var stringData = plugInExtra?[tag];
             if (stringData == null)
             {
-                throw new HsDeviceInvalidException(Invariant($"{tag} type not found for {RefId}"));
+                throw new HsDeviceInvalidException(Invariant($"{tag} type not found"));
             }
 
             var typeData = JsonConvert.DeserializeObject<T>(stringData, converters);
             if (typeData == null)
             {
-                throw new HsDeviceInvalidException(Invariant($"{tag} not a valid Json for {RefId}"));
-            }
-
-            return typeData;
-        }
-
-        public DeviceTypeData GetTypeData()
-        {
-            var typeData = GetPlugExtraData<DeviceTypeData>(DeviceTypePlugExtraTag);
-
-            if ((typeData.Type == DeviceType.Characteristics) && (typeData.Iid == null))
-            {
-                throw new HsDeviceInvalidException(Invariant($"Device Type data not valid for {RefId}"));
+                throw new HsDeviceInvalidException(Invariant($"{tag} not a valid Json value"));
             }
 
             return typeData;
@@ -83,9 +60,11 @@ namespace Hspi.DeviceData
 
         //Extra data Tags
         public const string AidPlugExtraTag = "Accessory.Aid";
+
         public const string CToFNeededPlugExtraTag = "C2F.needed";
         public const string DeviceTypePlugExtraTag = "Device.Type";
         public const string FallbackAddressPlugExtraTag = "Fallback.Address";
         public const string PairInfoPlugExtraTag = "Pairing.Info";
+        public const string EnabledCharacteristicPlugExtraTag = "Enabled.Characteristic";
     }
 }

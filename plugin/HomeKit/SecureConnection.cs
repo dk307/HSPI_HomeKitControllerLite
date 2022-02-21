@@ -32,11 +32,13 @@ namespace HomeKit
 
         public event AccessoryValueChangedHandler? AccessoryValueChangedEvent;
 
-        public DeviceReportedInfo? DeviceReportedInfo
+        public DeviceReportedInfo DeviceReportedInfo
         {
-            get => deviceReportedInfo;
+            get => deviceReportedInfo ?? throw new InvalidOperationException("Connection never made");
             private set => deviceReportedInfo = value;
         }
+
+        public PairingDeviceInfo PairingInfo => pairingInfo;
 
         public override async Task<Task> ConnectAndListen(IPEndPoint fallbackAddress, CancellationToken token)
         {
@@ -284,7 +286,7 @@ namespace HomeKit
         private readonly AsyncLock connectionLock = new();
         private readonly PairingDeviceInfo pairingInfo;
         private readonly HashSet<AidIidPair> subscriptionsToDevice = new();
-        private Task? processEventTask;
         private DeviceReportedInfo? deviceReportedInfo;
+        private Task? processEventTask;
     }
 }

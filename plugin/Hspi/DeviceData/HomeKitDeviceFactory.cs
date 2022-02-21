@@ -18,22 +18,30 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using static Hspi.DeviceData.HsHomeKitDevice;
+using static Hspi.DeviceData.HsHomeKitFeatureDevice;
 using static System.FormattableString;
 
 #nullable enable
 
 namespace Hspi.DeviceData
 {
-    internal sealed class HomeKitDeviceFactory
+    internal static class HomeKitDeviceFactory
     {
         public static int CreateHsDevice(IHsController hsController,
                                          PairingDeviceInfo pairingDeviceInfo,
                                          IPEndPoint fallbackAddress,
                                          Accessory accessory)
         {
+            //find default enabled characteristics
+            var defaultCharacteristics =
+                accessory.Services.Values.FirstOrDefault(x => x.Primary == true)?.Characteristics?.Values ??
+                accessory.Services.Values.FirstOrDefault(x => x.Type != ServiceType.AccessoryInformation)?.Characteristics?.Values ??
+                Array.Empty<Characteristic>();
+
             var extraData = CreateRootPlugInExtraData(pairingDeviceInfo,
                                                       fallbackAddress,
-                                                      accessory.Aid);
+                                                      accessory.Aid,
+                                                      defaultCharacteristics.Select(x => x.Iid));
 
             string friendlyName = pairingDeviceInfo.DeviceInformation.DisplayName ??
                                   accessory.Name ??
@@ -50,12 +58,35 @@ namespace Hspi.DeviceData
                                              .PrepareForHs();
 
             int refId = hsController.CreateDevice(newDeviceData);
-            Log.Information("Created Device {friendlyName}", friendlyName);
+            Log.Information("Created device {friendlyName}", friendlyName);
             return refId;
         }
 
+        public static int CreateAndUpdateConnectedFeature(IHsController hsController,
+                                                   HsDevice device)
+        {
+            foreach (var feature in device.Features)
+            {
+                if (GetDeviceTypeFromPlugInData(feature.PlugExtraData)?.Type == FeatureType.OnlineStatus)
+                {
+                    return feature.Ref;
+                }
+            }
+
+            var newFeatureData = FeatureFactory.CreateFeature(PlugInData.PlugInId)
+               .WithName("Connected")
+               .WithMiscFlags(EMiscFlag.StatusOnly)
+               .AsType(EFeatureType.Generic, 0)
+               .WithExtraData(CreatePlugInExtraforDeviceType(FeatureType.OnlineStatus))
+               .AddGraphicForValue(CreateImagePath("online"), OnValue, StatusOnline)
+               .AddGraphicForValue(CreateImagePath("offline"), OffValue, StatusOffline)
+               .PrepareForHsDevice(device.Ref);
+
+            return hsController.CreateFeatureForDevice(newFeatureData);
+        }
+
         private static void AddPlugExtraValue(NewFeatureData data,
-                                          string key,
+                                                  string key,
                                           string value)
         {
             if (data.Feature[EProperty.PlugExtraData] is not PlugExtraData plugExtraData)
@@ -180,14 +211,14 @@ namespace Hspi.DeviceData
             }
         }
 
-        private static NewFeatureData CreateFeature(IHsController hsController,
-                                                                                                           int refId,
-                                                   ServiceType serviceType,
-                                                   Characteristic characteristic)
+        public static int CreateFeature(IHsController hsController,
+                                        int refId,
+                                        ServiceType serviceType,
+                                        Characteristic characteristic)
         {
             var featureFactory = FeatureFactory.CreateFeature(PlugInData.PlugInId)
                                                .WithLocation(PlugInData.PlugInName)
-                                               .WithExtraData(CreatePlugInExtraforDeviceType(DeviceType.Characteristics, characteristic.Iid));
+                                               .WithExtraData(CreatePlugInExtraforDeviceType(FeatureType.Characteristics, characteristic.Iid));
 
             bool writable = characteristic.Permissions.Contains(CharacteristicPermissions.PairedWrite);
 
@@ -217,7 +248,8 @@ namespace Hspi.DeviceData
             }
 
             AddUnitSuffix(hsController, newData, characteristic);
-            return newData;
+
+            return hsController.CreateFeatureForDevice(newData);
         }
 
         private static string CreateImagePath(string featureName)
@@ -225,11 +257,11 @@ namespace Hspi.DeviceData
             return Path.ChangeExtension(Path.Combine(PlugInData.PlugInId, "images", featureName), "png");
         }
 
-        private static PlugExtraData CreatePlugInExtraforDeviceType(DeviceType deviceType,
+        private static PlugExtraData CreatePlugInExtraforDeviceType(FeatureType featureType,
                                                                     ulong? iid = null)
         {
             var plugExtra = new PlugExtraData();
-            DeviceTypeData value = new(deviceType, iid);
+            FeatureTypeData value = new(featureType, iid);
             plugExtra.AddNamed(DeviceTypePlugExtraTag,
                                JsonConvert.SerializeObject(value));
             return plugExtra;
@@ -237,14 +269,14 @@ namespace Hspi.DeviceData
 
         private static PlugExtraData CreateRootPlugInExtraData(PairingDeviceInfo pairingDeviceInfo,
                                                                IPEndPoint fallbackAddress,
-                                                               ulong aid)
+                                                               ulong aid,
+                                                               IEnumerable<ulong> enabledCharacteristics)
         {
             var plugExtra = new PlugExtraData();
             plugExtra.AddNamed(PairInfoPlugExtraTag, JsonConvert.SerializeObject(pairingDeviceInfo, Formatting.Indented));
             plugExtra.AddNamed(FallbackAddressPlugExtraTag, JsonConvert.SerializeObject(fallbackAddress, Formatting.Indented, new IPEndPointJsonConverter()));
             plugExtra.AddNamed(AidPlugExtraTag, JsonConvert.SerializeObject(aid));
-            DeviceTypeData value = new(DeviceType.Root);
-            plugExtra.AddNamed(DeviceTypePlugExtraTag, JsonConvert.SerializeObject(value));
+            plugExtra.AddNamed(EnabledCharacteristicPlugExtraTag, JsonConvert.SerializeObject(enabledCharacteristics));
             return plugExtra;
         }
 
@@ -268,12 +300,12 @@ namespace Hspi.DeviceData
             };
         }
 
-        private static DeviceTypeData? GetDeviceTypeFromPlugInData(PlugExtraData? plugInExtra)
+        private static FeatureTypeData? GetDeviceTypeFromPlugInData(PlugExtraData? plugInExtra)
         {
             if (plugInExtra != null && plugInExtra.NamedKeys.Contains(DeviceTypePlugExtraTag))
             {
                 var data = plugInExtra[DeviceTypePlugExtraTag];
-                return JsonConvert.DeserializeObject<DeviceTypeData>(data);
+                return JsonConvert.DeserializeObject<FeatureTypeData>(data);
             }
 
             return null;
@@ -300,38 +332,15 @@ namespace Hspi.DeviceData
             return featureFactory;
         }
 
-        private int CreateAndUpdateConnectedFeature(IHsController hsController,
-                                                    HsDevice device)
-        {
-            foreach (var feature in device.Features)
-            {
-                if (GetDeviceTypeFromPlugInData(feature.PlugExtraData)?.Type == DeviceType.OnlineStatus)
-                {
-                    return feature.Ref;
-                }
-            }
-
-            var newFeatureData = FeatureFactory.CreateFeature(PlugInData.PlugInId)
-               .WithName("Connected")
-               .WithMiscFlags(EMiscFlag.StatusOnly)
-               .AsType(EFeatureType.Generic, 0)
-               .WithExtraData(CreatePlugInExtraforDeviceType(DeviceType.OnlineStatus))
-               .AddGraphicForValue(CreateImagePath("online"), OnValue, StatusOnline)
-               .AddGraphicForValue(CreateImagePath("offline"), OffValue, StatusOffline)
-               .PrepareForHsDevice(device.Ref);
-
-            return hsController.CreateFeatureForDevice(newFeatureData);
-        }
-
         private const double OffValue = 0;
         private const double OnValue = 1;
         private const string StatusOffline = "Offline";
         private const string StatusOnline = "Online";
 
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
-                                               {
-                                                   string json = Encoding.UTF8.GetString(Resource.HSMappings);
-                                                   return JsonHelper.DeserializeObject<HSMappings>(json);
-                                               }, true);
+                                                     {
+                                                         string json = Encoding.UTF8.GetString(Resource.HSMappings);
+                                                         return JsonHelper.DeserializeObject<HSMappings>(json);
+                                                     }, true);
     }
 }

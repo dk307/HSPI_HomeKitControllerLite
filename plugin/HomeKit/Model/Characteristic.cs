@@ -10,7 +10,7 @@ namespace HomeKit.Model
 {
     internal sealed record Characteristic
     {
-        public Characteristic(uint iid,
+        public Characteristic(ulong iid,
                               CharacteristicType type,
                               object? value,
                               IImmutableList<CharacteristicPermissions> permissions,
@@ -48,7 +48,7 @@ namespace HomeKit.Model
         }
 
         [JsonProperty("iid", Required = Required.Always)]
-        public uint Iid { get; init; }
+        public ulong Iid { get; init; }
 
         [JsonProperty("type", Required = Required.Always)]
         [JsonConverter(typeof(CharacteristicTypeJsonConverter))]

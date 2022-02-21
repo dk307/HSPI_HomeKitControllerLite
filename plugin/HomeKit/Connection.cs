@@ -28,7 +28,11 @@ namespace HomeKit
             this.enableDevicePolling = enableDevicePolling;
         }
 
-        public IPEndPoint? Address { get; private set; }
+        public IPEndPoint Address
+        {
+            get => address ?? throw new InvalidOperationException("Connection never made");
+            private set => address = value;
+        }
 
         public virtual bool Connected
         {
@@ -71,7 +75,7 @@ namespace HomeKit
 
             if (discoveredInfo == null)
             {
-                Log.Warning("Did find {name} on the network. Using default address:{address}.", 
+                Log.Warning("Did find {name} on the network. Using default address:{address}.",
                              DisplayName, fallbackAddress);
             }
 
@@ -103,6 +107,35 @@ namespace HomeKit
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        internal async Task<IEnumerable<TlvValue>> PostTlv(IEnumerable<TlvValue> tlvList,
+                                  string target,
+                                  string query,
+                                  string contentType = TlvContentType,
+                                  CancellationToken cancellationToken = default)
+        {
+            var content = Tlv8.Encode(tlvList);
+
+            var response = await Request(HttpMethod.Post, target, query,
+                          content, contentType, cancellationToken).ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Log.Error("Unexpected {StatusCode} response for {target} for {EndPoint}", response.StatusCode, target, Address);
+                response.EnsureSuccessStatusCode();
+            }
+
+            string mediaType = response.Content.Headers.ContentType.MediaType;
+            if (mediaType != TlvContentType)
+            {
+                Log.Error("Unexpected {mediaType} response for {target} for {EndPoint}", mediaType, target, Address);
+                throw new HttpRequestException("Unexpected response Type for request " + mediaType);
+            }
+
+            var responseData = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            responseData.Position = 0;
+            return Tlv8.Decode(responseData);
         }
 
         protected void Disconnect()
@@ -170,47 +203,6 @@ namespace HomeKit
 
             var responseData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             return JsonConvert.DeserializeObject<R>(responseData);
-        }
-
-        private void SetSocketKeepAlive(TimeSpan keepAliveTime,
-                                        TimeSpan keepAliveInterval)
-        {
-            int size = Marshal.SizeOf((uint)0);
-            byte[] keepAlive = new byte[size * 3];
-
-            Buffer.BlockCopy(BitConverter.GetBytes((uint)1), 0, keepAlive, 0, size);
-            Buffer.BlockCopy(BitConverter.GetBytes((uint)keepAliveTime.TotalMilliseconds), 0, keepAlive, size, size);
-            Buffer.BlockCopy(BitConverter.GetBytes((uint)keepAliveInterval.TotalMilliseconds), 0, keepAlive, size * 2, size);
-            client.Client.IOControl(IOControlCode.KeepAliveValues, keepAlive, null);
-        }
-
-        internal async Task<IEnumerable<TlvValue>> PostTlv(IEnumerable<TlvValue> tlvList,
-                                  string target,
-                                  string query,
-                                  string contentType = TlvContentType,
-                                  CancellationToken cancellationToken = default)
-        {
-            var content = Tlv8.Encode(tlvList);
-
-            var response = await Request(HttpMethod.Post, target, query,
-                          content, contentType, cancellationToken).ConfigureAwait(false);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                Log.Error("Unexpected {StatusCode} response for {target} for {EndPoint}", response.StatusCode, target, Address);
-                response.EnsureSuccessStatusCode();
-            }
-
-            string mediaType = response.Content.Headers.ContentType.MediaType;
-            if (mediaType != TlvContentType)
-            {
-                Log.Error("Unexpected {mediaType} response for {target} for {EndPoint}", mediaType, target, Address);
-                throw new HttpRequestException("Unexpected response Type for request " + mediaType);
-            }
-
-            var responseData = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            responseData.Position = 0;
-            return Tlv8.Decode(responseData);
         }
 
         protected async Task<HttpResponseMessage> Request(HttpMethod httpMethod,
@@ -286,6 +278,17 @@ namespace HomeKit
             return response;
         }
 
+        private void SetSocketKeepAlive(TimeSpan keepAliveTime,
+                                        TimeSpan keepAliveInterval)
+        {
+            int size = Marshal.SizeOf((uint)0);
+            byte[] keepAlive = new byte[size * 3];
+
+            Buffer.BlockCopy(BitConverter.GetBytes((uint)1), 0, keepAlive, 0, size);
+            Buffer.BlockCopy(BitConverter.GetBytes((uint)keepAliveTime.TotalMilliseconds), 0, keepAlive, size, size);
+            Buffer.BlockCopy(BitConverter.GetBytes((uint)keepAliveInterval.TotalMilliseconds), 0, keepAlive, size * 2, size);
+            client.Client.IOControl(IOControlCode.KeepAliveValues, keepAlive, null);
+        }
         private async ValueTask TryParseHapStatus(string target, HttpResponseMessage response)
         {
             try
@@ -311,10 +314,11 @@ namespace HomeKit
 
         private const string JsonContentType = "application/hap+json";
         private const string TlvContentType = "application/pairing+tlv8";
+        private readonly bool enableDevicePolling;
         private readonly AsyncProducerConsumerQueue<HttpResponseMessage> eventQueue = new();
         private readonly Device homeKitDeviceInformation;
-        private readonly bool enableDevicePolling;
         private readonly AsyncLock streamLock = new();
+        private IPEndPoint? address;
         private TcpClient? client;
         private HttpOperationOnStream? httpOperationOnStream;
     }

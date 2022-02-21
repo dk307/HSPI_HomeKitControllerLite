@@ -25,45 +25,32 @@ namespace HomeKit
                 var connectionCopy = connection;
                 if (connectionCopy is null)
                 {
-                    throw new InvalidOperationException($"Not connected to the Homekit Device {displayName}");
+                    throw new InvalidOperationException($"Not connected to the Homekit Device");
                 }
                 return connectionCopy;
             }
         }
 
-        public void ConnectAndListenDevice(PairingDeviceInfo info,
-                                                   IPEndPoint fallbackEndPoint,
-                                           CancellationToken token)
-        {
-            this.displayName = info.DeviceInformation.DisplayName;
-            Hspi.Utils.TaskHelper.StartAsyncWithErrorChecking(
-                $"{displayName} connection",
-                () => ConnectionAndListenDeviceImpl(info, fallbackEndPoint, token),
-                token,
-                TimeSpan.FromSeconds(1));
-        }
+        public string DisplayNameForLog => lastDisplayName ?? "<Not connected>";
 
-        private void AccessoryValueChangedEventForward(object sender, AccessoryValueChangedArgs e)
-        {
-            this.AccessoryValueChangedEvent?.Invoke(this, e);
-        }
-
-        private async Task ConnectionAndListenDeviceImpl(PairingDeviceInfo info,
-                                                                 IPEndPoint fallbackEndPoint,
-                                                         CancellationToken token)
+        public async Task ConnectionAndListen(PairingDeviceInfo info,
+                                               IPEndPoint fallbackEndPoint,
+                                               CancellationToken token)
         {
             try
             {
                 EnqueueConnectionEvent(false);
-                SecureConnection secureHomeKitConnection = new(info);
-
-                var listenTask = await secureHomeKitConnection.ConnectAndListen(fallbackEndPoint, token).ConfigureAwait(false);
 
                 if (connection != null)
                 {
                     connection.AccessoryValueChangedEvent -= AccessoryValueChangedEventForward;
                     connection.Dispose();
                 }
+
+                SecureConnection secureHomeKitConnection = new(info);
+                var listenTask = await secureHomeKitConnection.ConnectAndListen(fallbackEndPoint, token).ConfigureAwait(false);
+
+                lastDisplayName = secureHomeKitConnection.DisplayName;
 
                 Interlocked.Exchange(ref connection, secureHomeKitConnection);
                 secureHomeKitConnection.AccessoryValueChangedEvent += AccessoryValueChangedEventForward;
@@ -84,6 +71,11 @@ namespace HomeKit
             }
         }
 
+        private void AccessoryValueChangedEventForward(object sender, AccessoryValueChangedArgs e)
+        {
+            this.AccessoryValueChangedEvent?.Invoke(this, e);
+        }
+
         private void EnqueueConnectionEvent(bool connection)
         {
             if (lastConnectionEvent != connection)
@@ -95,6 +87,6 @@ namespace HomeKit
 
         private volatile SecureConnection? connection;
         private bool? lastConnectionEvent;
-        private string? displayName;
+        private string? lastDisplayName;
     }
 }
