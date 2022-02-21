@@ -2,6 +2,7 @@
 using HomeSeer.PluginSdk.Devices;
 using Hspi.Exceptions;
 using Newtonsoft.Json;
+using System;
 using static System.FormattableString;
 
 #nullable enable
