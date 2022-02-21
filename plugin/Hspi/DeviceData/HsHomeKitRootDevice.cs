@@ -60,6 +60,8 @@ namespace Hspi.DeviceData
             return GetPlugExtraData<IPEndPoint>(FallbackAddressPlugExtraTag, new IPEndPointJsonConverter());
         }
 
+        public void SetConnectedState(bool connected) => ConnectedFeature.SetConnectedState(connected);
+
         public void SetFallBackAddress(IPEndPoint endPoint)
         {
             if (HS.GetPropertyByRef(RefId, EProperty.PlugExtraData) is not PlugExtraData plugInExtra)

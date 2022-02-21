@@ -19,13 +19,14 @@ using System.Net;
 using System.Text;
 using static Hspi.DeviceData.HsHomeKitDevice;
 using static Hspi.DeviceData.HsHomeKitFeatureDevice;
+using static Hspi.DeviceData.HsHomeKitConnectedFeatureDevice;
 using static System.FormattableString;
 
 #nullable enable
 
 namespace Hspi.DeviceData
 {
-    internal static class HomeKitDeviceFactory
+    internal static class HsHomeKitDeviceFactory
     {
         public static int CreateHsDevice(IHsController hsController,
                                          PairingDeviceInfo pairingDeviceInfo,
@@ -261,7 +262,7 @@ namespace Hspi.DeviceData
                                                                     ulong? iid = null)
         {
             var plugExtra = new PlugExtraData();
-            FeatureTypeData value = new(featureType, iid);
+            HsFeatureTypeData value = new(featureType, iid);
             plugExtra.AddNamed(DeviceTypePlugExtraTag,
                                JsonConvert.SerializeObject(value));
             return plugExtra;
@@ -300,12 +301,12 @@ namespace Hspi.DeviceData
             };
         }
 
-        private static FeatureTypeData? GetDeviceTypeFromPlugInData(PlugExtraData? plugInExtra)
+        private static HsFeatureTypeData? GetDeviceTypeFromPlugInData(PlugExtraData? plugInExtra)
         {
             if (plugInExtra != null && plugInExtra.NamedKeys.Contains(DeviceTypePlugExtraTag))
             {
                 var data = plugInExtra[DeviceTypePlugExtraTag];
-                return JsonConvert.DeserializeObject<FeatureTypeData>(data);
+                return JsonConvert.DeserializeObject<HsFeatureTypeData>(data);
             }
 
             return null;
@@ -332,10 +333,6 @@ namespace Hspi.DeviceData
             return featureFactory;
         }
 
-        private const double OffValue = 0;
-        private const double OnValue = 1;
-        private const string StatusOffline = "Offline";
-        private const string StatusOnline = "Online";
 
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
                                                      {

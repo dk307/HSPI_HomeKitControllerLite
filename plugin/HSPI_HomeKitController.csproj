@@ -194,12 +194,12 @@
     <Compile Include="HomeKit\Utils\ServiceTypeJsonConverter.cs" />
     <Compile Include="HomeKit\Utils\UnitAttribute.cs" />
     <Compile Include="Hspi\AddDeviceHandler.cs" />
-    <Compile Include="Hspi\DeviceData\FeatureTypeData.cs" />
+    <Compile Include="Hspi\DeviceData\HsFeatureTypeData.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\ButtonOption.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\HSMapping.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\HSMappingDeviceType.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\EControlUseType.cs" />
-    <Compile Include="Hspi\DeviceData\HomeKitDeviceFactory.cs" />
+    <Compile Include="Hspi\DeviceData\HsHomeKitDeviceFactory.cs" />
     <Compile Include="Hspi\DeviceData\HomeKitDevice.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\HSMappings.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\RangeOptions.cs" />

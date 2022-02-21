@@ -22,11 +22,6 @@ namespace Hspi.DeviceData
 
         protected IHsController HS { get; init; }
 
-        protected T GetPlugExtraData<T>(string tag, params JsonConverter[] converters)
-        {
-            return GetPlugExtraData<T>(HS, RefId, tag, converters);
-        }
-
         protected static T GetPlugExtraData<T>(IHsController hsController,
                                                int refId,
                                                string tag,
@@ -58,13 +53,35 @@ namespace Hspi.DeviceData
             return typeData;
         }
 
+        protected T GetPlugExtraData<T>(string tag, params JsonConverter[] converters)
+        {
+            return GetPlugExtraData<T>(HS, RefId, tag, converters);
+        }
+        protected void UpdateDeviceValue(in double? data)
+        {
+            if (data.HasValue)
+            {
+                HS.UpdatePropertyByRef(RefId, EProperty.InvalidValue, false);
+
+                // only this call triggers events
+                if (!HS.UpdateFeatureValueByRef(RefId, data.Value))
+                {
+                    throw new Exception("Failed to update device");
+                }
+            }
+            else
+            {
+                HS.UpdatePropertyByRef(RefId, EProperty.InvalidValue, true);
+            }
+        }
+
         //Extra data Tags
         public const string AidPlugExtraTag = "Accessory.Aid";
 
         public const string CToFNeededPlugExtraTag = "C2F.needed";
         public const string DeviceTypePlugExtraTag = "Device.Type";
+        public const string EnabledCharacteristicPlugExtraTag = "Enabled.Characteristic";
         public const string FallbackAddressPlugExtraTag = "Fallback.Address";
         public const string PairInfoPlugExtraTag = "Pairing.Info";
-        public const string EnabledCharacteristicPlugExtraTag = "Enabled.Characteristic";
     }
 }

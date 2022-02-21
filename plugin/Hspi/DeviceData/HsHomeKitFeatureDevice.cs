@@ -27,9 +27,9 @@ namespace Hspi.DeviceData
             return (stringData != null);
         }
 
-        public FeatureTypeData GetTypeData()
+        public HsFeatureTypeData GetTypeData()
         {
-            var typeData = GetPlugExtraData<FeatureTypeData>(DeviceTypePlugExtraTag);
+            var typeData = GetPlugExtraData<HsFeatureTypeData>(DeviceTypePlugExtraTag);
 
             if ((typeData.Type == FeatureType.Characteristics) && (typeData.Iid == null))
             {
@@ -39,9 +39,9 @@ namespace Hspi.DeviceData
             return typeData;
         }
 
-        public static FeatureTypeData GetTypeData(PlugExtraData plugExtraData)
+        public static HsFeatureTypeData GetTypeData(PlugExtraData plugExtraData)
         {
-            var typeData = GetPlugExtraData<FeatureTypeData>(plugExtraData, DeviceTypePlugExtraTag);
+            var typeData = GetPlugExtraData<HsFeatureTypeData>(plugExtraData, DeviceTypePlugExtraTag);
 
             if ((typeData.Type == FeatureType.Characteristics) && (typeData.Iid == null))
             {

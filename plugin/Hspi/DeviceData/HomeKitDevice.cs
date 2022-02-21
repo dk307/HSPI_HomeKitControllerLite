@@ -54,7 +54,7 @@ namespace Hspi.DeviceData
             var enabledCharacteristics =
                 HsHomeKitRootDevice.GetEnabledCharacteristic(device.PlugExtraData);
 
-            int connectedRefId = HomeKitDeviceFactory.CreateAndUpdateConnectedFeature(HS, device);
+            int connectedRefId = HsHomeKitDeviceFactory.CreateAndUpdateConnectedFeature(HS, device);
 
             List<HsHomeKitCharacteristicFeatureDevice> featureRefIds = new();
             foreach (var enabledCharacteristic in enabledCharacteristics)
@@ -77,7 +77,7 @@ namespace Hspi.DeviceData
                         continue;
                     }
 
-                    int featureRefId = HomeKitDeviceFactory.CreateFeature(HS,
+                    int featureRefId = HsHomeKitDeviceFactory.CreateFeature(HS,
                                                                           refId,
                                                                           service.Type,
                                                                           characteristic);
@@ -114,7 +114,6 @@ namespace Hspi.DeviceData
                                            featureRefIds);
         }
 
-        [MemberNotNull(nameof(hsDevices))]
         private void CreateFeaturesAndDevices()
         {
             var deviceReportedInfo = manager.Connection.DeviceReportedInfo;
@@ -136,7 +135,7 @@ namespace Hspi.DeviceData
                 rootDevices[refId] = rootDevice;
             }
 
-            // check for new accessories
+            // check for new accessories on device and create them
             foreach (var accessory in deviceReportedInfo.Accessories)
             {
                 var found = rootDevices.Values.Any(x => x.GetAid() == accessory.Aid);
@@ -145,7 +144,7 @@ namespace Hspi.DeviceData
                     Log.Warning("Found a new accessory from the homekit device {name}. Creating new device in Homeseer.",
                                 manager.DisplayNameForLog);
 
-                    int refId = HomeKitDeviceFactory.CreateHsDevice(HS,
+                    int refId = HsHomeKitDeviceFactory.CreateHsDevice(HS,
                                                 manager.Connection.PairingInfo,
                                                 manager.Connection.Address,
                                                 accessory);
@@ -164,7 +163,7 @@ namespace Hspi.DeviceData
             if (e.Connected)
             {
                 Log.Information("Connected to {name}", manager.DisplayNameForLog);
-                if (this.hsDevices == null)
+                if (this.hsDevices.Count == 0)
                 {
                     CreateFeaturesAndDevices();
                 }
@@ -178,6 +177,12 @@ namespace Hspi.DeviceData
             else
             {
                 Log.Information("Disconnected from {name}", manager.DisplayNameForLog);
+            }
+
+            // update connected state
+            foreach (var rootDevice in this.hsDevices)
+            {
+                rootDevice.Value.SetConnectedState(e.Connected);
             }
         }
 
@@ -195,6 +200,6 @@ namespace Hspi.DeviceData
         private readonly CancellationToken cancellationToken;
         private readonly IHsController HS;
         private readonly SecureConnectionManager manager = new();
-        private ImmutableDictionary<int, HsHomeKitRootDevice>? hsDevices;
+        private ImmutableDictionary<int, HsHomeKitRootDevice> hsDevices = ImmutableDictionary<int, HsHomeKitRootDevice>.Empty;
     }
 }
