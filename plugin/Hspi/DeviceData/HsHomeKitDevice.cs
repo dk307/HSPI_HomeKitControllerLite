@@ -17,12 +17,23 @@ namespace Hspi.DeviceData
             RefId = refId;
         }
 
-        public string Name => HS.GetNameByRef(RefId);
+        public string NameForLog => GetNameForLog(HS, RefId);
 
         public int RefId { get; init; }
 
         protected IHsController HS { get; init; }
 
+        public static string GetNameForLog(IHsController hsController, int refId)
+        {
+            try
+            {
+                return hsController.GetNameByRef(refId);
+            }
+            catch
+            {
+                return Invariant($"RefId:{refId}");
+            }
+        }
         protected static T GetPlugExtraData<T>(IHsController hsController,
                                                int refId,
                                                string tag,
@@ -58,6 +69,7 @@ namespace Hspi.DeviceData
         {
             return GetPlugExtraData<T>(HS, RefId, tag, converters);
         }
+
         protected void UpdateDeviceValue(in double? data)
         {
             if (data.HasValue)
@@ -77,12 +89,12 @@ namespace Hspi.DeviceData
         }
 
         //Extra data Tags
-        public const string AidPlugExtraTag = "Accessory.Aid";
+        public const string AidPlugExtraTag = "accessory.aid";
 
-        public const string CToFNeededPlugExtraTag = "C2F.needed";
-        public const string DeviceTypePlugExtraTag = "Device.Type";
-        public const string EnabledCharacteristicPlugExtraTag = "Enabled.Characteristic";
-        public const string FallbackAddressPlugExtraTag = "Fallback.Address";
-        public const string PairInfoPlugExtraTag = "Pairing.Info";
+        public const string CToFNeededPlugExtraTag = "c2f.needed";
+        public const string DeviceTypePlugExtraTag = "device.type";
+        public const string EnabledCharacteristicPlugExtraTag = "enabled.characteristic";
+        public const string FallbackAddressPlugExtraTag = "fallback.address";
+        public const string PairInfoPlugExtraTag = "pairing.info";
     }
 }

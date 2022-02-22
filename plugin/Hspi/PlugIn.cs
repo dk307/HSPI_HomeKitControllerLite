@@ -1,7 +1,11 @@
 ﻿using HomeSeer.PluginSdk;
+using Hspi.DeviceData;
 using Hspi.Utils;
+using Nito.AsyncEx;
 using Serilog;
 using System;
+using System.Collections.Immutable;
+using System.Threading.Tasks;
 
 #nullable enable
 
@@ -21,6 +25,22 @@ namespace Hspi
             this.Status = PluginStatus.Ok();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                deviceManager?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        private async Task<ImmutableDictionary<int, HomeKitDevice>> GetDevices()
+        {
+            using var _ = await dataLock.LockAsync(ShutdownCancellationToken);
+            return deviceManager?.Devices ??
+                    ImmutableDictionary<int, HomeKitDevice>.Empty;
+        }
+
         protected override void Initialize()
         {
             try
@@ -29,6 +49,8 @@ namespace Hspi
 
                 // Device Add Page
                 HomeSeerSystem.RegisterDeviceIncPage(PlugInData.PlugInId, "AddDevice.html", "Pair HomeKit Device");
+
+                RestartProcessing();
 
                 Log.Information("Plugin Started");
             }
@@ -54,5 +76,25 @@ namespace Hspi
                 _ => base.PostBackProc(page, data, user, userRights),
             };
         }
+
+        private async Task MainTask()
+        {
+            using var sync = await dataLock.LockAsync(ShutdownCancellationToken).ConfigureAwait(false);
+
+            deviceManager?.Dispose();
+            deviceManager = new HsHomeKitDeviceManager(HomeSeerSystem,
+                                                       ShutdownCancellationToken);
+        }
+
+        private void RestartProcessing()
+        {
+            Utils.TaskHelper.StartAsyncWithErrorChecking("Main Task",
+                                                          MainTask,
+                                                          ShutdownCancellationToken,
+                                                          TimeSpan.FromSeconds(10));
+        }
+
+        private readonly AsyncLock dataLock = new AsyncLock();
+        private volatile HsHomeKitDeviceManager? deviceManager;
     }
 }

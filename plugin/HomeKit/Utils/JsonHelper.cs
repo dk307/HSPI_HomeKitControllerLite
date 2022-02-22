@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Hspi.HomeKit.Utils
+namespace HomeKit.Utils
 {
     internal static class JsonHelper
     {

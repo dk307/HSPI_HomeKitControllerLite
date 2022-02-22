@@ -38,7 +38,7 @@ namespace Hspi
                 return action switch
                 {
                     "search" => await Discover(cancellationToken).ConfigureAwait(false),
-                    "pair" => await Pair(hsController, requestObject, cancellationToken).ConfigureAwait(false),
+                    "pair" => await PairandCreateDevices(hsController, requestObject, cancellationToken).ConfigureAwait(false),
                     _ => throw new ArgumentException("Unknown Action"),
                 };
             }
@@ -49,9 +49,9 @@ namespace Hspi
             }
         }
 
-        private static async ValueTask<string> Pair(IHsController hsController,
-                                                    JObject requestObject,
-                                                    CancellationToken cancellationToken)
+        private static async ValueTask<string> PairandCreateDevices(IHsController hsController,
+                                                                    JObject requestObject,
+                                                                    CancellationToken cancellationToken)
         {
             var pincode = requestObject["pincode"]?.ToString();
             var discoveredDevice = requestObject["data"]?.ToObject<DiscoveredDevice>();
@@ -61,7 +61,6 @@ namespace Hspi
                 throw new ArgumentException("Invalid data for pairing");
             }
             var pairingInfo = await InsecureConnection.StartNewPairing(discoveredDevice, pincode, cancellationToken).ConfigureAwait(false);
-
             using SecureConnection secureConnection = new(pairingInfo);
 
             await secureConnection.ConnectAndListen(discoveredDevice.Address, cancellationToken).ConfigureAwait(false);
@@ -75,9 +74,9 @@ namespace Hspi
             }
 
             int refId = HsHomeKitDeviceFactory.CreateHsDevice(hsController,
-                                                            pairingInfo,
-                                                            discoveredDevice.Address,
-                                                            accessory1Aid);
+                                                              pairingInfo,
+                                                              discoveredDevice.Address,
+                                                              accessory1Aid);
 
             Log.Information("Created {refId} for {name}", refId, discoveredDevice.DisplayName);
 

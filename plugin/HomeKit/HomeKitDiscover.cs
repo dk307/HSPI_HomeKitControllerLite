@@ -16,10 +16,8 @@ namespace HomeKit
         public static async Task<DiscoveredDevice?> DiscoverDeviceById(string id, TimeSpan scanTime,
                                                                      CancellationToken cancellationToken)
         {
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-            var combined = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokenSource.Token,
-                                                                           cancellationToken);
+            var combined = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
             DiscoveredDevice? device = null;
             Action<IZeroconfHost> callback = (IZeroconfHost host) =>
@@ -30,7 +28,7 @@ namespace HomeKit
                     if (deviceFound.Id == id)
                     {
                         device = deviceFound;
-                        cancellationTokenSource.Cancel();
+                        combined.Cancel();
                     }
                 }
             };

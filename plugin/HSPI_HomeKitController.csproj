@@ -121,6 +121,7 @@
     <Compile Include="HomeKit\Exceptions\AccessoryDisconnectedException.cs" />
     <Compile Include="HomeKit\Exceptions\AccessoryException.cs" />
     <Compile Include="HomeKit\Exceptions\DecryptionFailedException.cs" />
+    <Compile Include="Hspi\DeviceData\HsHomeKitDeviceManager.cs" />
     <Compile Include="Hspi\DeviceData\HsHomeKitCharacteristicFeatureDevice.cs" />
     <Compile Include="Hspi\DeviceData\HsHomeKitConnectedFeatureDevice.cs" />
     <Compile Include="Hspi\DeviceData\HsHomeKitDevice.cs" />

@@ -34,8 +34,8 @@ namespace HomeKit
         public string DisplayNameForLog => lastDisplayName ?? "<Not connected>";
 
         public async Task ConnectionAndListen(PairingDeviceInfo info,
-                                               IPEndPoint fallbackEndPoint,
-                                               CancellationToken token)
+                                              IPEndPoint fallbackEndPoint,
+                                              CancellationToken token)
         {
             try
             {

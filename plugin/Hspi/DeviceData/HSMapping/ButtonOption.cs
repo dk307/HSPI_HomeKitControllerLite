@@ -24,7 +24,7 @@ namespace Hspi.DeviceData.HSMapping
         [JsonProperty("name", Required = Required.Always)]
         public string Name { get; init; }
 
-        [JsonProperty("name", Required = Required.Always)]
+        [JsonProperty("value", Required = Required.Always)]
         public double Value { get; init; }
 
         [JsonProperty("eControlUse")]

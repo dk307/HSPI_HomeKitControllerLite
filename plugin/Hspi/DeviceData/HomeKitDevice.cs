@@ -5,7 +5,6 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -22,13 +21,13 @@ namespace Hspi.DeviceData
                              IEnumerable<int> refIds,
                              CancellationToken cancellationToken)
         {
-            RefIds = refIds.ToList();
-            if (RefIds.Count == 0)
+            if (!refIds.Any())
             {
                 throw new ArgumentException(nameof(refIds));
             }
 
             this.HS = hsController;
+            this.originalRefIds = refIds;
             this.cancellationToken = cancellationToken;
 
             manager.DeviceConnectionChangedEvent += DeviceConnectionChangedEvent;
@@ -40,8 +39,6 @@ namespace Hspi.DeviceData
                                                          cancellationToken,
                                                          TimeSpan.FromSeconds(15));
         }
-
-        public IReadOnlyList<int> RefIds { get; }
 
         private void AccessoryValueChangedEvent(object sender, AccessoryValueChangedArgs e)
         {
@@ -84,7 +81,7 @@ namespace Hspi.DeviceData
                     HsHomeKitCharacteristicFeatureDevice item = new(HS, featureRefId);
                     featureRefIds.Add(item);
 
-                    Log.Information("Created {featureName} for {deviceName}", item.Name, device.Name);
+                    Log.Information("Created {featureName} for {deviceName}", item.NameForLog, device.Name);
                 }
                 else
                 {
@@ -119,7 +116,7 @@ namespace Hspi.DeviceData
             var deviceReportedInfo = manager.Connection.DeviceReportedInfo;
 
             Dictionary<int, HsHomeKitRootDevice> rootDevices = new();
-            foreach (var refId in RefIds)
+            foreach (var refId in originalRefIds)
             {
                 var aid = HsHomeKitRootDevice.GetAid(HS, refId);
                 var accessory = deviceReportedInfo.Accessories.FirstOrDefault(x => x.Aid == aid);
@@ -158,7 +155,7 @@ namespace Hspi.DeviceData
         }
 
         private void DeviceConnectionChangedEvent(object sender,
-                                                        DeviceConnectionChangedArgs e)
+                                                  DeviceConnectionChangedArgs e)
         {
             if (e.Connected)
             {
@@ -189,8 +186,9 @@ namespace Hspi.DeviceData
         private async Task UpdateDeviceProperties()
         {
             //open first device
-            var pairingInfo = HsHomeKitRootDevice.GetPairingInfo(HS, RefIds[0]);
-            var fallbackAddress = HsHomeKitRootDevice.GetFallBackAddress(HS, RefIds[0]);
+            int refId = originalRefIds.First();
+            var pairingInfo = HsHomeKitRootDevice.GetPairingInfo(HS, refId);
+            var fallbackAddress = HsHomeKitRootDevice.GetFallBackAddress(HS, refId);
 
             await manager.ConnectionAndListen(pairingInfo,
                                               fallbackAddress,
@@ -200,6 +198,7 @@ namespace Hspi.DeviceData
         private readonly CancellationToken cancellationToken;
         private readonly IHsController HS;
         private readonly SecureConnectionManager manager = new();
+        private readonly IEnumerable<int> originalRefIds;
         private ImmutableDictionary<int, HsHomeKitRootDevice> hsDevices = ImmutableDictionary<int, HsHomeKitRootDevice>.Empty;
     }
 }

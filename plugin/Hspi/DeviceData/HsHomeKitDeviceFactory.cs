@@ -5,7 +5,6 @@ using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Devices.Controls;
 using HomeSeer.PluginSdk.Devices.Identification;
 using Hspi.DeviceData.HSMapping;
-using Hspi.HomeKit.Utils;
 using Hspi.Utils;
 using Newtonsoft.Json;
 using Serilog;
@@ -17,9 +16,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using static Hspi.DeviceData.HsHomeKitConnectedFeatureDevice;
 using static Hspi.DeviceData.HsHomeKitDevice;
 using static Hspi.DeviceData.HsHomeKitFeatureDevice;
-using static Hspi.DeviceData.HsHomeKitConnectedFeatureDevice;
 using static System.FormattableString;
 
 #nullable enable
@@ -333,11 +332,10 @@ namespace Hspi.DeviceData
             return featureFactory;
         }
 
-
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
-                                                     {
-                                                         string json = Encoding.UTF8.GetString(Resource.HSMappings);
-                                                         return JsonHelper.DeserializeObject<HSMappings>(json);
-                                                     }, true);
+                                                        {
+                                                            string json = Encoding.UTF8.GetString(Resource.HSMappings);
+                                                            return JsonHelper.DeserializeObject<HSMappings>(json);
+                                                        }, true);
     }
 }

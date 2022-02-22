@@ -1,4 +1,4 @@
-﻿{
+{
   "mappings": [
     {
       "iid": "00000011-0000-1000-8000-0026BB765291",
@@ -96,49 +96,58 @@
       "iid": "00000033-0000-1000-8000-0026BB765291",
       "name": "Target Heating Cooling State",
 
-      "deviceType": {
-        "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
-        "featureType": 17, // ThermostatControl
-        "featureSubType": 9 // OperatingMode
-      },
+      "deviceType": [
+        {
+          "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+          "featureType": 17, // ThermostatControl
+          "featureSubType": 9 // OperatingMode
+        }
+      ],
 
       "buttonOptions": [
         {
           "value": 0,
           "name": "Off",
           "icon": "off.png",
-          "eControlUse": {
-            "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
-            "value": 14 //ThermModeOff
-          }
+          "eControlUse": [
+            {
+              "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+              "value": 14 //ThermModeOff
+            }
+          ]
         },
         {
           "value": 1,
           "name": "Heating",
           "icon": "heating.png",
-          "eControlUse": {
-            "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
-            "value": 15 //ThermModeHeat
-          }
+          "eControlUse": [
+            {
+              "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+              "value": 15 //ThermModeHeat
+            }
+          ]
         },
         {
           "value": 2,
           "name": "Cooling",
           "icon": "cooling.png",
-          "eControlUse": {
-            "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
-            "value": 16 //ThermModeCool
-          }
+          "eControlUse": [
+            {
+              "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+              "value": 16 //ThermModeCool
+            }
+          ]
         },
         {
           "value": 3,
           "name": "Auto",
           "icon": "autooperatingmode.png",
-          "eControlUse": {
-            "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
-            "value": 17 //ThermModeAuto
-          }
-
+          "eControlUse": [
+            {
+              "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+              "value": 17 //ThermModeAuto
+            }
+          ]
         }
       ]
     },
