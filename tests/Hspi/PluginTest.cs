@@ -23,5 +23,19 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsTrue(plugin.Object.InitIO());
             plugin.Object.ShutdownIO();
         }
+
+        [TestMethod]
+        public void AddDeviceTestWithNoAccessory()
+        {
+            var plugIn = TestHelper.CreatePlugInMock();
+            TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
+            Assert.IsTrue(plugIn.Object.InitIO());
+
+            string data = plugIn.Object.PostBackProc("AddDevice.html", "{\"action\":\"search\"}", string.Empty, 0);
+
+            Assert.AreEqual("{\"ErrorMessage\":null,\"Data\":[]}", data);
+
+            plugIn.Object.ShutdownIO();
+        }
     }
 }
