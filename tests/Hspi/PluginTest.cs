@@ -32,9 +32,7 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsTrue(plugIn.Object.InitIO());
 
             string data = plugIn.Object.PostBackProc("AddDevice.html", "{\"action\":\"search\"}", string.Empty, 0);
-
             Assert.AreEqual("{\"ErrorMessage\":null,\"Data\":[]}", data);
-
             plugIn.Object.ShutdownIO();
         }
     }
