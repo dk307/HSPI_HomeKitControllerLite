@@ -20,7 +20,7 @@ namespace HSPI_HomeKitControllerTest
 
             Assert.IsTrue(File.Exists(scriptPath));
 
-            ProcessStartInfo start = new ProcessStartInfo
+            ProcessStartInfo start = new()
             {
                 FileName = "python",
                 Arguments = string.Format("\"{0}\" {1}", scriptPath, args),

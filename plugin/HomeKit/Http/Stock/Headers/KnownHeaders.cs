@@ -4,6 +4,8 @@
 
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace System.Net.Http.Headers
 {
     internal static class KnownHeaders
@@ -135,7 +137,7 @@ namespace System.Net.Http.Headers
         // Matching is case-insenstive.
         // NOTE: Because of this, we do not preserve the case of the original header,
         // whether from the wire or from the user explicitly setting a known header using a header name string.
-        private static KnownHeader GetCandidate<T>(T key)
+        private static KnownHeader? GetCandidate<T>(T key)
             where T : struct, IHeaderNameAccessor     // Enforce struct for performance
         {
             int length = key.Length;
@@ -359,9 +361,9 @@ namespace System.Net.Http.Headers
             return null;
         }
 
-        internal static KnownHeader TryGetKnownHeader(string name)
+        internal static KnownHeader? TryGetKnownHeader(string name)
         {
-            KnownHeader candidate = GetCandidate(new StringAccessor(name));
+            var candidate = GetCandidate(new StringAccessor(name));
             if (candidate != null && StringComparer.OrdinalIgnoreCase.Equals(name, candidate.Name))
             {
                 return candidate;
@@ -370,7 +372,7 @@ namespace System.Net.Http.Headers
             return null;
         }
 
-        internal static unsafe KnownHeader TryGetKnownHeader(ReadOnlySpan<byte> name)
+        internal static unsafe KnownHeader? TryGetKnownHeader(ReadOnlySpan<byte> name)
         {
             fixed (byte* p = &MemoryMarshal.GetReference(name))
             {

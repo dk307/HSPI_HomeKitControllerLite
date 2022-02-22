@@ -20,10 +20,10 @@ namespace Hspi.DeviceData
         {
             this.HS = HS;
             this.combinedToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            devices = GetCurrentDevices().ToImmutableDictionary();
+            homeKitDevices = GetCurrentDevices().ToImmutableDictionary();
         }
 
-        public ImmutableDictionary<int, HomeKitDevice> Devices => devices;
+        public ImmutableDictionary<int, HomeKitDevice> Devices => homeKitDevices;
 
         public void Dispose()
         {
@@ -83,7 +83,7 @@ namespace Hspi.DeviceData
 
         private readonly CancellationTokenSource combinedToken;
         private readonly IHsController HS;
-        private readonly ImmutableDictionary<int, HomeKitDevice> devices;
+        private readonly ImmutableDictionary<int, HomeKitDevice> homeKitDevices;
         private bool disposedValue;
     };
 }
