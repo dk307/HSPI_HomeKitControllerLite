@@ -181,18 +181,16 @@ namespace Hspi.DeviceData
                 if (!string.IsNullOrWhiteSpace(suffix))
                 {
                     data.Feature.Add(EProperty.AdditionalStatusData, new List<string>() { suffix! });
-                    if (data.Feature[EProperty.StatusGraphics] is StatusGraphicCollection graphics)
+                    if (data.Feature[EProperty.StatusGraphics] is StatusGraphicCollection graphics && 
+                        graphics.Values != null)
                     {
-                        if (graphics.Values != null)
+                        foreach (var statusGraphic in graphics.Values)
                         {
-                            foreach (var statusGraphic in graphics.Values)
-                            {
-                                statusGraphic.HasAdditionalData = true;
+                            statusGraphic.HasAdditionalData = true;
 
-                                if (statusGraphic.IsRange)
-                                {
-                                    statusGraphic.TargetRange.Suffix = " " + HsFeature.GetAdditionalDataToken(0);
-                                }
+                            if (statusGraphic.IsRange)
+                            {
+                                statusGraphic.TargetRange.Suffix = " " + HsFeature.GetAdditionalDataToken(0);
                             }
                         }
                     }

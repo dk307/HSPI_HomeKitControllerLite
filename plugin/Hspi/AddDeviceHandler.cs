@@ -18,7 +18,7 @@ namespace Hspi
 {
     internal static class AddDeviceHandler
     {
-        public static string PostBackProc(string data,
+        public static (string, bool) PostBackProc(string data,
                                           IHsController hsController,
                                           CancellationToken cancellationToken)
         {
@@ -27,29 +27,15 @@ namespace Hspi
 
         private sealed record Result(string? ErrorMessage = null, object? Data = null);
 
-        private static async Task<string> PostBackProcAsync(string data,
-                                                            IHsController hsController,
-                                                            CancellationToken cancellationToken)
+        private static async ValueTask<string> Discover(CancellationToken cancellationToken)
         {
-            try
-            {
-                var requestObject = JsonConvert.DeserializeObject<JObject>(data);
-                var action = requestObject["action"]?.ToString();
-                return action switch
-                {
-                    "search" => await Discover(cancellationToken).ConfigureAwait(false),
-                    "pair" => await PairandCreateDevices(hsController, requestObject, cancellationToken).ConfigureAwait(false),
-                    _ => throw new ArgumentException("Unknown Action"),
-                };
-            }
-            catch (Exception ex)
-            {
-                var result = new Result { ErrorMessage = ex.GetFullMessage() };
-                return JsonConvert.SerializeObject(result);
-            }
+            var discoveredDevices = await HomeKitDiscover.DiscoverIPs(TimeSpan.FromSeconds(5), cancellationToken);
+            var unPairedDevices = discoveredDevices.Where(x => (x.Status & DeviceStatus.NotPaired) == DeviceStatus.NotPaired);
+            var result = new Result { Data = unPairedDevices };
+            return JsonConvert.SerializeObject(result);
         }
 
-        private static async ValueTask<string> PairandCreateDevices(IHsController hsController,
+        private static async ValueTask<string> PairAndCreateDevices(IHsController hsController,
                                                                     JObject requestObject,
                                                                     CancellationToken cancellationToken)
         {
@@ -84,14 +70,27 @@ namespace Hspi
             return JsonConvert.SerializeObject(result);
         }
 
-        private static async ValueTask<string> Discover(CancellationToken cancellationToken)
+        private static async Task<(string, bool)> PostBackProcAsync(string data,
+                                                                            IHsController hsController,
+                                                            CancellationToken cancellationToken)
         {
-            var discoveredDevices = await HomeKitDiscover.DiscoverIPs(TimeSpan.FromSeconds(5), cancellationToken);
-            var unPairedDevices = discoveredDevices.Where(x => (x.Status & DeviceStatus.NotPaired) == DeviceStatus.NotPaired);
-            var result = new Result { Data = unPairedDevices };
-            return JsonConvert.SerializeObject(result);
+            try
+            {
+                var requestObject = JsonConvert.DeserializeObject<JObject>(data);
+                var action = requestObject["action"]?.ToString();
+                return action switch
+                {
+                    "search" => (await Discover(cancellationToken).ConfigureAwait(false), false),
+                    "pair" => (await PairAndCreateDevices(hsController, requestObject, cancellationToken).ConfigureAwait(false), true),
+                    _ => throw new ArgumentException("Unknown Action"),
+                };
+            }
+            catch (Exception ex)
+            {
+                var result = new Result { ErrorMessage = ex.GetFullMessage() };
+                return (JsonConvert.SerializeObject(result), false);
+            }
         }
-
         public const string PageName = "AddDevice.html";
     }
 }

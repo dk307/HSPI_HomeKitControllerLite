@@ -9,9 +9,9 @@ using static System.FormattableString;
 
 namespace Hspi.DeviceData
 {
-    internal class HsHomeKitDevice
+    internal abstract class HsHomeKitDevice
     {
-        public HsHomeKitDevice(IHsController controller, int refId)
+        protected HsHomeKitDevice(IHsController controller, int refId)
         {
             HS = controller;
             RefId = refId;

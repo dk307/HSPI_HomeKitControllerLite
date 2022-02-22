@@ -7,7 +7,7 @@ using static System.FormattableString;
 
 namespace Hspi.DeviceData
 {
-    internal class HsHomeKitFeatureDevice : HsHomeKitDevice
+    internal abstract class HsHomeKitFeatureDevice : HsHomeKitDevice
     {
         public HsHomeKitFeatureDevice(IHsController controller, int refId) 
             : base(controller, refId)

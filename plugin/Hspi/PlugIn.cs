@@ -51,7 +51,6 @@ namespace Hspi
                 HomeSeerSystem.RegisterDeviceIncPage(PlugInData.PlugInId, "AddDevice.html", "Pair HomeKit Device");
 
                 RestartProcessing();
-
                 Log.Information("Plugin Started");
             }
             catch (Exception ex)
@@ -70,11 +69,18 @@ namespace Hspi
         public override string PostBackProc(string page, string data, string user, int userRights)
         {
             Log.Debug("PostBackProc for {page} with {data}", page, data);
-            return page switch
+            var (result, restart) = page switch
             {
                 AddDeviceHandler.PageName => AddDeviceHandler.PostBackProc(data, HomeSeerSystem, ShutdownCancellationToken),
-                _ => base.PostBackProc(page, data, user, userRights),
+                _ => (base.PostBackProc(page, data, user, userRights), false),
             };
+
+            if (restart)
+            {
+                RestartProcessing();
+            }
+
+            return result;
         }
 
         private async Task MainTask()
@@ -94,7 +100,7 @@ namespace Hspi
                                                           TimeSpan.FromSeconds(10));
         }
 
-        private readonly AsyncLock dataLock = new AsyncLock();
+        private readonly AsyncLock dataLock = new();
         private volatile HsHomeKitDeviceManager? deviceManager;
     }
 }

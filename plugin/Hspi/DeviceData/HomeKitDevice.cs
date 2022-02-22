@@ -56,6 +56,14 @@ namespace Hspi.DeviceData
             List<HsHomeKitCharacteristicFeatureDevice> featureRefIds = new();
             foreach (var enabledCharacteristic in enabledCharacteristics)
             {
+                var (service, characteristic) = accessory.FindCharacteristic(enabledCharacteristic);
+
+                if ((service == null) || (characteristic == null))
+                {
+                    Log.Warning("Enabled Characteristic not found on {name}", manager.DisplayNameForLog);
+                    continue;
+                }
+
                 int index = device.Features.FindIndex(
                     x =>
                     {
@@ -66,19 +74,11 @@ namespace Hspi.DeviceData
 
                 if (index == -1)
                 {
-                    var (service, characteristic) = accessory.FindCharacteristic(enabledCharacteristic);
-
-                    if ((service == null) || (characteristic == null))
-                    {
-                        Log.Warning("Enabled Characteristic not found on {name}", manager.DisplayNameForLog);
-                        continue;
-                    }
-
                     int featureRefId = HsHomeKitDeviceFactory.CreateFeature(HS,
                                                                           refId,
                                                                           service.Type,
                                                                           characteristic);
-                    HsHomeKitCharacteristicFeatureDevice item = new(HS, featureRefId);
+                    HsHomeKitCharacteristicFeatureDevice item = new(HS, featureRefId, characteristic.Format);
                     featureRefIds.Add(item);
 
                     Log.Information("Created {featureName} for {deviceName}", item.NameForLog, device.Name);
@@ -87,21 +87,19 @@ namespace Hspi.DeviceData
                 {
                     var feature = device.Features[index];
                     Log.Debug("Found {featureName} for {deviceName}", feature.Name, device.Name);
-                    featureRefIds.Add(new HsHomeKitCharacteristicFeatureDevice(HS, feature.Ref));
+                    featureRefIds.Add(new HsHomeKitCharacteristicFeatureDevice(HS, feature.Ref, characteristic.Format));
                 }
             }
 
             // delete removed ones
             foreach (var feature in device.Features)
             {
-                if (!enabledCharacteristics.Contains((ulong)feature.Ref))
+                var typeData = HsHomeKitFeatureDevice.GetTypeData(feature.PlugExtraData);
+                if (typeData.Type == HsHomeKitFeatureDevice.FeatureType.Characteristics &&
+                    (typeData.Iid == null || !enabledCharacteristics.Contains(typeData.Iid.Value)))
                 {
-                    var typeData = HsHomeKitFeatureDevice.GetTypeData(feature.PlugExtraData);
-                    if (typeData.Type == HsHomeKitFeatureDevice.FeatureType.Characteristics)
-                    {
-                        Log.Information("Deleting {featureName} for {deviceName}", feature.Name, device.Name);
-                        HS.DeleteFeature(feature.Ref);
-                    }
+                    Log.Information("Deleting {featureName} for {deviceName}", feature.Name, device.Name);
+                    HS.DeleteFeature(feature.Ref);
                 }
             }
 

@@ -80,8 +80,8 @@ namespace HomeKit
         {
             if (lastConnectionEvent != connection)
             {
-                DeviceConnectionChangedEvent?.Invoke(this, new DeviceConnectionChangedArgs(connection));
                 lastConnectionEvent = connection;
+                DeviceConnectionChangedEvent?.Invoke(this, new DeviceConnectionChangedArgs(connection));
             }
         }
 
