@@ -35,7 +35,8 @@ namespace Hspi.DeviceData
             //find default enabled characteristics
             var defaultCharacteristics =
                 accessory.Services.Values.FirstOrDefault(x => x.Primary == true)?.Characteristics?.Values ??
-                accessory.Services.Values.FirstOrDefault(x => x.Type != ServiceType.AccessoryInformation)?.Characteristics?.Values ??
+                accessory.Services.Values.FirstOrDefault(x => x.Type != ServiceType.AccessoryInformation &&
+                                                              x.Type != ServiceType.ProtocolInformation)?.Characteristics?.Values ??
                 Array.Empty<Characteristic>();
 
             var extraData = CreateRootPlugInExtraData(pairingDeviceInfo,
@@ -75,6 +76,7 @@ namespace Hspi.DeviceData
 
             var newFeatureData = FeatureFactory.CreateFeature(PlugInData.PlugInId)
                .WithName("Connected")
+               .WithLocation(PlugInData.PlugInName)
                .WithMiscFlags(EMiscFlag.StatusOnly)
                .AsType(EFeatureType.Generic, 0)
                .WithExtraData(CreatePlugInExtraforDeviceType(FeatureType.OnlineStatus))
@@ -136,13 +138,25 @@ namespace Hspi.DeviceData
 
         private static void AddStatusControl(NewFeatureData newData, StatusControl statusControl)
         {
-            var statusControls = (StatusControlCollection)newData.Feature[EProperty.StatusControls];
+            if (!newData.Feature.TryGetValue(EProperty.StatusControls, out var value))
+            {
+                value = new StatusControlCollection();
+                newData.Feature[EProperty.StatusControls] = value; 
+            }
+
+            var statusControls = (StatusControlCollection)value;
             statusControls.Add(statusControl);
         }
 
         private static void AddStatusGraphic(NewFeatureData newData, StatusGraphic statusGraphic)
         {
-            var statusGraphics = (StatusGraphicCollection)newData.Feature[EProperty.StatusGraphics];
+            if (!newData.Feature.TryGetValue(EProperty.StatusGraphics, out var value))
+            {
+                value = new StatusGraphicCollection();
+                newData.Feature[EProperty.StatusGraphics] = value;
+            }
+
+            var statusGraphics = (StatusGraphicCollection)value;
             statusGraphics.Add(statusGraphic);
         }
 
@@ -169,13 +183,16 @@ namespace Hspi.DeviceData
                     data.Feature.Add(EProperty.AdditionalStatusData, new List<string>() { suffix! });
                     if (data.Feature[EProperty.StatusGraphics] is StatusGraphicCollection graphics)
                     {
-                        foreach (var statusGraphic in graphics.Values)
+                        if (graphics.Values != null)
                         {
-                            statusGraphic.HasAdditionalData = true;
-
-                            if (statusGraphic.IsRange)
+                            foreach (var statusGraphic in graphics.Values)
                             {
-                                statusGraphic.TargetRange.Suffix = " " + HsFeature.GetAdditionalDataToken(0);
+                                statusGraphic.HasAdditionalData = true;
+
+                                if (statusGraphic.IsRange)
+                                {
+                                    statusGraphic.TargetRange.Suffix = " " + HsFeature.GetAdditionalDataToken(0);
+                                }
                             }
                         }
                     }
@@ -333,9 +350,9 @@ namespace Hspi.DeviceData
         }
 
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
-                                                        {
-                                                            string json = Encoding.UTF8.GetString(Resource.HSMappings);
-                                                            return JsonHelper.DeserializeObject<HSMappings>(json);
-                                                        }, true);
+                                                           {
+                                                               string json = Encoding.UTF8.GetString(Resource.HSMappings);
+                                                               return JsonHelper.DeserializeObject<HSMappings>(json);
+                                                           }, true);
     }
 }

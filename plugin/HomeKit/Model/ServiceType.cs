@@ -13,6 +13,7 @@ namespace HomeKit.Model
         }
 
         public static readonly ServiceType AccessoryInformation = new("3E");
+        public static readonly ServiceType ProtocolInformation = new("A2");
         public static readonly ServiceType Fan = new("40");
         public static readonly ServiceType Fan2 = new("B7");
         public static readonly ServiceType Thermostat = new("4A");
