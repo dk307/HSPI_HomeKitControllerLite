@@ -9,7 +9,8 @@ namespace Hspi.DeviceData
 {
     internal abstract class HsHomeKitFeatureDevice : HsHomeKitDevice
     {
-        public HsHomeKitFeatureDevice(IHsController controller, int refId) 
+        protected HsHomeKitFeatureDevice(IHsController controller,
+                                         int refId) 
             : base(controller, refId)
         {
         }
@@ -27,7 +28,7 @@ namespace Hspi.DeviceData
             return (stringData != null);
         }
 
-        public HsFeatureTypeData GetTypeData()
+        protected HsFeatureTypeData GetTypeData()
         {
             var typeData = GetPlugExtraData<HsFeatureTypeData>(DeviceTypePlugExtraTag);
 

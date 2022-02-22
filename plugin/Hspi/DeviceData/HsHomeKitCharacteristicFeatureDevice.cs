@@ -1,9 +1,9 @@
 ﻿using HomeKit.Model;
 using HomeSeer.PluginSdk;
+using Newtonsoft.Json.Linq;
 using Serilog;
 using System;
-using System.ComponentModel;
-using System.Globalization;
+using System.Diagnostics;
 
 #nullable enable
 
@@ -17,28 +17,20 @@ namespace Hspi.DeviceData
             : base(controller, refId)
         {
             Format = characteristicFormat;
+            var typeData = GetTypeData();
+            Debug.Assert(typeData.Type == FeatureType.Characteristics);
+            this.Iid = typeData.Iid ?? throw new InvalidOperationException("Invalid PlugExtraData");
         }
 
         public CharacteristicFormat Format { get; }
+        public ulong Iid { get; }
 
-        public void SetValue(object value)
+        public void SetValue(object? value)
         {
             switch (Format)
             {
                 case CharacteristicFormat.Bool:
-                    {
-                        TypeConverter typeConverter = TypeDescriptor.GetConverter(typeof(bool));
-                        if (typeConverter.IsValid(value))
-                        {
-                            var boolValue = (bool)typeConverter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
-                            UpdateDeviceValue(boolValue ? 1 : 0);
-                        }
-                        else
-                        {
-                            Log.Warning("Invalid value {value} received for the {name}", value, NameForLog);
-                            UpdateDeviceValue(null);
-                        }
-                    }
+                    UpdateDoubleValue<bool>(value);
                     break;
 
                 case CharacteristicFormat.UnsignedInt8:
@@ -46,22 +38,11 @@ namespace Hspi.DeviceData
                 case CharacteristicFormat.UnsignedInt32:
                 case CharacteristicFormat.Integer:
                 case CharacteristicFormat.Float:
-                    {
-                        TypeConverter typeConverter = TypeDescriptor.GetConverter(typeof(double));
-                        if (typeConverter.IsValid(value))
-                        {
-                            var doubleValue = (double)typeConverter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
-                            UpdateDeviceValue(doubleValue);
-                        }
-                        else
-                        {
-                            Log.Warning("Invalid value {value} received for the {name}", value, NameForLog);
-                            UpdateDeviceValue(null);
-                        }
-                    }
+                    UpdateDoubleValue<double>(value);
                     break;
 
                 case CharacteristicFormat.String:
+                    UpdateDeviceValue(value?.ToString());
                     break;
 
                 case CharacteristicFormat.Tlv8:
@@ -70,6 +51,27 @@ namespace Hspi.DeviceData
                     throw new NotImplementedException();
                 default:
                     break;
+            }
+        }
+
+        private void UpdateDoubleValue<T>(object? value)
+        {
+            try
+            {
+                if (value == null)
+                {
+                    UpdateDeviceValue(null);
+                    return;
+                }
+                JValue jValue = new(value);
+                var doubleValue = jValue.Value<T>();
+                UpdateDeviceValue(Convert.ToDouble(doubleValue));
+                Log.Debug("Updated value {value} for the {name}", value, NameForLog);
+            }
+            catch (Exception)
+            {
+                Log.Warning("Invalid value {value} received for the {name}", value, NameForLog);
+                UpdateDeviceValue(null);
             }
         }
     }

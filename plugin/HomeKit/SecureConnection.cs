@@ -125,9 +125,6 @@ namespace HomeKit
 
                 var changedSubscriptions = await ChangeSubscription(neededSubscriptions, true, token).ConfigureAwait(false);
 
-                // refresh all subscribed values as we may have missed some changes by the time we subscribed
-                await RefreshValues(neededSubscriptions, token).ConfigureAwait(false);
-
                 foreach (var AidIidPair in changedSubscriptions)
                 {
                     subscriptionsToDevice.Add(AidIidPair);
@@ -262,23 +259,28 @@ namespace HomeKit
             }
         }
 
-        private async Task RefreshValues(IEnumerable<AidIidPair> pairs,
-                                                                                                 CancellationToken token)
+        public async Task RefreshValues(CancellationToken token)
         {
-            var data = string.Join(",", pairs.Select(x => Invariant($"{x.Aid}.{x.Iid}")));
+            foreach (var accessory in DeviceReportedInfo.Accessories)
+            {
+                var readableCharacterestics = accessory.Services.Values.SelectMany(
+                    x => x.Characteristics.Values.Where(c => c.Permissions.Contains(CharacteristicPermissions.PairedRead)));
 
-            var result = await this.HandleJsonRequest<JObject, CharacteristicsValuesList>(HttpMethod.Get,
-                                                                             null,
-                                                                             CharacteristicsTarget,
-                                                                             "id=" + data,
-                                                                             cancellationToken: token);
-            if (result != null)
-            {
-                EnqueueResults(result);
-            }
-            else
-            {
-                Log.Warning("Failed to refresh values {values} for {name}", data, DisplayName);
+                var data = string.Join(",", readableCharacterestics.Select(x => Invariant($"{accessory.Aid}.{x.Iid}")));
+
+                var result = await this.HandleJsonRequest<JObject, CharacteristicsValuesList>(HttpMethod.Get,
+                                                                                 null,
+                                                                                 CharacteristicsTarget,
+                                                                                 "id=" + data,
+                                                                                 cancellationToken: token);
+                if (result != null)
+                {
+                    EnqueueResults(result);
+                }
+                else
+                {
+                    Log.Warning("Failed to refresh values {values} for {name}", data, DisplayName);
+                }
             }
         }
 

@@ -34,6 +34,7 @@ namespace Hspi.DeviceData
                 return Invariant($"RefId:{refId}");
             }
         }
+
         protected static T GetPlugExtraData<T>(IHsController hsController,
                                                int refId,
                                                string tag,
@@ -79,13 +80,19 @@ namespace Hspi.DeviceData
                 // only this call triggers events
                 if (!HS.UpdateFeatureValueByRef(RefId, data.Value))
                 {
-                    throw new Exception("Failed to update device");
+                    throw new InvalidOperationException($"Failed to update device {NameForLog}");
                 }
             }
             else
             {
                 HS.UpdatePropertyByRef(RefId, EProperty.InvalidValue, true);
             }
+        }
+
+        protected void UpdateDeviceValue(string? data)
+        {
+            HS.UpdatePropertyByRef(RefId, EProperty.Status, data);
+            HS.UpdatePropertyByRef(RefId, EProperty.InvalidValue, false);
         }
 
         //Extra data Tags

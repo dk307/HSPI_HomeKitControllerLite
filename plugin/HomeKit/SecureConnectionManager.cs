@@ -59,6 +59,8 @@ namespace HomeKit
 
                 EnqueueConnectionEvent(true);
 
+                await secureHomeKitConnection.RefreshValues(token).ConfigureAwait(false);
+
                 //listen and process events
                 var finishedTask = await Task.WhenAny(listenTask, eventProcessTask).ConfigureAwait(false);
                 await finishedTask.ConfigureAwait(false);

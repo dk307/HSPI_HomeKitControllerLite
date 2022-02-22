@@ -3,6 +3,7 @@ using HomeKit.Utils;
 using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
 using Newtonsoft.Json;
+using Serilog;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net;
@@ -19,11 +20,16 @@ namespace Hspi.DeviceData
                                    IEnumerable<HsHomeKitCharacteristicFeatureDevice> characteristicFeatures)
             : base(controller, refId)
         {
-            CharacteristicFeatures = characteristicFeatures.ToImmutableDictionary(x => x.RefId);
+            CharacteristicFeatures = characteristicFeatures.ToImmutableDictionary(x => x.Iid);
             ConnectedFeature = connectedFeature;
+            this.Aid = GetAid();
         }
 
-        public ImmutableDictionary<int, HsHomeKitCharacteristicFeatureDevice> CharacteristicFeatures { get; }
+        public ulong Aid { get; }
+
+        // Iid to device dict
+        public ImmutableDictionary<ulong, HsHomeKitCharacteristicFeatureDevice> CharacteristicFeatures { get; }
+
         public HsHomeKitConnectedFeatureDevice ConnectedFeature { get; }
 
         public static ulong GetAid(IHsController hsController, int refId)
@@ -50,14 +56,14 @@ namespace Hspi.DeviceData
             return GetPlugExtraData<PairingDeviceInfo>(hsController, refId, PairInfoPlugExtraTag);
         }
 
-        public ulong GetAid()
-        {
-            return GetPlugExtraData<ulong>(AidPlugExtraTag);
-        }
-
         public IPEndPoint GetFallBackAddress()
         {
             return GetPlugExtraData<IPEndPoint>(FallbackAddressPlugExtraTag, new IPEndPointJsonConverter());
+        }
+
+        public PairingDeviceInfo GetPairingInfo()
+        {
+            return GetPlugExtraData<PairingDeviceInfo>(PairInfoPlugExtraTag);
         }
 
         public void SetConnectedState(bool connected) => ConnectedFeature.SetConnectedState(connected);
@@ -73,9 +79,21 @@ namespace Hspi.DeviceData
             HS.UpdatePropertyByRef(RefId, EProperty.PlugExtraData, plugInExtra);
         }
 
-        public PairingDeviceInfo GetPairingInfo()
+        public void SetValue(ulong iid, object? value)
         {
-            return GetPlugExtraData<PairingDeviceInfo>(PairInfoPlugExtraTag);
+            if (CharacteristicFeatures.TryGetValue(iid, out var feature))
+            {
+                feature.SetValue(value);
+            }
+            else
+            {
+                Log.Debug("Unknown iid {iid} received for {aid} from {name}", iid, Aid, NameForLog);
+            }
+        }
+
+        private ulong GetAid()
+        {
+            return GetPlugExtraData<ulong>(AidPlugExtraTag);
         }
     }
 }

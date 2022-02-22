@@ -42,6 +42,15 @@ namespace Hspi.DeviceData
 
         private void AccessoryValueChangedEvent(object sender, AccessoryValueChangedArgs e)
         {
+            Log.Debug("Update for {name} with Aid:{aid} Iid:{iid} value:{value}", manager.DisplayNameForLog, e.Aid, e.Iid, e.Value);
+            if (hsDevices.TryGetValue(e.Aid, out var rootDevice))
+            {
+                rootDevice.SetValue(e.Iid, e.Value);
+            }
+            else
+            {
+                Log.Warning("Unknown value update for {aid} for {name}", e.Aid, manager.DisplayNameForLog);
+            }
         }
 
         private HsHomeKitRootDevice CreateAndUpdateFeatures(Accessory accessory,
@@ -113,7 +122,7 @@ namespace Hspi.DeviceData
         {
             var deviceReportedInfo = manager.Connection.DeviceReportedInfo;
 
-            Dictionary<int, HsHomeKitRootDevice> rootDevices = new();
+            Dictionary<ulong, HsHomeKitRootDevice> rootDevices = new();
             foreach (var refId in originalRefIds)
             {
                 var aid = HsHomeKitRootDevice.GetAid(HS, refId);
@@ -127,13 +136,13 @@ namespace Hspi.DeviceData
                 }
 
                 var rootDevice = CreateAndUpdateFeatures(accessory, refId);
-                rootDevices[refId] = rootDevice;
+                rootDevices[rootDevice.Aid] = rootDevice;
             }
 
             // check for new accessories on device and create them
             foreach (var accessory in deviceReportedInfo.Accessories)
             {
-                var found = rootDevices.Values.Any(x => x.GetAid() == accessory.Aid);
+                var found = rootDevices.Values.Any(x => x.Aid == accessory.Aid);
                 if (!found)
                 {
                     Log.Warning("Found a new accessory from the homekit device {name}. Creating new device in Homeseer.",
@@ -145,7 +154,7 @@ namespace Hspi.DeviceData
                                                 accessory);
 
                     var rootDevice = CreateAndUpdateFeatures(accessory, refId);
-                    rootDevices[refId] = rootDevice;
+                    rootDevices[rootDevice.Aid] = rootDevice;
                 }
             }
 
@@ -197,6 +206,9 @@ namespace Hspi.DeviceData
         private readonly IHsController HS;
         private readonly SecureConnectionManager manager = new();
         private readonly IEnumerable<int> originalRefIds;
-        private ImmutableDictionary<int, HsHomeKitRootDevice> hsDevices = ImmutableDictionary<int, HsHomeKitRootDevice>.Empty;
+
+        // aid to device dict
+        private ImmutableDictionary<ulong, HsHomeKitRootDevice> hsDevices = 
+            ImmutableDictionary<ulong, HsHomeKitRootDevice>.Empty;
     }
 }
