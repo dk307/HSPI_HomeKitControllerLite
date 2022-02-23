@@ -20,6 +20,7 @@ namespace HSPI_HomeKitControllerTest
             // files not shipped
             dllFiles.Remove("HSCF.dll");
             dllFiles.Remove("PluginSdk.dll");
+            dllFiles.Remove("HomeSeerAPI.dll");
 
             // Parse shipped dlls
             var installDlls = File.ReadLines(Path.Combine(path, "DllsToShip.txt")).ToList();
