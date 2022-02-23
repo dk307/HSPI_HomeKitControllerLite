@@ -17,61 +17,13 @@ namespace HSPI_HomeKitControllerTest
     [TestClass]
     public class PlugInTest
     {
-        private readonly CancellationTokenSource cancellationTokenSource = new();
-
         public PlugInTest()
         {
             cancellationTokenSource.CancelAfter(120 * 1000);
         }
 
         [TestMethod]
-        public void VerifyNameAndId()
-        {
-            var plugin = new PlugIn();
-            Assert.AreEqual(plugin.Id, PlugInData.PlugInId);
-            Assert.AreEqual(plugin.Name, PlugInData.PlugInName);
-        }
-
-        [TestMethod]
-        public void InitFirstTime()
-        {
-            var plugin = TestHelper.CreatePlugInMock();
-            var mockHsController = TestHelper.SetupHsControllerAndSettings(plugin, new Dictionary<string, string>());
-
-            Assert.IsTrue(plugin.Object.InitIO());
-            plugin.Object.ShutdownIO();
-            mockHsController.Verify(x => x.RegisterDeviceIncPage(PlugInData.PlugInId, "AddDevice.html", "Pair HomeKit Device"));
-        }
-
-        [TestMethod]
-        public void AddDeviceTestWithNoAccessory()
-        {
-            var plugIn = TestHelper.CreatePlugInMock();
-            TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
-            Assert.IsTrue(plugIn.Object.InitIO());
-
-            string data = plugIn.Object.PostBackProc("AddDevice.html", "{\"action\":\"search\"}", string.Empty, 0);
-            Assert.AreEqual("{\"ErrorMessage\":null,\"Data\":[]}", data);
-            plugIn.Object.ShutdownIO();
-        }
-
-        [TestMethod]
-        public async Task AddDeviceIgnoresAlreadyPairedOnesAsync()
-        {
-            using var hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
-            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
-
-            var plugIn = TestHelper.CreatePlugInMock();
-            TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
-            Assert.IsTrue(plugIn.Object.InitIO());
-
-            string data = plugIn.Object.PostBackProc("AddDevice.html", "{\"action\":\"search\"}", string.Empty, 0);
-            Assert.AreEqual("{\"ErrorMessage\":null,\"Data\":[]}", data);
-            plugIn.Object.ShutdownIO();
-        }
-
-        [TestMethod]
-        public async Task AddDeviceAsync()
+        public async Task AddDevice()
         {
             int port = 50001;
             string pin = "133-34-295";
@@ -124,9 +76,95 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsNotNull(JsonConvert.DeserializeObject<PairingDeviceInfo>(extraData["pairing.info"]));
             Assert.AreEqual(1UL, JsonConvert.DeserializeObject<ulong>(extraData["accessory.aid"]));
             Assert.IsNotNull(JsonConvert.DeserializeObject<IPEndPoint>(extraData["fallback.address"], new IPEndPointJsonConverter()));
-            CollectionAssert.AreEqual(new ulong[] { 11 }, 
+            CollectionAssert.AreEqual(new ulong[] { 11 },
                                       JsonConvert.DeserializeObject<ulong[]>(extraData["enabled.characteristic"]));
             plugIn.Object.ShutdownIO();
         }
+
+        [TestMethod]
+        public async Task AddDeviceIgnoresAlreadyPairedOnesAsync()
+        {
+            using var hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
+            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+
+            var plugIn = TestHelper.CreatePlugInMock();
+            TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
+            Assert.IsTrue(plugIn.Object.InitIO());
+
+            string data = plugIn.Object.PostBackProc("AddDevice.html", "{\"action\":\"search\"}", string.Empty, 0);
+            Assert.AreEqual("{\"ErrorMessage\":null,\"Data\":[]}", data);
+            plugIn.Object.ShutdownIO();
+        }
+
+        [TestMethod]
+        public void AddDeviceTestWithNoAccessory()
+        {
+            var plugIn = TestHelper.CreatePlugInMock();
+            TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
+            Assert.IsTrue(plugIn.Object.InitIO());
+
+            string data = plugIn.Object.PostBackProc("AddDevice.html", "{\"action\":\"search\"}", string.Empty, 0);
+            Assert.AreEqual("{\"ErrorMessage\":null,\"Data\":[]}", data);
+            plugIn.Object.ShutdownIO();
+        }
+
+        [TestMethod]
+        public async Task AddDeviceWithAuthFailure()
+        {
+            int port = 50001;
+            string pin = "133-34-295";
+            using var hapAccessory = TestHelper.CreateUnPairedTemperatureAccessory(port, pin);
+            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+
+            var plugIn = TestHelper.CreatePlugInMock();
+            TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
+
+            Assert.IsTrue(plugIn.Object.InitIO());
+
+            //discover
+            string data = plugIn.Object.PostBackProc("AddDevice.html", "{\"action\":\"search\"}", string.Empty, 0);
+
+            var result = JsonConvert.DeserializeObject<JObject>(data);
+
+            Assert.IsNotNull(result);
+            Assert.IsNull((string)result["ErrorMessage"]);
+            Assert.AreEqual(1, (result["Data"] as JArray).Count);
+
+            JObject pairRequest = new();
+
+            pairRequest.Add("action", new JValue("pair"));
+            pairRequest.Add("pincode", new JValue("345-34-345"));
+            pairRequest.Add("data", (result["Data"] as JArray)[0]);
+
+            //add
+            string data2 = plugIn.Object.PostBackProc("AddDevice.html", pairRequest.ToString(), string.Empty, 0);
+            var result2 = JsonConvert.DeserializeObject<JObject>(data2);
+
+            Assert.IsNotNull(result2);
+            Assert.IsNotNull((string)result2["ErrorMessage"]);
+
+            plugIn.Object.ShutdownIO();
+        }
+
+        [TestMethod]
+        public void InitFirstTime()
+        {
+            var plugin = TestHelper.CreatePlugInMock();
+            var mockHsController = TestHelper.SetupHsControllerAndSettings(plugin, new Dictionary<string, string>());
+
+            Assert.IsTrue(plugin.Object.InitIO());
+            plugin.Object.ShutdownIO();
+            mockHsController.Verify(x => x.RegisterDeviceIncPage(PlugInData.PlugInId, "AddDevice.html", "Pair HomeKit Device"));
+        }
+
+        [TestMethod]
+        public void VerifyNameAndId()
+        {
+            var plugin = new PlugIn();
+            Assert.AreEqual(plugin.Id, PlugInData.PlugInId);
+            Assert.AreEqual(plugin.Name, PlugInData.PlugInName);
+        }
+
+        private readonly CancellationTokenSource cancellationTokenSource = new();
     }
 }
