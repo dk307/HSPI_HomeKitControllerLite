@@ -1,10 +1,14 @@
-﻿using HomeSeer.PluginSdk.Devices;
+﻿using HomeKit.Model;
+using HomeKit.Utils;
+using HomeSeer.PluginSdk.Devices;
+using HomeSeer.PluginSdk.Devices.Identification;
 using Hspi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -110,6 +114,18 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsNull((string)result2["ErrorMessage"]);
 
             Assert.IsNotNull(newDataForDevice);
+            Assert.IsTrue(((string)newDataForDevice.Device[EProperty.Name]).StartsWith("Sensor"));
+            Assert.AreEqual(ERelationship.Device, newDataForDevice.Device[EProperty.Relationship]);
+            Assert.AreEqual(PlugInData.PlugInName, newDataForDevice.Device[EProperty.Location]);
+            Assert.AreEqual((int)EDeviceType.Generic, ((TypeInfo)newDataForDevice.Device[EProperty.DeviceType]).Type);
+            Assert.AreEqual(2, ((TypeInfo)newDataForDevice.Device[EProperty.DeviceType]).SubType);
+
+            var extraData = (PlugExtraData)newDataForDevice.Device[EProperty.PlugExtraData];
+            Assert.IsNotNull(JsonConvert.DeserializeObject<PairingDeviceInfo>(extraData["pairing.info"]));
+            Assert.AreEqual(1UL, JsonConvert.DeserializeObject<ulong>(extraData["accessory.aid"]));
+            Assert.IsNotNull(JsonConvert.DeserializeObject<IPEndPoint>(extraData["fallback.address"], new IPEndPointJsonConverter()));
+            CollectionAssert.AreEqual(new ulong[] { 11 }, 
+                                      JsonConvert.DeserializeObject<ulong[]>(extraData["enabled.characteristic"]));
             plugIn.Object.ShutdownIO();
         }
     }
