@@ -23,11 +23,9 @@ namespace HSPI_HomeKitControllerTest
         {
             int port = 50001;
             string pin = "233-34-235";
-            string fileName = Guid.NewGuid().ToString("N") + ".obj";
-
-            string args = $"{port} {pin} {fileName}";
-            using var hapAccessory = new HapAccessory("temperature_sensor_unparied.py", args);
-            DiscoveredDevice discoveredDevice = await DiscoverAndVerify(port).ConfigureAwait(false);
+            using HapAccessory hapAccessory = TestHelper.CreateUnPairedTemperatureAccessory(port, pin);
+            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            var discoveredDevice = await DiscoverAndVerify(port).ConfigureAwait(false);
 
             var pairing = await InsecureConnection.StartNewPairing(discoveredDevice,
                                                                    pin,
@@ -39,6 +37,7 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsFalse(pairing.ControllerDevicePublicKey.IsEmpty);
         }
 
+
         [TestMethod]
         public async Task DiscoverAndPairingFailure()
         {
@@ -48,8 +47,7 @@ namespace HSPI_HomeKitControllerTest
 
             string args = $"{port} {pin} {fileName}";
             using var hapAccessory = new HapAccessory("temperature_sensor_unparied.py", args);
-            DiscoveredDevice discoveredDevice = await DiscoverAndVerify(port).ConfigureAwait(false);
-
+            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false); DiscoveredDevice discoveredDevice = await DiscoverAndVerify(port).ConfigureAwait(false);
             await Assert.ThrowsExceptionAsync<PairingException>(() => InsecureConnection.StartNewPairing(discoveredDevice,
                                                      "123-45-687",
                                                      cancellationTokenSource.Token));

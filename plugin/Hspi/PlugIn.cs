@@ -41,16 +41,27 @@ namespace Hspi
                     ImmutableDictionary<int, HomeKitDevice>.Empty;
         }
 
+        private void UpdateDebugLevel()
+        {
+            bool debugLevel = true;
+            bool logToFile = false;
+            this.LogDebug = debugLevel;
+            Logger.ConfigureLogging(LogDebug, logToFile, HomeSeerSystem);
+        }
+
+
         protected override void Initialize()
         {
             try
             {
+                UpdateDebugLevel();
                 Log.Information("Plugin Starting");
 
                 // Device Add Page
                 HomeSeerSystem.RegisterDeviceIncPage(PlugInData.PlugInId, "AddDevice.html", "Pair HomeKit Device");
 
                 RestartProcessing();
+                
                 Log.Information("Plugin Started");
             }
             catch (Exception ex)
