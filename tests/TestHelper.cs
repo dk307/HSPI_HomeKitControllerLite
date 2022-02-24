@@ -37,11 +37,11 @@ namespace HSPI_HomeKitControllerTest
             return hapAccessory;
         }
 
-        public static HapAccessory CreateTemperatureUnPairedAccessory(int port, string pin)
+        public static HapAccessory CreateTemperatureUnPairedAccessory(string pin)
         {
             string fileName = Guid.NewGuid().ToString("N") + ".obj";
 
-            string args = $"{port} {pin} {fileName}";
+            string args = $"{pin} {fileName}";
             var hapAccessory = new HapAccessory("temperature_sensor_unparied.py", args);
             return hapAccessory;
         }

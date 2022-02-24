@@ -26,9 +26,8 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task AddDevice()
         {
-            int port = 50001;
             string pin = "133-34-295";
-            using var hapAccessory = TestHelper.CreateTemperatureUnPairedAccessory(port, pin);
+            using var hapAccessory = TestHelper.CreateTemperatureUnPairedAccessory(pin);
             await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
 
             var plugIn = TestHelper.CreatePlugInMock();
@@ -112,9 +111,8 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task AddDeviceWithAuthFailure()
         {
-            int port = 50001;
             string pin = "133-34-295";
-            using var hapAccessory = TestHelper.CreateTemperatureUnPairedAccessory(port, pin);
+            using var hapAccessory = TestHelper.CreateTemperatureUnPairedAccessory(pin);
             await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
 
             var plugIn = TestHelper.CreatePlugInMock();
