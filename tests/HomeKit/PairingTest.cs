@@ -23,7 +23,7 @@ namespace HSPI_HomeKitControllerTest
         {
             int port = 50001;
             string pin = "233-34-235";
-            using HapAccessory hapAccessory = TestHelper.CreateUnPairedTemperatureAccessory(port, pin);
+            using HapAccessory hapAccessory = TestHelper.CreateTemperatureUnPairedAccessory(port, pin);
             await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
             var discoveredDevice = await DiscoverAndVerify(port).ConfigureAwait(false);
 

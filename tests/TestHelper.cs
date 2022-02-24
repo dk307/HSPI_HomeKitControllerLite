@@ -36,7 +36,7 @@ namespace HSPI_HomeKitControllerTest
             return hapAccessory;
         }
 
-        public static HapAccessory CreateUnPairedTemperatureAccessory(int port, string pin)
+        public static HapAccessory CreateTemperatureUnPairedAccessory(int port, string pin)
         {
             string fileName = Guid.NewGuid().ToString("N") + ".obj";
 
@@ -77,11 +77,13 @@ namespace HSPI_HomeKitControllerTest
             var method = plugInType.GetMethod("set_HomeSeerSystem", BindingFlags.NonPublic | BindingFlags.SetProperty | BindingFlags.Instance);
             method.Invoke(mockPlugin.Object, new object[] { mockHsController.Object });
 
+            mockHsController.Setup(x => x.GetINISetting("Settings", "gGlobalTempScaleF", "True", "")).Returns("True");
             mockHsController.Setup(x => x.GetIniSection("Settings", PlugInData.PlugInId + ".ini")).Returns(settingsFromIni);
             mockHsController.Setup(x => x.SaveINISetting("Settings", It.IsAny<string>(), It.IsAny<string>(), PlugInData.PlugInId + ".ini"));
             mockHsController.Setup(x => x.WriteLog(It.IsAny<ELogType>(), It.IsAny<string>(), PlugInData.PlugInName, It.IsAny<string>()));
             mockHsController.Setup(x => x.RegisterDeviceIncPage(PlugInData.PlugInId, It.IsAny<string>(), It.IsAny<string>()));
             mockHsController.Setup(x => x.GetRefsByInterface(PlugInData.PlugInId, true)).Returns(new List<int>());
+            mockHsController.Setup(x => x.GetNameByRef(It.IsAny<int>())).Returns("Test");
             return mockHsController;
         }
 

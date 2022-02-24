@@ -68,6 +68,7 @@
     <Compile Include="..\plugin\shared\tests\ExceptionHelperTest.cs">
       <Link>shared\ExceptionHelperTest.cs</Link>
     </Compile>
+    <Compile Include="PlugExtraDataConverter.cs" />
     <Compile Include="HapAccessory.cs" />
     <Compile Include="HomeKit\Http\ByteBufferWithIndexTest.cs" />
     <Compile Include="HomeKit\Http\HttpResponseParserTest.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="HomeKit\Srp\SrpIntegerTests.cs" />
     <Compile Include="HomeKit\PairingTest.cs" />
     <Compile Include="Hspi\AddDeviceTest.cs" />
+    <Compile Include="Hspi\AddFeatureTest.cs" />
     <Compile Include="Initialize.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>

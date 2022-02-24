@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace HSPI_HomeKitControllerTest
 {
+
     [TestClass]
     public class AddDeviceTest
     {
@@ -27,7 +28,7 @@ namespace HSPI_HomeKitControllerTest
         {
             int port = 50001;
             string pin = "133-34-295";
-            using var hapAccessory = TestHelper.CreateUnPairedTemperatureAccessory(port, pin);
+            using var hapAccessory = TestHelper.CreateTemperatureUnPairedAccessory(port, pin);
             await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
 
             var plugIn = TestHelper.CreatePlugInMock();
@@ -113,7 +114,7 @@ namespace HSPI_HomeKitControllerTest
         {
             int port = 50001;
             string pin = "133-34-295";
-            using var hapAccessory = TestHelper.CreateUnPairedTemperatureAccessory(port, pin);
+            using var hapAccessory = TestHelper.CreateTemperatureUnPairedAccessory(port, pin);
             await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
 
             var plugIn = TestHelper.CreatePlugInMock();

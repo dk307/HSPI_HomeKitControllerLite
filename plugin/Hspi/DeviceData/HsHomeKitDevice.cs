@@ -51,19 +51,31 @@ namespace Hspi.DeviceData
                                                string tag,
                                                params JsonConverter[] converters)
         {
-            var stringData = plugInExtra?[tag];
+            if (plugInExtra == null ||
+                !plugInExtra.ContainsNamed(tag))
+            {
+                throw new HsDeviceInvalidException(Invariant($"{tag} type not found"));
+            }
+
+            var stringData = plugInExtra[tag];
             if (stringData == null)
             {
                 throw new HsDeviceInvalidException(Invariant($"{tag} type not found"));
             }
 
-            var typeData = JsonConvert.DeserializeObject<T>(stringData, converters);
-            if (typeData == null)
+            try
             {
-                throw new HsDeviceInvalidException(Invariant($"{tag} not a valid Json value"));
+                var typeData = JsonConvert.DeserializeObject<T>(stringData, converters);
+                if (typeData == null)
+                {
+                    throw new HsDeviceInvalidException(Invariant($"{tag} not a valid Json value"));
+                }
+                return typeData;
             }
-
-            return typeData;
+            catch (Exception ex)
+            {
+                throw new HsDeviceInvalidException(Invariant($"{tag} type not found"), ex);
+            }
         }
 
         protected T GetPlugExtraData<T>(string tag, params JsonConverter[] converters)

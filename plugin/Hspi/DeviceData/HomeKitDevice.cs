@@ -84,9 +84,9 @@ namespace Hspi.DeviceData
                 if (index == -1)
                 {
                     int featureRefId = HsHomeKitDeviceFactory.CreateFeature(HS,
-                                                                          refId,
-                                                                          service.Type,
-                                                                          characteristic);
+                                                                            refId,
+                                                                            service.Type,
+                                                                            characteristic);
                     HsHomeKitCharacteristicFeatureDevice item = new(HS, featureRefId, characteristic.Format);
                     featureRefIds.Add(item);
 
@@ -208,7 +208,7 @@ namespace Hspi.DeviceData
         private readonly IEnumerable<int> originalRefIds;
 
         // aid to device dict
-        private ImmutableDictionary<ulong, HsHomeKitRootDevice> hsDevices = 
+        private ImmutableDictionary<ulong, HsHomeKitRootDevice> hsDevices =
             ImmutableDictionary<ulong, HsHomeKitRootDevice>.Empty;
     }
 }
