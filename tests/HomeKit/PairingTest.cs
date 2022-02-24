@@ -21,11 +21,10 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task DiscoverAndPairing()
         {
-            int port = 50001;
             string pin = "233-34-235";
             using HapAccessory hapAccessory = TestHelper.CreateTemperatureUnPairedAccessory(pin);
             await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
-            var discoveredDevice = await DiscoverAndVerify(port).ConfigureAwait(false);
+            var discoveredDevice = await DiscoverAndVerify().ConfigureAwait(false);
 
             var pairing = await InsecureConnection.StartNewPairing(discoveredDevice,
                                                                    pin,
@@ -41,20 +40,20 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task DiscoverAndPairingFailure()
         {
-            int port = 50001;
             string pin = "233-34-245";
             string fileName = Guid.NewGuid().ToString("N") + ".obj";
 
-            string args = $"{port} {pin} {fileName}";
+            string args = $"{pin} {fileName}";
             using var hapAccessory = new HapAccessory("temperature_sensor_unparied.py", args);
-            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false); DiscoveredDevice discoveredDevice = await DiscoverAndVerify(port).ConfigureAwait(false);
+            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            DiscoveredDevice discoveredDevice = await DiscoverAndVerify().ConfigureAwait(false);
             await Assert.ThrowsExceptionAsync<PairingException>(() => InsecureConnection.StartNewPairing(discoveredDevice,
                                                      "123-45-687",
                                                      cancellationTokenSource.Token));
         }
 
 
-        private async Task<DiscoveredDevice> DiscoverAndVerify(int port)
+        private async Task<DiscoveredDevice> DiscoverAndVerify()
         {
             IList<DiscoveredDevice> discoveredDevices = null;
 
@@ -66,7 +65,6 @@ namespace HSPI_HomeKitControllerTest
 
             Assert.AreEqual(1, discoveredDevices.Count);
             DiscoveredDevice discoveredDevice = discoveredDevices[0];
-            Assert.AreEqual(port, discoveredDevice.Address.Port);
             Assert.AreEqual(DeviceCategory.Sensors, discoveredDevice.CategoryIdentifier);
             return discoveredDevice;
         }
