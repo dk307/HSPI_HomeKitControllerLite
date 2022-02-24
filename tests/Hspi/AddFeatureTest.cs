@@ -70,7 +70,7 @@ namespace HSPI_HomeKitControllerTest
 
             Nito.AsyncEx.AsyncManualResetEvent asyncManualResetEvent = new(false);
 
-            mockHsController.Setup(x => x.UpdateFeatureValueByRef(It.IsAny<int>(), 49))
+            mockHsController.Setup(x => x.UpdateFeatureValueByRef(It.IsAny<int>(), 120.2))
                             .Returns((int devOrFeatRef, double value) =>
                             {
                                 deviceOrFeatureData[devOrFeatRef][EProperty.Value] = value;

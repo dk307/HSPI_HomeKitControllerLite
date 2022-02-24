@@ -70,20 +70,7 @@ namespace HSPI_HomeKitControllerTest {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {
-        ///	&quot;8475&quot;: {
-        ///		&quot;PlugExtraData&quot;: [{
-        ///			&quot;key&quot;: &quot;accessory.aid&quot;,
-        ///			&quot;value&quot;: &quot;1&quot;
-        ///		}, {
-        ///			&quot;key&quot;: &quot;enabled.characteristic&quot;,
-        ///			&quot;value&quot;: &quot;[9]&quot;
-        ///		}, {
-        ///			&quot;key&quot;: &quot;fallback.address&quot;,
-        ///			&quot;value&quot;: &quot;{\&quot;Address\&quot;:\&quot;192.168.1.82\&quot;,\&quot;Port\&quot;:51234}&quot;
-        ///		}, {
-        ///			&quot;key&quot;: &quot;pairing.info&quot;,
-        ///			&quot;value&quot;: &quot;{\&quot;DeviceInformation\&quot;:{\&quot;CategoryIdentifier\&quot;:\&quot;Sensors\&quot;,\&quot;ConfigurationNumber\&quot;:2,\&quot;DisplayName\&quot;:\&quot;Sensor1 C66693\&quot;,\&quot;Feature\&quot;:\&quot;None\&quot;,\&quot;Id\&quot;:\&quot;09:B4:A0:C6:66:93\&quot;,\&quot;Model\&quot;:\&quot;Sensor1\&quot;,\&quot;Protocol\&quot;:\&quot;1.1\&quot;},\&quot;A [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {&quot;8475&quot;:{&quot;PlugExtraData&quot;:[{&quot;key&quot;:&quot;accessory.aid&quot;,&quot;value&quot;:&quot;1&quot;},{&quot;key&quot;:&quot;enabled.characteristic&quot;,&quot;value&quot;:&quot;[9]&quot;},{&quot;key&quot;:&quot;fallback.address&quot;,&quot;value&quot;:&quot;{\&quot;Address\&quot;:\&quot;192.168.1.82\&quot;,\&quot;Port\&quot;:51234}&quot;},{&quot;key&quot;:&quot;pairing.info&quot;,&quot;value&quot;:&quot;{\&quot;DeviceInformation\&quot;:{\&quot;CategoryIdentifier\&quot;:\&quot;Sensors\&quot;,\&quot;ConfigurationNumber\&quot;:2,\&quot;DisplayName\&quot;:\&quot;Sensor1 C66693\&quot;,\&quot;Feature\&quot;:\&quot;None\&quot;,\&quot;Id\&quot;:\&quot;09:B4:A0:C6:66:93\&quot;,\&quot;Model\&quot;:\&quot;Sensor1\&quot;,\&quot;Protocol\&quot;:\&quot;1.1\&quot;},\&quot;AccessoryPairingId\&quot;:[48,57,58,66,52,58,65,48,58,67,54,58,54,54,58,57,51] [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TemperatureSensorPairedHS3DataJson {
             get {

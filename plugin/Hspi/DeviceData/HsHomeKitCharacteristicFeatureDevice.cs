@@ -1,5 +1,6 @@
 ﻿using HomeKit.Model;
 using HomeSeer.PluginSdk;
+using HomeSeer.PluginSdk.Devices;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using System;
@@ -20,9 +21,11 @@ namespace Hspi.DeviceData
             var typeData = GetTypeData();
             Debug.Assert(typeData.Type == FeatureType.Characteristics);
             this.Iid = typeData.Iid ?? throw new InvalidOperationException("Invalid PlugExtraData");
+            this.cToFNeeded = GetCToFNeeded();
         }
 
         public CharacteristicFormat Format { get; }
+
         public ulong Iid { get; }
 
         public void SetValue(object? value)
@@ -54,6 +57,11 @@ namespace Hspi.DeviceData
             }
         }
 
+        private bool GetCToFNeeded()
+        {
+            var plugInExtra = HS.GetPropertyByRef(RefId, EProperty.PlugExtraData) as PlugExtraData;
+            return plugInExtra?.ContainsNamed(CToFNeededPlugExtraTag) ?? false;
+        }
         private void UpdateDoubleValue<T>(object? value)
         {
             try
@@ -64,8 +72,13 @@ namespace Hspi.DeviceData
                     return;
                 }
                 JValue jValue = new(value);
-                var doubleValue = jValue.Value<T>();
-                UpdateDeviceValue(Convert.ToDouble(doubleValue));
+                var doubleValue = Convert.ToDouble(jValue.Value<T>());
+
+                if (cToFNeeded)
+                {
+                    doubleValue = ((doubleValue * 9) / 5) + 32;
+                }
+                UpdateDeviceValue(doubleValue);
                 Log.Debug("Updated value {value} for the {name}", value, NameForLog);
             }
             catch (Exception)
@@ -74,5 +87,7 @@ namespace Hspi.DeviceData
                 UpdateDeviceValue(null);
             }
         }
+
+        private readonly bool cToFNeeded;
     }
 }

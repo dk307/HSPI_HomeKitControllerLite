@@ -21,12 +21,6 @@ namespace Hspi.DeviceData
             Characteristics = 2
         }
 
-        public bool GetCToFNeeded()
-        {
-            var plugInExtra = HS.GetPropertyByRef(RefId, EProperty.PlugExtraData) as PlugExtraData;
-            var stringData = plugInExtra?[CToFNeededPlugExtraTag];
-            return (stringData != null);
-        }
 
         protected HsFeatureTypeData GetTypeData()
         {
