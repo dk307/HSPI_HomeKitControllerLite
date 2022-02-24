@@ -20,7 +20,7 @@ namespace HSPI_HomeKitControllerTest
     {
         public AddDeviceTest()
         {
-            cancellationTokenSource.CancelAfter(120 * 1000);
+            cancellationTokenSource.CancelAfter(60 * 1000);
         }
 
         [TestMethod]

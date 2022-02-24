@@ -1,5 +1,4 @@
 ﻿using HomeKit.Utils;
-using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Devices.Identification;
 using Hspi;
@@ -19,7 +18,7 @@ namespace HSPI_HomeKitControllerTest
     {
         public AddFeatureTest()
         {
-            cancellationTokenSource.CancelAfter(120 * 1000);
+            cancellationTokenSource.CancelAfter(60 * 1000);
         }
 
         [TestMethod]
@@ -56,17 +55,13 @@ namespace HSPI_HomeKitControllerTest
                                 return featureRefId;
                             });
 
-            SetupEPropertyGetOrSet(mockHsController, deviceOrFeatureData);
+            TestHelper.SetupEPropertyGetOrSet(mockHsController, deviceOrFeatureData);
 
             mockHsController.Setup(x => x.GetRefsByInterface(PlugInData.PlugInId, true))
                             .Returns(new List<int>() { refId });
 
             mockHsController.Setup(x => x.GetDeviceWithFeaturesByRef(refId))
                             .Returns(device);
-
-            //update of fallback address
-
-            //update of values
 
             Nito.AsyncEx.AsyncManualResetEvent asyncManualResetEvent = new(false);
 
@@ -89,29 +84,6 @@ namespace HSPI_HomeKitControllerTest
             Assert.AreEqual(Resource.TemperatureSensorPairedHS3DataJson, jsonData);
 
             plugIn.Object.ShutdownIO();
-        }
-
-        private static void SetupEPropertyGetOrSet(Mock<IHsController> mockHsController,
-                                                   Dictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
-        {
-            mockHsController.Setup(x => x.GetPropertyByRef(It.IsAny<int>(), It.IsAny<EProperty>()))
-                .Returns((int devOrFeatRef, EProperty property) =>
-                {
-                    return deviceOrFeatureData[devOrFeatRef][property];
-                });
-
-            mockHsController.Setup(x => x.UpdateFeatureValueByRef(It.IsAny<int>(), It.IsAny<double>()))
-                .Returns((int devOrFeatRef, double value) =>
-                {
-                    deviceOrFeatureData[devOrFeatRef][EProperty.Value] = value;
-                    return true;
-                });
-
-            mockHsController.Setup(x => x.UpdatePropertyByRef(It.IsAny<int>(), It.IsAny<EProperty>(), It.IsAny<object>()))
-                .Callback((int devOrFeatRef, EProperty property, object value) =>
-                {
-                    deviceOrFeatureData[devOrFeatRef][property] = value;
-                });
         }
 
         private static PlugExtraData CreateTemperatureAccessoryDevicePlugExtraData()

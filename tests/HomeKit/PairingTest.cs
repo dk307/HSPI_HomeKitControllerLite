@@ -15,7 +15,7 @@ namespace HSPI_HomeKitControllerTest
     {
         public PairingTest()
         {
-            cancellationTokenSource.CancelAfter(120 * 1000);
+            cancellationTokenSource.CancelAfter(60 * 1000);
         }
 
         [TestMethod]

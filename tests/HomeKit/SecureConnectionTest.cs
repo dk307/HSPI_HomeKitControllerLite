@@ -15,7 +15,7 @@ namespace HSPI_HomeKitControllerTest
     {
         public SecureConnectionTest()
         {
-            cancellationTokenSource.CancelAfter(120 * 1000);
+            cancellationTokenSource.CancelAfter(60 * 1000);
         }
 
         private CancellationToken Token => cancellationTokenSource.Token;

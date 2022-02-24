@@ -1,5 +1,6 @@
 ﻿using HomeKit.Model;
 using HomeSeer.PluginSdk;
+using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Logging;
 using Hspi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -45,18 +46,6 @@ namespace HSPI_HomeKitControllerTest
             return hapAccessory;
         }
 
-        public static HapAccessory CreateTemperatureUnPairedAccessory(
-                    string script = "temperature_sensor_paried.py")
-        {
-            string fileName = Path.Combine("scripts", "temperaturesensor_accessory.txt");
-            string fileName2 = Path.Combine("scripts", "temperaturesensor_accessory2.txt");
-
-            File.Copy(fileName, fileName2, true);
-
-            var hapAccessory = new HapAccessory(script, fileName2);
-            return hapAccessory;
-        }
-
         public static PairingDeviceInfo GetTemperatureSensorParingInfo()
         {
             string controllerFile = Path.Combine("scripts", "temperaturesensor_controller.txt");
@@ -66,9 +55,32 @@ namespace HSPI_HomeKitControllerTest
             return pairingInfo;
         }
 
+        public static void SetupEPropertyGetOrSet(Mock<IHsController> mockHsController,
+                                           Dictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
+        {
+            mockHsController.Setup(x => x.GetPropertyByRef(It.IsAny<int>(), It.IsAny<EProperty>()))
+                .Returns((int devOrFeatRef, EProperty property) =>
+                {
+                    return deviceOrFeatureData[devOrFeatRef][property];
+                });
+
+            mockHsController.Setup(x => x.UpdateFeatureValueByRef(It.IsAny<int>(), It.IsAny<double>()))
+                .Returns((int devOrFeatRef, double value) =>
+                {
+                    deviceOrFeatureData[devOrFeatRef][EProperty.Value] = value;
+                    return true;
+                });
+
+            mockHsController.Setup(x => x.UpdatePropertyByRef(It.IsAny<int>(), It.IsAny<EProperty>(), It.IsAny<object>()))
+                .Callback((int devOrFeatRef, EProperty property, object value) =>
+                {
+                    deviceOrFeatureData[devOrFeatRef][property] = value;
+                });
+        }
+
         public static Mock<IHsController> SetupHsControllerAndSettings(Mock<PlugIn> mockPlugin,
 
-                                                         Dictionary<string, string> settingsFromIni)
+                                                                 Dictionary<string, string> settingsFromIni)
         {
             var mockHsController = new Mock<IHsController>(MockBehavior.Strict);
 
@@ -86,7 +98,6 @@ namespace HSPI_HomeKitControllerTest
             mockHsController.Setup(x => x.GetNameByRef(It.IsAny<int>())).Returns("Test");
             return mockHsController;
         }
-
         public static void VeryHtmlValid(string html)
         {
             HtmlAgilityPack.HtmlDocument htmlDocument = new();
