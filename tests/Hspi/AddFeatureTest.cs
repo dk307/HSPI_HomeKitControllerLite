@@ -79,8 +79,11 @@ namespace HSPI_HomeKitControllerTest
 
             Assert.AreEqual(3, deviceOrFeatureData.Count);
 
-            string jsonData = JsonConvert.SerializeObject(deviceOrFeatureData, new PlugExtraDataConverter());
 
+            // remove as it is different on machines
+            ((PlugExtraData)deviceOrFeatureData[refId][EProperty.PlugExtraData]).RemoveNamed("fallback.address");
+
+            string jsonData = JsonConvert.SerializeObject(deviceOrFeatureData, new PlugExtraDataConverter());
             Assert.AreEqual(Resource.TemperatureSensorPairedHS3DataJson, jsonData);
 
             plugIn.Object.ShutdownIO();
