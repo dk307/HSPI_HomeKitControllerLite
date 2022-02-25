@@ -102,7 +102,7 @@
       <Version>1.11.40</Version>
     </PackageReference>
     <PackageReference Include="HtmlSanitizer">
-      <Version>7.1.475</Version>
+      <Version>7.1.488</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces">
       <Version>6.0.0</Version>
