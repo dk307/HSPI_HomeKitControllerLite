@@ -112,7 +112,7 @@ namespace HSPI_HomeKitControllerTest
             Assert.AreEqual(0D, deviceOrFeatureData[refIds[1]][EProperty.Value]);
 
             //Restart accessory
-            var hapAccessory2 = TestHelper.CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
+            using var hapAccessory2 = TestHelper.CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
             await hapAccessory2.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
 
             await onlineEvent2.WaitAsync(cancellationTokenSource.Token).ConfigureAwait(false);
