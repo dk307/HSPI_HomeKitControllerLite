@@ -60,9 +60,7 @@ namespace System.Net.Http.Headers
         // values (e.g. byte[] to Base64 encoded string).
         public virtual string ToString(object value)
         {
-            Debug.Assert(value != null);
-
-            return value.ToString();
+            return value?.ToString();
         }
     }
 }

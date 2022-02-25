@@ -70,7 +70,7 @@ namespace HSPI_HomeKitControllerTest {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {&quot;$type&quot;:&quot;System.Collections.Generic.SortedDictionary`2[[System.Int32, mscorlib],[System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib]], System&quot;,&quot;8475&quot;:{&quot;$type&quot;:&quot;System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib&quot;,&quot;PlugExtraData&quot;:{&quot;$type&quot;:&quot;HomeSeer.PluginSdk.Devices.PlugExtraData, PluginSdk&quot;,&quot;Values&quot;:[{&quot;key&quot;:&quot;accessory.aid&quot;,&quot;value&quot;:&quot;1&quot;},{&quot;key&quot;:&quot;enabled.charac [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {&quot;$type&quot;:&quot;System.Collections.Generic.SortedDictionary`2[[System.Int32, mscorlib],[System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib]], System&quot;,&quot;8475&quot;:{&quot;$type&quot;:&quot;System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib&quot;,&quot;PlugExtraData&quot;:[{&quot;key&quot;:&quot;accessory.aid&quot;,&quot;value&quot;:&quot;1&quot;},{&quot;key&quot;:&quot;enabled.characteristic&quot;,&quot;value&quot;:&quot;[9]&quot;},{&quot;key&quot;:&quot;pairing.info&quot;,&quot;value&quot;:&quot;{\&quot;DeviceInforma [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TemperatureSensorPairedHS3DataJson {
             get {

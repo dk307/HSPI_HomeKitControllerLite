@@ -53,7 +53,8 @@ namespace HSPI_HomeKitControllerTest
             return graphic;
         }
         public override void WriteJson(JsonWriter writer,
-                                       object value, JsonSerializer serializer)
+                                       object value, 
+                                       JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }

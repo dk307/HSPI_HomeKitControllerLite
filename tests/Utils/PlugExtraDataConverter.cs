@@ -12,34 +12,20 @@ namespace HSPI_HomeKitControllerTest
             return typeof(PlugExtraData).IsAssignableFrom(objectType);
         }
 
+        public override bool CanRead => false;
+
         public override object ReadJson(JsonReader reader,
                                         Type objectType,
                                         object existingValue,
                                         JsonSerializer serializer)
         {
-            JObject jObjectTop = JObject.Load(reader);
-            PlugExtraData plugExtraData = new();
-            JArray jArray = (JArray)jObjectTop["Values"];
-
-            foreach (var value in jArray)
-            {
-                JObject jObject = (JObject)value;
-                plugExtraData.AddNamed((string)jObject["key"], (string)jObject["value"]);
-            }
-
-            return plugExtraData;
+            throw new NotImplementedException();
         }
 
         public override void WriteJson(JsonWriter writer,
                                        object value,
                                        JsonSerializer serializer)
         {
-            JObject jObject = new();
-            if (serializer.TypeNameHandling != TypeNameHandling.None)
-            {
-                jObject.Add("$type", $"{value.GetType().FullName}, PluginSdk");
-            }
-
             JArray jArray = new();
             if (value is PlugExtraData plugExtraData)
             {
@@ -52,8 +38,7 @@ namespace HSPI_HomeKitControllerTest
                     jArray.Add(jToken);
                 }
             }
-            jObject.Add("Values", jArray);
-            jObject.WriteTo(writer);
+            jArray.WriteTo(writer);
         }
     }
 }

@@ -376,7 +376,7 @@ namespace System.Net.Http.Headers
         {
             fixed (byte* p = &MemoryMarshal.GetReference(name))
             {
-                KnownHeader candidate = GetCandidate(new BytePtrAccessor(p, name.Length));
+                var candidate = GetCandidate(new BytePtrAccessor(p, name.Length));
                 if (candidate != null && ByteArrayHelpers.EqualsOrdinalAsciiIgnoreCase(candidate.Name, name))
                 {
                     return candidate;

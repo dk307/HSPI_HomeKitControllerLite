@@ -5,6 +5,7 @@ using Hspi.DeviceData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -34,11 +35,16 @@ namespace HSPI_HomeKitControllerTest
 
             Nito.AsyncEx.AsyncManualResetEvent asyncManualResetEvent = new(false);
 
-            mockHsController.Setup(x => x.UpdateFeatureValueByRef(It.IsAny<int>(), 140))
+            int count = 0;
+            mockHsController.Setup(x => x.UpdateFeatureValueByRef(deviceOrFeatureData.Keys.Last(), It.IsAny<double>()))
                             .Returns((int devOrFeatRef, double value) =>
                             {
                                 deviceOrFeatureData[devOrFeatRef][EProperty.Value] = value;
-                                asyncManualResetEvent.Set();
+                                if (count == 3)
+                                {
+                                    asyncManualResetEvent.Set();
+                                }
+                                count++;
                                 return true;
                             });
 
@@ -51,7 +57,6 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsFalse(plugExtraData[HsHomeKitDevice.FallbackAddressPlugExtraTag].Contains("0.0.0.0"));
 
             Assert.AreEqual(1D, deviceOrFeatureData[refIds[1]][EProperty.Value]);
-            Assert.AreEqual(140D, deviceOrFeatureData[refIds[1]][EProperty.Value]);
 
             plugIn.Object.ShutdownIO();
         }
@@ -66,6 +71,19 @@ namespace HSPI_HomeKitControllerTest
             deviceOrFeatureData = JsonConvert.DeserializeObject<
                 SortedDictionary<int, Dictionary<EProperty, object>>>(hsData,
                 TestHelper.CreateJsonSerializerForHsData());
+
+            foreach (var changes in deviceOrFeatureData)
+            {
+                JArray jArray = (JArray)changes.Value[EProperty.PlugExtraData];
+
+                PlugExtraData extraData = new();
+                foreach (var token in jArray)
+                {
+                    JObject jObject = (JObject)token;
+                    extraData.AddNamed((string)jObject["key"], (string?)jObject["value"]);
+                }
+                changes.Value[EProperty.PlugExtraData] = extraData;
+            }
 
             var deviceRefId = deviceOrFeatureData.Keys.First();
 
