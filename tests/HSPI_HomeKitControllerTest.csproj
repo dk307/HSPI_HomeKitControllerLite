@@ -68,8 +68,9 @@
     <Compile Include="..\plugin\shared\tests\ExceptionHelperTest.cs">
       <Link>shared\ExceptionHelperTest.cs</Link>
     </Compile>
-    <Compile Include="PlugExtraDataConverter.cs" />
-    <Compile Include="HapAccessory.cs" />
+    <Compile Include="Hspi\DeviceWorkingTest.cs" />
+    <Compile Include="Utils\PlugExtraDataConverter.cs" />
+    <Compile Include="Utils\HapAccessory.cs" />
     <Compile Include="HomeKit\Http\ByteBufferWithIndexTest.cs" />
     <Compile Include="HomeKit\Http\HttpResponseParserTest.cs" />
     <Compile Include="HomeKit\Http\MockNetworkReadStream.cs" />
@@ -79,14 +80,15 @@
     <Compile Include="HomeKit\PairingTest.cs" />
     <Compile Include="Hspi\AddDeviceTest.cs" />
     <Compile Include="Hspi\AddFeatureTest.cs" />
-    <Compile Include="Initialize.cs" />
+    <Compile Include="Utils\Initialize.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
     <Compile Include="ShippedDllsTest.cs" />
-    <Compile Include="TestHelper.cs" />
+    <Compile Include="Utils\StatusGraphicReadConverter.cs" />
+    <Compile Include="Utils\TestHelper.cs" />
     <Compile Include="Hspi\PluginTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HomeKit\TLV8Test.cs" />

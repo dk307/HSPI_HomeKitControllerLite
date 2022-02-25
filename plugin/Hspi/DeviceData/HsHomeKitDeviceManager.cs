@@ -1,6 +1,4 @@
 ﻿using HomeSeer.PluginSdk;
-using HomeSeer.PluginSdk.Devices;
-using HomeSeer.PluginSdk.Devices.Identification;
 using Hspi.Utils;
 using Serilog;
 using System;
@@ -41,7 +39,6 @@ namespace Hspi.DeviceData
 
             Log.Information("Found {count} devices.", interfaceRefIds.Count);
 
-
             var homeKitDeviceIds = new List<ValueTuple<int, string>>();
 
             foreach (var refId in interfaceRefIds)
@@ -49,12 +46,8 @@ namespace Hspi.DeviceData
                 combinedToken.Token.ThrowIfCancellationRequested();
                 try
                 {
-                    var relationship = (ERelationship)HS.GetPropertyByRef(refId, EProperty.Relationship);
-                    if (relationship == ERelationship.Device)
-                    {
-                        var pairingInfo = HsHomeKitRootDevice.GetPairingInfo(HS, refId);
-                        homeKitDeviceIds.Add(new ValueTuple<int, string>(refId, pairingInfo.DeviceInformation.Id));
-                    }
+                    var pairingInfo = HsHomeKitRootDevice.GetPairingInfo(HS, refId);
+                    homeKitDeviceIds.Add(new ValueTuple<int, string>(refId, pairingInfo.DeviceInformation.Id));
                 }
                 catch (Exception ex)
                 {

@@ -36,7 +36,7 @@ namespace HSPI_HomeKitControllerTest
             PlugExtraData extraData = CreateTemperatureAccessoryDevicePlugExtraData();
 
             // Capture create device data
-            Dictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData = new();
+            SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData = new();
 
             HsDevice device = new(refId);
             device.Changes[EProperty.PlugExtraData] = extraData;
@@ -79,15 +79,15 @@ namespace HSPI_HomeKitControllerTest
 
             Assert.AreEqual(3, deviceOrFeatureData.Count);
 
-
             // remove as it is different on machines
             ((PlugExtraData)deviceOrFeatureData[refId][EProperty.PlugExtraData]).RemoveNamed("fallback.address");
 
-            string jsonData = JsonConvert.SerializeObject(deviceOrFeatureData, new PlugExtraDataConverter());
+            string jsonData = JsonConvert.SerializeObject(deviceOrFeatureData, TestHelper.CreateJsonSerializerForHsData());
             Assert.AreEqual(Resource.TemperatureSensorPairedHS3DataJson, jsonData);
 
             plugIn.Object.ShutdownIO();
         }
+
 
         private static PlugExtraData CreateTemperatureAccessoryDevicePlugExtraData()
         {

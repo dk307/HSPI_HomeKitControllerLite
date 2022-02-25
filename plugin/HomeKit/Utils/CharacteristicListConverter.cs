@@ -4,18 +4,19 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
 namespace HomeKit.Utils
 {
-
-
-    internal sealed class CharacteristicListConverter : JsonConverter
+    internal sealed class CharacteristicListConverter : JsonConverter<IImmutableDictionary<ulong, Characteristic>>
     {
-        public override object ReadJson(JsonReader reader, 
-                                        Type objectType, 
-                                        object? existingValue, JsonSerializer serializer)
+        public override IImmutableDictionary<ulong, Characteristic> ReadJson(JsonReader reader,
+                                                                             Type objectType,
+                                                                             [AllowNull] IImmutableDictionary<ulong, Characteristic> existingValue,
+                                                                             bool hasExistingValue,
+                                                                             JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.StartArray)
             {
@@ -41,27 +42,18 @@ namespace HomeKit.Utils
         }
 
         public override void WriteJson(JsonWriter writer,
-                                       object? value, JsonSerializer serializer)
+                                       [AllowNull] IImmutableDictionary<ulong, Characteristic> value,
+                                       JsonSerializer serializer)
         {
-            if (value is IImmutableDictionary<ulong, Service> values)
+            writer.WriteStartArray();
+            if (value != null)
             {
-                writer.WriteStartArray();
-                foreach (var entry in values)
+                foreach (var entry in value)
                 {
                     serializer.Serialize(writer, entry.Value);
                 }
-                writer.WriteEndArray();
             }
-            else
-            {
-                writer.WriteStartObject();
-                writer.WriteEndObject();
-            }
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return typeof(IImmutableDictionary<ulong, Characteristic>).IsAssignableFrom(objectType);
+            writer.WriteEndArray();
         }
     }
 }

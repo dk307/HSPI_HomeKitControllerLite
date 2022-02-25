@@ -2,7 +2,7 @@
 
 namespace HomeKit.Model
 {
-    internal sealed record ServiceType : BaseGuidType
+    public sealed record ServiceType : BaseGuidType
     {
         public ServiceType(string value) : base(value)
         {

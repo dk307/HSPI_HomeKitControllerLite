@@ -17,6 +17,16 @@ namespace HSPI_HomeKitControllerTest
 {
     internal static class TestHelper
     {
+        public static JsonSerializerSettings CreateJsonSerializerForHsData()
+        {
+            return new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                Converters = new List<JsonConverter>() { new PlugExtraDataConverter(), 
+                                                         new StatusGraphicReadConverter() }
+            };
+        }
+
         public static Mock<PlugIn> CreatePlugInMock()
         {
             return new Mock<PlugIn>(MockBehavior.Loose)
@@ -56,7 +66,7 @@ namespace HSPI_HomeKitControllerTest
         }
 
         public static void SetupEPropertyGetOrSet(Mock<IHsController> mockHsController,
-                                           Dictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
+                                           SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
         {
             mockHsController.Setup(x => x.GetPropertyByRef(It.IsAny<int>(), It.IsAny<EProperty>()))
                 .Returns((int devOrFeatRef, EProperty property) =>
@@ -79,8 +89,7 @@ namespace HSPI_HomeKitControllerTest
         }
 
         public static Mock<IHsController> SetupHsControllerAndSettings(Mock<PlugIn> mockPlugin,
-
-                                                                 Dictionary<string, string> settingsFromIni)
+                                                                       Dictionary<string, string> settingsFromIni)
         {
             var mockHsController = new Mock<IHsController>(MockBehavior.Strict);
 
@@ -98,6 +107,7 @@ namespace HSPI_HomeKitControllerTest
             mockHsController.Setup(x => x.GetNameByRef(It.IsAny<int>())).Returns("Test");
             return mockHsController;
         }
+
         public static void VeryHtmlValid(string html)
         {
             HtmlAgilityPack.HtmlDocument htmlDocument = new();

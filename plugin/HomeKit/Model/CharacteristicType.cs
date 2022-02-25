@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace HomeKit.Model
 {
-    internal sealed record CharacteristicType : BaseGuidType
+    public sealed record CharacteristicType : BaseGuidType
     {
         public CharacteristicType(string value) : base(value)
         {
