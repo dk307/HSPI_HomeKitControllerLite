@@ -22,16 +22,16 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
-        public async Task ConnectedUpdate()
+        public async Task ConnectionWorking()
         {
             using var hapAccessory = TestHelper.CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
             await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
             string hsData = Resource.TemperatureSensorPairedHS3DataJson;
 
-            Mock<PlugIn> plugIn;
-            Mock<IHsController> mockHsController;
-            SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData;
-            SetupHsDataForSyncing(hsData, out plugIn, out mockHsController, out deviceOrFeatureData);
+            SetupHsDataForSyncing(hsData,
+                                  out Mock<PlugIn> plugIn,
+                                  out Mock<IHsController> mockHsController,
+                                  out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData);
 
             Nito.AsyncEx.AsyncManualResetEvent asyncManualResetEvent = new(false);
 
