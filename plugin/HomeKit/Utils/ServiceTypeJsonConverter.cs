@@ -1,37 +1,36 @@
 ﻿using HomeKit.Model;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
 namespace HomeKit.Utils
 {
-    public sealed class ServiceTypeJsonConverter : JsonConverter
+    public sealed class ServiceTypeJsonConverter : JsonConverter<ServiceType>
     {
-        public override bool CanConvert(Type objectType)
+
+        public override ServiceType ReadJson(JsonReader reader,
+                                             Type objectType,
+                                             [AllowNull] ServiceType existingValue,
+                                             bool hasExistingValue,
+                                             JsonSerializer serializer)
         {
-            return objectType == typeof(ServiceType);
+            var str = (string?)reader.Value ?? throw new JsonReaderException();
+            return new ServiceType(str);
         }
 
         public override void WriteJson(JsonWriter writer,
-                                       object? value, JsonSerializer serializer)
+                                               ServiceType? value, JsonSerializer serializer)
         {
             if (value != null)
             {
-                var obj = (ServiceType)value;
-                writer.WriteValue(obj.Id.ToString("D"));
+                writer.WriteValue(value.Id.ToString("D"));
             }
             else
             {
                 writer.WriteNull();
             }
         }
-
-        public override object ReadJson(JsonReader reader, Type objectType,
-                                        object? existingValue, JsonSerializer serializer)
-        {
-            var str = (string?)reader.Value ?? throw new JsonReaderException();
-            return new ServiceType(str);
-        }
-    }
+     }
 }

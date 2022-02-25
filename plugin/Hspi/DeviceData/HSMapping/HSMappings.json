@@ -1,0 +1,243 @@
+{
+  "mappings": [
+    {
+      "iid": "00000011-0000-1000-8000-0026BB765291",
+      "name": "Current Temperature",
+
+      "rangeOptions": {
+        "icon": "temperature.png"
+      },
+
+      "deviceType": [
+        {
+          "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+          "featureType": 16, // ThermostatStatus
+          "featureSubType": 0 // Temperature
+        }
+      ]
+    },
+    {
+      "iid": "00000035-0000-1000-8000-0026BB765291",
+      "name": "Target Temperature"
+    },
+    {
+      "iid": "00000012-0000-1000-8000-0026BB765291",
+      "name": "Heating Threshold Temperature",
+
+      "deviceType": [
+        {
+          "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+          "featureType": 17, // ThermostatControl
+          "featureSubType": 1 // HeatingSetPoint
+        }
+      ],
+
+      "rangeOptions": {
+        "eControlUse": [
+          {
+            "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+            "value": 12 //HeatSetPoint
+          }
+        ]
+      }
+    },
+    {
+      "iid": "0000000D-0000-1000-8000-0026BB765291",
+      "name": "Cooling Threshold Temperature",
+
+      "deviceType": [
+        {
+          "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+          "featureType": 17, // ThermostatControl
+          "featureSubType": 2 // CoolingSetPoint
+        }
+      ],
+
+      "rangeOptions": {
+        "eControlUse": [
+          {
+            "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+            "value": 13 // CoolSetPoint
+          }
+        ]
+      }
+    },
+    {
+      "iid": "00000034-0000-1000-8000-0026BB765291",
+      "name": "Target Relative Humidity"
+    },
+    {
+      "iid": "0000000F-0000-1000-8000-0026BB765291",
+      "name": "Current Heating Cooling State",
+
+      "deviceType": [
+        {
+          "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+          "featureType": 16, // ThermostatStatus
+          "featureSubType": 6 // ModeSet
+        }
+      ],
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Off",
+          "icon": "off.png"
+        },
+        {
+          "value": 1,
+          "name": "Heating",
+          "icon": "heating.png"
+        },
+        {
+          "value": 2,
+          "name": "Cooling",
+          "icon": "cooling.png"
+        }
+      ]
+    },
+    {
+      "iid": "00000033-0000-1000-8000-0026BB765291",
+      "name": "Target Heating Cooling State",
+
+      "deviceType": [
+        {
+          "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+          "featureType": 17, // ThermostatControl
+          "featureSubType": 9 // OperatingMode
+        }
+      ],
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Off",
+          "icon": "off.png",
+          "eControlUse": [
+            {
+              "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+              "value": 14 //ThermModeOff
+            }
+          ]
+        },
+        {
+          "value": 1,
+          "name": "Heating",
+          "icon": "heating.png",
+          "eControlUse": [
+            {
+              "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+              "value": 15 //ThermModeHeat
+            }
+          ]
+        },
+        {
+          "value": 2,
+          "name": "Cooling",
+          "icon": "cooling.png",
+          "eControlUse": [
+            {
+              "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+              "value": 16 //ThermModeCool
+            }
+          ]
+        },
+        {
+          "value": 3,
+          "name": "Auto",
+          "icon": "autooperatingmode.png",
+          "eControlUse": [
+            {
+              "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+              "value": 17 //ThermModeAuto
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iid": "000000AF-0000-1000-8000-0026BB765291",
+      "name": "Current Fan State",
+
+      "deviceType": [
+        {
+          "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+          "featureType": 16, // ThermostatStatus
+          "featureSubType": 7 // FanStatus
+        }
+      ],
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Inactive",
+          "icon": "inactivefan.png"
+        },
+        {
+          "value": 1,
+          "name": "Idle",
+          "icon": "idlefan.png"
+        },
+        {
+          "value": 2,
+          "name": "Blowing Air",
+          "icon": "blowingairfan.png"
+        }
+      ]
+    },
+    {
+      "iid": "000000BF-0000-1000-8000-0026BB765291",
+      "name": "Target Fan State",
+
+      "deviceType": [
+        {
+          "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+          "featureType": 17, // ThermostatControl
+          "featureSubType": 9 // OperatingMode
+        }
+      ],
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Manual On",
+          "icon": "manualonfan.png",
+          "eControlUse": [
+            {
+              "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+              "value": 20 //ThermFanAuto
+            }
+          ]
+        },
+        {
+          "value": 1,
+          "name": "Auto",
+          "icon": "autofan.png",
+          "eControlUse": [
+            {
+              "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+              "value": 21 //ThermFanOn
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iid": "00000022-0000-1000-8000-0026BB765291",
+      "name": "Motion Detected",
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Not Detected",
+          "icon": "motionnotdetected.png"
+        },
+        {
+          "value": 1,
+          "name": "Detected",
+          "icon": "motiondetected.png"
+        }
+      ]
+    }
+  ]
+}

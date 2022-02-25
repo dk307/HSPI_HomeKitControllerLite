@@ -8,8 +8,22 @@ namespace HomeKit.Model
 {
     internal record Device
     {
-        [property: JsonConverter(typeof(IPEndPointJsonConverter))]
-        public IPEndPoint Address { get; init; }
+        public Device(string id, 
+                      string displayName, 
+                      string model, 
+                      DeviceCategory categoryIdentifier, 
+                      ushort configurationNumber, 
+                      DeviceFeature feature, 
+                      Version protocol)
+        {
+            Id = id;
+            DisplayName = displayName;
+            Model = model;
+            CategoryIdentifier = categoryIdentifier;
+            ConfigurationNumber = configurationNumber;
+            Feature = feature;
+            Protocol = protocol;
+        }
 
         [property: JsonConverter(typeof(StringEnumConverter))]
         public DeviceCategory CategoryIdentifier { get; init; }

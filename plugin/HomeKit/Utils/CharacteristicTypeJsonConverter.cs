@@ -1,26 +1,22 @@
 ﻿using HomeKit.Model;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
 namespace HomeKit.Utils
 {
 
-    public sealed class CharacteristicTypeJsonConverter : JsonConverter
+    public sealed class CharacteristicTypeJsonConverter : JsonConverter<CharacteristicType>
     {
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(CharacteristicType);
-        }
 
         public override void WriteJson(JsonWriter writer,
-                                       object? value, JsonSerializer serializer)
+                                       CharacteristicType? value, JsonSerializer serializer)
         {
             if (value != null)
             {
-                var obj = (CharacteristicType)value;
-                writer.WriteValue(obj.Id.ToString("D"));
+                writer.WriteValue(value.Id.ToString("D"));
             }
             else
             {
@@ -28,11 +24,15 @@ namespace HomeKit.Utils
             }
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType,
-                                        object? existingValue, JsonSerializer serializer)
+        public override CharacteristicType ReadJson(JsonReader reader,
+                                                    Type objectType,
+                                                    [AllowNull] CharacteristicType existingValue,
+                                                    bool hasExistingValue,
+                                                    JsonSerializer serializer)
         {
             var str = (string?)reader.Value ?? throw new JsonReaderException();
             return new CharacteristicType(str);
         }
-    }
+
+     }
 }

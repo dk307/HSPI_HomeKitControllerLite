@@ -273,7 +273,7 @@ namespace HomeKit
                    BitConverter.ToString(errorValue.Value.ToArray());
 
                 Log.Error("{step} pairing failed with Error:{error} for {Name}", step, error, connection.DisplayName);
-                string message = $"{step} of pairing for {connection.DisplayName} failed with {error}";
+                string message = $"Pairing for {connection.DisplayName} failed with {error} error";
                 throw (T)Activator.CreateInstance(typeof(T), message);
             }
         }

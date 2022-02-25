@@ -18,7 +18,7 @@ namespace HomeKit.Model
 
         public Characteristic? FindCharacteristic(ulong aid, ulong iid)
         {
-            return Accessories.FirstOrDefault(x => x.Aid == aid)?.FindCharacteristic(iid);
+            return Accessories.FirstOrDefault(x => x.Aid == aid)?.FindCharacteristic(iid).Item2;
         }
     }
 }

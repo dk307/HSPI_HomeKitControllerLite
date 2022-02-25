@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace HomeKit.Model
 {
-    internal sealed record CharacteristicType : BaseGuidType
+    public sealed record CharacteristicType : BaseGuidType
     {
         public CharacteristicType(string value) : base(value)
         {
@@ -25,7 +25,7 @@ namespace HomeKit.Model
         private static readonly Dictionary<CharacteristicType, string> names = new();
         private static readonly object namesLock = new();
 
-        public bool Equals(CharacteristicType other) => this.Id == other.Id;
+        public bool Equals(CharacteristicType other) => this.Id == other?.Id;
 
         public override int GetHashCode() => Id.GetHashCode();
 

@@ -1,6 +1,6 @@
 ﻿using HomeKit.Model;
-using Nito.AsyncEx;
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,19 +8,15 @@ using System.Threading.Tasks;
 
 namespace HomeKit
 {
+    internal sealed record DeviceConnectionChangedArgs(bool Connected);
+
     internal sealed class SecureConnectionManager
     {
-        public void ConnectAndListenDevice(PairingDeviceInfo info,
-                                           AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
-                                           CancellationToken token)
-        {
-            this.displayName = info.DeviceInformation.DisplayName;
-            Hspi.Utils.TaskHelper.StartAsyncWithErrorChecking(
-                $"{displayName} connection",
-                () => ConnectionAndListenDeviceImpl(info, changedEventQueue, token),
-                token,
-                TimeSpan.FromSeconds(1));
-        }
+        public delegate void DeviceConnectionChangedHandler(object sender, DeviceConnectionChangedArgs e);
+
+        public event SecureConnection.AccessoryValueChangedHandler? AccessoryValueChangedEvent;
+
+        public event DeviceConnectionChangedHandler? DeviceConnectionChangedEvent;
 
         public SecureConnection Connection
         {
@@ -29,32 +25,41 @@ namespace HomeKit
                 var connectionCopy = connection;
                 if (connectionCopy is null)
                 {
-                    throw new InvalidOperationException($"Not connected to the Homekit Device {displayName}");
+                    throw new InvalidOperationException($"Not connected to the Homekit Device");
                 }
                 return connectionCopy;
             }
         }
 
-        private static async ValueTask EnqueueConnectionEvent(AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
-                                                                      bool connection)
-        {
-            // dont use cancel event here
-            await changedEventQueue.EnqueueAsync(new DeviceConnectionChangedEvent(connection)).ConfigureAwait(false);
-        }
+        public string DisplayNameForLog => lastDisplayName ?? "<Not connected>";
 
-        private async Task ConnectionAndListenDeviceImpl(PairingDeviceInfo info,
-                                                         AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue,
-                                                         CancellationToken token)
+        public async Task ConnectionAndListen(PairingDeviceInfo info,
+                                              IPEndPoint fallbackEndPoint,
+                                              CancellationToken token)
         {
             try
             {
-                await EnqueueConnectionEvent(changedEventQueue, false).ConfigureAwait(false);
-                SecureConnection secureHomeKitConnection = new(info);
-                var listenTask = await secureHomeKitConnection.ConnectAndListen(token).ConfigureAwait(false);
-                Interlocked.Exchange(ref connection, secureHomeKitConnection);
-                var eventProcessTask = await secureHomeKitConnection.TrySubscribeAll(changedEventQueue, token);
+                EnqueueConnectionEvent(false);
 
-                await EnqueueConnectionEvent(changedEventQueue, true).ConfigureAwait(false);
+                if (connection != null)
+                {
+                    connection.AccessoryValueChangedEvent -= AccessoryValueChangedEventForward;
+                    connection.Dispose();
+                }
+
+                SecureConnection secureHomeKitConnection = new(info);
+                var listenTask = await secureHomeKitConnection.ConnectAndListen(fallbackEndPoint, token).ConfigureAwait(false);
+
+                lastDisplayName = secureHomeKitConnection.DisplayName;
+
+                Interlocked.Exchange(ref connection, secureHomeKitConnection);
+                secureHomeKitConnection.AccessoryValueChangedEvent += AccessoryValueChangedEventForward;
+
+                var eventProcessTask = await secureHomeKitConnection.TrySubscribeAll(token);
+
+                EnqueueConnectionEvent(true);
+
+                await secureHomeKitConnection.RefreshValues(token).ConfigureAwait(false);
 
                 //listen and process events
                 var finishedTask = await Task.WhenAny(listenTask, eventProcessTask).ConfigureAwait(false);
@@ -64,11 +69,26 @@ namespace HomeKit
             }
             finally
             {
-                await EnqueueConnectionEvent(changedEventQueue, false).ConfigureAwait(false);
+                EnqueueConnectionEvent(false);
+            }
+        }
+
+        private void AccessoryValueChangedEventForward(object sender, AccessoryValueChangedArgs e)
+        {
+            this.AccessoryValueChangedEvent?.Invoke(this, e);
+        }
+
+        private void EnqueueConnectionEvent(bool connection)
+        {
+            if (lastConnectionEvent != connection)
+            {
+                lastConnectionEvent = connection;
+                DeviceConnectionChangedEvent?.Invoke(this, new DeviceConnectionChangedArgs(connection));
             }
         }
 
         private volatile SecureConnection? connection;
-        private string? displayName;
+        private bool? lastConnectionEvent;
+        private string? lastDisplayName;
     }
 }

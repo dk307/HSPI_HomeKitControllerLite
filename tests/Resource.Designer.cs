@@ -61,11 +61,20 @@ namespace HSPI_HomeKitControllerTest {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {&quot;accessories&quot;:[{&quot;aid&quot;:1,&quot;services&quot;:[{&quot;iid&quot;:1,&quot;type&quot;:&quot;0000003e-0000-1000-8000-0026bb765291&quot;,&quot;primary&quot;:null,&quot;hidden&quot;:null,&quot;characteristics&quot;:{}},{&quot;iid&quot;:8,&quot;type&quot;:&quot;0000008a-0000-1000-8000-0026bb765291&quot;,&quot;primary&quot;:null,&quot;hidden&quot;:null,&quot;characteristics&quot;:{}}],&quot;Name&quot;:&quot;Sensor1&quot;,&quot;Version&quot;:null,&quot;Model&quot;:&quot;&quot;,&quot;SerialNumber&quot;:&quot;default&quot;,&quot;FirmwareRevision&quot;:&quot;&quot;}]}.
+        ///   Looks up a localized string similar to {&quot;accessories&quot;:[{&quot;aid&quot;:1,&quot;services&quot;:[{&quot;iid&quot;:1,&quot;type&quot;:&quot;0000003e-0000-1000-8000-0026bb765291&quot;,&quot;primary&quot;:null,&quot;hidden&quot;:null,&quot;characteristics&quot;:[{&quot;iid&quot;:2,&quot;type&quot;:&quot;00000014-0000-1000-8000-0026bb765291&quot;,&quot;value&quot;:null,&quot;perms&quot;:[&quot;pw&quot;],&quot;ev&quot;:null,&quot;format&quot;:&quot;bool&quot;,&quot;description&quot;:null,&quot;unit&quot;:null,&quot;minValue&quot;:null,&quot;maxValue&quot;:null,&quot;minStep&quot;:null,&quot;maxLen&quot;:null,&quot;maxDataLen&quot;:null,&quot;valid-values&quot;:null,&quot;valid-values-range&quot;:null,&quot;TTL&quot;:null,&quot;pid&quot;:null},{&quot;iid&quot;:3,&quot;type&quot;:&quot;00000020-0000-1000-8000-0026bb765291&quot;,&quot;value&quot;:&quot;&quot;,&quot;perms&quot;:[&quot;pr&quot;],&quot;ev [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TemperatureSensorPairedAccessoryJson {
             get {
                 return ResourceManager.GetString("TemperatureSensorPairedAccessoryJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {&quot;$type&quot;:&quot;System.Collections.Generic.SortedDictionary`2[[System.Int32, mscorlib],[System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib]], System&quot;,&quot;8475&quot;:{&quot;$type&quot;:&quot;System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib&quot;,&quot;PlugExtraData&quot;:[{&quot;key&quot;:&quot;accessory.aid&quot;,&quot;value&quot;:&quot;1&quot;},{&quot;key&quot;:&quot;enabled.characteristic&quot;,&quot;value&quot;:&quot;[9]&quot;},{&quot;key&quot;:&quot;pairing.info&quot;,&quot;value&quot;:&quot;{\&quot;DeviceInforma [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string TemperatureSensorPairedHS3DataJson {
+            get {
+                return ResourceManager.GetString("TemperatureSensorPairedHS3DataJson", resourceCulture);
             }
         }
     }

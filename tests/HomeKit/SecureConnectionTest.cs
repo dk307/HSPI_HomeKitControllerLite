@@ -2,7 +2,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Nito.AsyncEx;
+using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,7 +15,7 @@ namespace HSPI_HomeKitControllerTest
     {
         public SecureConnectionTest()
         {
-            cancellationTokenSource.CancelAfter(120 * 1000);
+            cancellationTokenSource.CancelAfter(60 * 1000);
         }
 
         private CancellationToken Token => cancellationTokenSource.Token;
@@ -73,6 +75,27 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
+        public async Task RefreshValueEnqueuesOriginalValueOnSubscribe()
+        {
+            using HapAccessory hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
+            await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
+            using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
+
+            List<AccessoryValueChangedArgs> changedEventQueue = new();
+            connection.AccessoryValueChangedEvent += (s, e) => changedEventQueue.Add(e);
+
+            await connection.RefreshValues(Token).ConfigureAwait(false);
+
+            Assert.AreEqual(6, changedEventQueue.Count);
+
+            var data = changedEventQueue[5];
+
+            Assert.AreEqual(1UL, data.Aid);
+            Assert.AreEqual(9UL, data.Iid);
+            Assert.AreEqual(49.0D, data.Value);
+        }
+
+        [TestMethod]
         public async Task RemovePairing()
         {
             using HapAccessory hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
@@ -81,25 +104,6 @@ namespace HSPI_HomeKitControllerTest
 
             await connection.RemovePairing(Token).ConfigureAwait(false);
         }
-
-        [TestMethod]
-        public async Task SubscribeAllEnqueuesOriginalValueOnSubscribe()
-        {
-            using HapAccessory hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
-            await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
-            using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
-
-            AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue = new();
-
-            await connection.TrySubscribeAll(changedEventQueue, Token).ConfigureAwait(false);
-
-            var data = await changedEventQueue.DequeueAsync(Token) as AccessoryValueChangedEvent;
-
-            Assert.AreEqual(1UL, data.Aid);
-            Assert.AreEqual(9UL, data.Iid);
-            Assert.AreEqual(49.0D, data.Value);
-        }
-
         [TestMethod]
         public async Task SubscribeAllGetsNewValues()
         {
@@ -107,14 +111,13 @@ namespace HSPI_HomeKitControllerTest
             await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
             using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
 
-            AsyncProducerConsumerQueue<ChangedEvent> changedEventQueue = new();
+            AsyncProducerConsumerQueue<AccessoryValueChangedArgs> changedEventQueue = new();
+            connection.AccessoryValueChangedEvent += (s, e) => changedEventQueue.Enqueue(e);
 
-            await connection.TrySubscribeAll(changedEventQueue, Token).ConfigureAwait(false);
+            await connection.TrySubscribeAll(Token).ConfigureAwait(false);
 
             await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false); //original value
-            var eventC = await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false);
-
-            var data = eventC as AccessoryValueChangedEvent;
+            var data = await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false);
 
             Assert.IsNotNull(data);
             Assert.AreEqual(1UL, data.Aid);
@@ -128,7 +131,7 @@ namespace HSPI_HomeKitControllerTest
             var pairingInfo = TestHelper.GetTemperatureSensorParingInfo();
             var connection = new SecureConnection(pairingInfo);
 
-            await connection.ConnectAndListen(token).ConfigureAwait(false);
+            await connection.ConnectAndListen(new IPEndPoint(IPAddress.Any, 0), token).ConfigureAwait(false);
             Assert.IsTrue(connection.Connected);
             return connection;
         }

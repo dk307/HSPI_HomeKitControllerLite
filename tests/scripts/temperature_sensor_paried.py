@@ -23,12 +23,10 @@ def get_accessory(driver):
     return TemperatureSensor(driver, 'Sensor1')
     
 parser = argparse.ArgumentParser()
-parser.add_argument("port", type=int)
-parser.add_argument("address")
 parser.add_argument("persist_file")
 args = parser.parse_args()
 
-driver = AccessoryDriver(port=args.port, address=args.address, persist_file=args.persist_file)
+driver = AccessoryDriver(persist_file=args.persist_file)
 driver.add_accessory(accessory=get_accessory(driver))
 signal.signal(signal.SIGTERM, driver.signal_handler)
 driver.start()

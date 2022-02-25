@@ -47,11 +47,9 @@ namespace HomeKit.Http
             await underlyingStream.FlushAsync(token).ConfigureAwait(false);
 
             // Create timer task
-            CancellationTokenSource timerToken = new();
-            timerToken.CancelAfter(CalltimeoutMilliseconds);
-
             var cancellationTokenSource =
-                    CancellationTokenSource.CreateLinkedTokenSource(timerToken.Token, token);
+                    CancellationTokenSource.CreateLinkedTokenSource(token);
+            cancellationTokenSource.CancelAfter(CalltimeoutMilliseconds);
 
             var waitTask = waitForResult.WaitAsync(cancellationTokenSource.Token);
 
@@ -62,7 +60,7 @@ namespace HomeKit.Http
 
             if (response == null)
             {
-                throw new InvalidDataException("http response unexpected null");
+                throw new InvalidDataException("http response unexpected null or timed out");
             }
 
             response.RequestMessage = request;

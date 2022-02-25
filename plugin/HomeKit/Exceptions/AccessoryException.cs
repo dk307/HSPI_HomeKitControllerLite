@@ -4,6 +4,8 @@ using System.Runtime.Serialization;
 
 namespace HomeKit.Exceptions
 {
+
+
     [Serializable]
     public class AccessoryException : Exception
     {

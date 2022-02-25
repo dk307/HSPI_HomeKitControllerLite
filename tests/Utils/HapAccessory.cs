@@ -3,7 +3,6 @@ using Nito.AsyncEx;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,10 +19,10 @@ namespace HSPI_HomeKitControllerTest
 
             Assert.IsTrue(File.Exists(scriptPath));
 
-            ProcessStartInfo start = new ProcessStartInfo
+            ProcessStartInfo start = new()
             {
                 FileName = "python",
-                Arguments = string.Format("\"{0}\" {1}", scriptPath, args),
+                Arguments = string.Format("-u \"{0}\" {1}", scriptPath, args),
                 WorkingDirectory = workingDirectory,
                 UseShellExecute = false,
                 CreateNoWindow = false,
@@ -46,11 +45,12 @@ namespace HSPI_HomeKitControllerTest
             {
                 if (this.process != null)
                 {
-                    if (!this.process.HasExited) {
+                    if (!this.process.HasExited)
+                    {
                         Console.WriteLine("Killing Accessory process");
-                        this.process.Kill(); 
+                        this.process.Kill();
                     }
-                    this.process.WaitForExit();
+                    this.process.WaitForExit(10000);
                     this.process.Dispose();
                 }
             }
@@ -62,8 +62,11 @@ namespace HSPI_HomeKitControllerTest
 
         public async Task WaitForSuccessStart(CancellationToken token)
         {
-            CancellationTokenTaskSource<bool> cancellationTokenTaskSource = new(token);
-            await Task.WhenAny(startedSuccessFully.Task, cancellationTokenTaskSource.Task).ConfigureAwait(false);
+            await Task.WhenAny(startedSuccessFully.WaitAsync(token)).ConfigureAwait(false);
+            if (!startSuccess)
+            {
+                throw new Exception("Failed to start accessory process");
+            }
         }
 
         private void OutputHandler(object sender, DataReceivedEventArgs e)
@@ -71,27 +74,37 @@ namespace HSPI_HomeKitControllerTest
             string data = e.Data;
             if (data != null)
             {
-                output.AppendLine(data);
                 Console.WriteLine(data);
 
-                if (!startedSuccessFully.Task.IsCompleted)
+                if (!startedSuccessFully.IsSet)
                 {
+                    foreach (var error in errorsInStart)
+                    {
+                        if (data.Contains(error))
+                        {
+                            startedSuccessFully.Set();
+                            return;
+                        }
+                    }
+
                     var match = startedRegEx.Match(data);
                     if (match.Success)
                     {
-                        startedSuccessFully.SetResult(true);
+                        startSuccess = true;
+                        startedSuccessFully.Set();
                     }
                 }
             }
         }
-
-        private readonly StringBuilder output = new();
 
         private readonly Process process;
 
         private readonly Regex startedRegEx = new(@"^\s*\[accessory_driver\]\s*AccessoryDriver\s*for\s*\w+\s*started\ssuccessfully\s*$",
                                                                 RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-        private readonly TaskCompletionSource<bool> startedSuccessFully = new();
+        private readonly string[] errorsInStart = new string[] { "error while attempting to bind on address" };
+
+        private readonly AsyncManualResetEvent startedSuccessFully = new();
+        private bool startSuccess = false;
     }
 }

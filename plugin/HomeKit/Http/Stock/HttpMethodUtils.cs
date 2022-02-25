@@ -20,6 +20,7 @@ namespace System.Net.Http
             { HttpMethod.Trace, HttpMethod.Trace }
         };
 
+        [Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3963:\"static\" fields should be initialized inline", Justification = "<Pending>")]
         [Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "<Pending>")]
         static HttpMethodUtils()
         {

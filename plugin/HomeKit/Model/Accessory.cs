@@ -34,20 +34,17 @@ namespace HomeKit.Model
                     ?.Characteristics.Values.FirstOrDefault(x => x.Type == characteristicType);
         }
 
-        public Characteristic? FindCharacteristic(ulong iid)
+        public (Service?, Characteristic?) FindCharacteristic(ulong iid)
         {
-            if (Services != null)
+            foreach (var service in Services)
             {
-                foreach (var service in Services)
+                if (service.Value.Characteristics.TryGetValue(iid, out var value))
                 {
-                    if (service.Value.Characteristics.TryGetValue(iid, out var value))
-                    {
-                        return value;
-                    }
+                    return (service.Value, value);
                 }
             }
 
-            return null;
+            return (null, null);
         }
     }
 }

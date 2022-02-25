@@ -4,16 +4,14 @@
 
 using System.Diagnostics;
 
+#nullable enable
+
 namespace System.Net.Http.Headers
 {
-    // This struct represents a particular named header --
-    // if the header is one of our known headers, then it contains a reference to the KnownHeader object;
-    // otherwise, for custom headers, it just contains a string for the header name.
-    // Use HeaderDescriptor.TryGet to resolve an arbitrary header name to a HeaderDescriptor.
     internal readonly struct HeaderDescriptor : IEquatable<HeaderDescriptor>
     {
         private readonly string _headerName;
-        private readonly KnownHeader _knownHeader;
+        private readonly KnownHeader? _knownHeader;
 
         public HeaderDescriptor(KnownHeader knownHeader)
         {
@@ -29,9 +27,9 @@ namespace System.Net.Http.Headers
         }
 
         public string Name => _headerName;
-        public HttpHeaderParser Parser => _knownHeader?.Parser;
+        public HttpHeaderParser? Parser => _knownHeader?.Parser;
         public HttpHeaderType HeaderType => _knownHeader == null ? HttpHeaderType.Custom : _knownHeader.HeaderType;
-        public KnownHeader KnownHeader => _knownHeader;
+        public KnownHeader? KnownHeader => _knownHeader;
 
         [Diagnostics.CodeAnalysis.SuppressMessage("Blocker Code Smell", "S3877:Exceptions should not be thrown from unexpected methods", Justification = "<Pending>")]
         public override bool Equals(object obj) => throw new InvalidOperationException();   // Ensure this is never called, to avoid boxing
@@ -52,7 +50,7 @@ namespace System.Net.Http.Headers
         {
             Debug.Assert(headerName.Length > 0);
 
-            KnownHeader knownHeader = KnownHeaders.TryGetKnownHeader(headerName);
+            var knownHeader = KnownHeaders.TryGetKnownHeader(headerName);
             if (knownHeader != null)
             {
                 descriptor = new HeaderDescriptor(knownHeader);
@@ -71,8 +69,6 @@ namespace System.Net.Http.Headers
 
         public HeaderDescriptor AsCustomHeader()
         {
-            Debug.Assert(_knownHeader != null);
-            Debug.Assert(_knownHeader.HeaderType != HttpHeaderType.Custom);
             return new HeaderDescriptor(_knownHeader.Name);
         }
 

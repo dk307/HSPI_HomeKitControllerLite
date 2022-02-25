@@ -1,4 +1,5 @@
 ﻿using HomeKit.Model;
+using Hspi.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,41 @@ namespace HomeKit
 {
     internal static class HomeKitDiscover
     {
-         public static async Task<IList<DiscoveredDevice>> DiscoverIPs(TimeSpan scanTime,
+        public static async Task<DiscoveredDevice?> DiscoverDeviceById(string id, TimeSpan scanTime,
+                                                                     CancellationToken cancellationToken)
+        {
+
+            var combined = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+            DiscoveredDevice? device = null;
+            Action<IZeroconfHost> callback = (IZeroconfHost host) =>
+            {
+                if (IsValidHomeKitDevice(host) && device == null)
+                {
+                    var deviceFound = DiscoveredDevice.FromZeroConfigHost(host);
+                    if (deviceFound.Id == id)
+                    {
+                        device = deviceFound;
+                        combined.Cancel();
+                    }
+                }
+            };
+
+            try
+            {
+                await ZeroconfResolver.ResolveAsync(DiscoveredDevice.HapProtocol,
+                                                                  scanTime: scanTime,
+                                                                  callback: callback,
+                                                                  cancellationToken: combined.Token).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex.IsCancelException())
+            {
+                //ignore
+            }
+            return device;
+        }
+
+        public static async Task<IList<DiscoveredDevice>> DiscoverIPs(TimeSpan scanTime,
                                                                       CancellationToken cancellationToken)
         {
             var devices = await ZeroconfResolver.ResolveAsync(DiscoveredDevice.HapProtocol,
@@ -20,7 +55,7 @@ namespace HomeKit
                                                               cancellationToken: cancellationToken).ConfigureAwait(false);
 
             var homekitDevices = devices.SkipWhile(x => !IsValidHomeKitDevice(x))
-                                        .Select(x => new DiscoveredDevice(x));
+                                        .Select(x => DiscoveredDevice.FromZeroConfigHost(x));
 
             // devices can show up multiple times
             var consolidatedHomekitDevices = new List<DiscoveredDevice>();
