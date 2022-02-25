@@ -63,6 +63,10 @@ namespace HSPI_HomeKitControllerTest
         public async Task WaitForSuccessStart(CancellationToken token)
         {
             await Task.WhenAny(startedSuccessFully.WaitAsync(token)).ConfigureAwait(false);
+            if (!startSuccess)
+            {
+                throw new Exception("Failed to start accessory process");
+            }
         }
 
         private void OutputHandler(object sender, DataReceivedEventArgs e)
@@ -74,9 +78,19 @@ namespace HSPI_HomeKitControllerTest
 
                 if (!startedSuccessFully.IsSet)
                 {
+                    foreach (var error in errorsInStart)
+                    {
+                        if (data.Contains(error))
+                        {
+                            startedSuccessFully.Set();
+                            return;
+                        }
+                    }
+
                     var match = startedRegEx.Match(data);
                     if (match.Success)
                     {
+                        startSuccess = true;
                         startedSuccessFully.Set();
                     }
                 }
@@ -88,6 +102,9 @@ namespace HSPI_HomeKitControllerTest
         private readonly Regex startedRegEx = new(@"^\s*\[accessory_driver\]\s*AccessoryDriver\s*for\s*\w+\s*started\ssuccessfully\s*$",
                                                                 RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
+        private readonly string[] errorsInStart = new string[] { "error while attempting to bind on address" };
+
         private readonly AsyncManualResetEvent startedSuccessFully = new();
+        private bool startSuccess = false;
     }
 }
