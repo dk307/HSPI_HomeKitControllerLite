@@ -61,6 +61,66 @@ namespace HSPI_HomeKitControllerTest
             plugIn.Object.ShutdownIO();
         }
 
+        [TestMethod]
+        public async Task ConnectionReconnect()
+        {
+            var hapAccessory1 = TestHelper.CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
+            await hapAccessory1.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            string hsData = Resource.TemperatureSensorPairedHS3DataJson;
+
+            SetupHsDataForSyncing(hsData,
+                                  out Mock<PlugIn> plugIn,
+                                  out Mock<IHsController> mockHsController,
+                                  out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData);
+
+            Nito.AsyncEx.AsyncManualResetEvent onlineEvent = new(false);
+            Nito.AsyncEx.AsyncManualResetEvent onlineEvent2 = new(false);
+            Nito.AsyncEx.AsyncManualResetEvent offlineEvent = new(false);
+
+            var refIds = deviceOrFeatureData.Keys.ToArray();
+
+            mockHsController.Setup(x => x.UpdateFeatureValueByRef(refIds[1], It.IsAny<double>()))
+                            .Returns((int devOrFeatRef, double value) =>
+                            {
+                                deviceOrFeatureData[devOrFeatRef][EProperty.Value] = value;
+                                if (value == 1)
+                                {
+                                    if (!onlineEvent.IsSet)
+                                    {
+                                        onlineEvent.Set();
+                                    }
+                                    else
+                                    {
+                                        onlineEvent2.Set();
+                                    }
+                                }
+                                else
+                                {
+                                    offlineEvent.Set();
+                                }
+                                return true;
+                            });
+
+            Assert.IsTrue(plugIn.Object.InitIO());
+
+            await onlineEvent.WaitAsync(cancellationTokenSource.Token).ConfigureAwait(false);
+            Assert.AreEqual(1D, deviceOrFeatureData[refIds[1]][EProperty.Value]);
+
+            hapAccessory1.Dispose();
+
+            await offlineEvent.WaitAsync(cancellationTokenSource.Token).ConfigureAwait(false);
+            Assert.AreEqual(0D, deviceOrFeatureData[refIds[1]][EProperty.Value]);
+
+            //Restart accessory
+            var hapAccessory2 = TestHelper.CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
+            await hapAccessory2.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+
+            await onlineEvent2.WaitAsync(cancellationTokenSource.Token).ConfigureAwait(false);
+            Assert.AreEqual(1D, deviceOrFeatureData[refIds[1]][EProperty.Value]);
+
+            plugIn.Object.ShutdownIO();
+        }
+
         private static void SetupHsDataForSyncing(string hsData,
                                                    out Mock<PlugIn> plugIn,
                                                    out Mock<IHsController> mockHsController,
