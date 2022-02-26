@@ -1,12 +1,8 @@
 {
   "mappings": [
     {
-      "iid": "00000023-0000-1000-8000-0026bb765291",
-      "name": "Name",
-
-      "rangeOptions": {
-        "icon": "name.png"
-      }
+      "iid": "1621f556-1367-443c-af19-82af018e99de",
+      "name": "Timestamp"
     },
     {
       "iid": "00000011-0000-1000-8000-0026BB765291",
@@ -104,7 +100,6 @@
       "iid": "7d381baa-20f9-40e5-9be9-aeb92d4becef",
       "name": "Home - Cooling Threshold Temperature",
 
- 
       "rangeOptions": {
         "icon": "temperaturechange2.png"
       }
@@ -113,7 +108,6 @@
       "iid": "5da985f0-898a-4850-b987-b76c6c78d670",
       "name": "Sleep - Cooling Threshold Temperature",
 
-
       "rangeOptions": {
         "icon": "temperaturechange2.png"
       }
@@ -121,7 +115,6 @@
     {
       "iid": "a251f6e7-ac46-4190-9c5d-3d06277bdf9f",
       "name": "Away - Cooling Threshold Temperature",
-
 
       "rangeOptions": {
         "icon": "temperaturechange2.png"
@@ -134,7 +127,6 @@
       "rangeOptions": {
         "icon": "humidity.png"
       }
-
     },
     {
       "iid": "00000010-0000-1000-8000-0026bb765291",
@@ -236,6 +228,7 @@
     {
       "iid": "000000AF-0000-1000-8000-0026BB765291",
       "name": "Current Fan State",
+      "forceButtonOptions": true,
 
       "deviceType": [
         {
@@ -266,6 +259,7 @@
     {
       "iid": "000000BF-0000-1000-8000-0026BB765291",
       "name": "Target Fan State",
+      "forceButtonOptions": true,
 
       "deviceType": [
         {
@@ -337,7 +331,7 @@
     {
       "iid": "B7DDB9A3-54BB-4572-91D2-F1F5B0510F8C",
       "name": "Current Program",
-      "forceButtonOptions" :  true,
+      "forceButtonOptions": true,
 
       "buttonOptions": [
         {
@@ -357,7 +351,7 @@
         },
         {
           "value": 3,
-          "name": "Paused",
+          "name": "On Hold",
           "icon": "paused.png"
         },
       ]
@@ -384,6 +378,38 @@
           "icon": "away.png"
         }
       ]
+    },
+    {
+      "iid": "fa128de6-9d7d-49a4-b6d8-4e4e234dee38",
+      "name": "Clear Hold",
+      "forceButtonOptions": true,
+
+      "buttonOptions": [
+        {
+          "value": 1,
+          "name": "Clear Hold"
+        }
+      ]
+    },
+    {
+      "iid": "c35da3c0-e004-40e3-b153-46655cdd9214",
+      "name": "Fan Speed",
+
+      "rangeOptions": {
+        "icon": "fanspeed.png"
+      }
+    },
+    {
+      "iid": "48f62aec-4171-4b4a-8f0e-1eeb6708b3fb",
+      "name": "Fan Speed",
+
+      "rangeOptions": {
+        "icon": "fanspeed.png"
+      }
+    },
+    {
+      "iid": "1b1515f2-cc45-409f-991f-c480987f92c3",
+      "name": "Notifications"
     }
   ]
 }

@@ -447,6 +447,7 @@ namespace Hspi.DeviceData
         {
             featureFactory = featureFactory.WithName(mapping?.Name ??
                                                      characteristic.Description ??
+                                                     characteristic.Type.DisplayName ??
                                                      characteristic.Type.Id.ToString("D"));
             return featureFactory;
         }
@@ -454,9 +455,9 @@ namespace Hspi.DeviceData
         private const string DefaultIcon = "default.png";
 
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
-                                                                                                                                      {
-                                                                                                                                          string json = Encoding.UTF8.GetString(Resource.HSMappings);
-                                                                                                                                          return JsonHelper.DeserializeObject<HSMappings>(json);
-                                                                                                                                      }, true);
+                                                           {
+                                                               string json = Encoding.UTF8.GetString(Resource.HSMappings);
+                                                               return JsonHelper.DeserializeObject<HSMappings>(json);
+                                                           }, true);
     }
 }

@@ -226,6 +226,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Hspi\DeviceData\HSMapping\CharacteristicTypeNames.json" />
     <None Include="Hspi\DeviceData\HSMapping\HSMappings.json" />
     <None Include="Properties\app.manifest" />
   </ItemGroup>

@@ -63,6 +63,16 @@ namespace Hspi {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] CharacteristicTypeNames {
+            get {
+                object obj = ResourceManager.GetObject("CharacteristicTypeNames", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] HSMappings {
             get {
                 object obj = ResourceManager.GetObject("HSMappings", resourceCulture);
