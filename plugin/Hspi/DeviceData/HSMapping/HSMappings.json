@@ -1,6 +1,14 @@
 {
   "mappings": [
     {
+      "iid": "00000023-0000-1000-8000-0026bb765291",
+      "name": "Name",
+
+      "rangeOptions": {
+        "icon": "name.png"
+      }
+    },
+    {
       "iid": "00000011-0000-1000-8000-0026BB765291",
       "name": "Current Temperature",
 
@@ -18,7 +26,11 @@
     },
     {
       "iid": "00000035-0000-1000-8000-0026BB765291",
-      "name": "Target Temperature"
+      "name": "Target Temperature",
+
+      "rangeOptions": {
+        "icon": "temperature.png"
+      }
     },
     {
       "iid": "00000012-0000-1000-8000-0026BB765291",
@@ -33,12 +45,37 @@
       ],
 
       "rangeOptions": {
+        "icon": "temperaturechange.png",
         "eControlUse": [
           {
             "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
             "value": 12 //HeatSetPoint
           }
         ]
+      }
+    },
+    {
+      "iid": "e4489bbc-5227-4569-93e5-b345e3e5508f",
+      "name": "Home - Heating Threshold Temperature",
+
+      "rangeOptions": {
+        "icon": "temperaturechange2.png",
+      }
+    },
+    {
+      "iid": "05b97374-6dc0-439b-a0fa-ca33f612d425",
+      "name": "Away - Heating Threshold Temperature",
+
+      "rangeOptions": {
+        "icon": "temperaturechange2.png"
+      }
+    },
+    {
+      "iid": "73aab542-892a-4439-879a-d2a883724b69",
+      "name": "Sleep - Heating Threshold Temperature",
+
+      "rangeOptions": {
+        "icon": "temperaturechange2.png"
       }
     },
     {
@@ -54,6 +91,7 @@
       ],
 
       "rangeOptions": {
+        "icon": "temperaturechange.png",
         "eControlUse": [
           {
             "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -63,8 +101,48 @@
       }
     },
     {
+      "iid": "7d381baa-20f9-40e5-9be9-aeb92d4becef",
+      "name": "Home - Cooling Threshold Temperature",
+
+ 
+      "rangeOptions": {
+        "icon": "temperaturechange2.png"
+      }
+    },
+    {
+      "iid": "5da985f0-898a-4850-b987-b76c6c78d670",
+      "name": "Sleep - Cooling Threshold Temperature",
+
+
+      "rangeOptions": {
+        "icon": "temperaturechange2.png"
+      }
+    },
+    {
+      "iid": "a251f6e7-ac46-4190-9c5d-3d06277bdf9f",
+      "name": "Away - Cooling Threshold Temperature",
+
+
+      "rangeOptions": {
+        "icon": "temperaturechange2.png"
+      }
+    },
+    {
       "iid": "00000034-0000-1000-8000-0026BB765291",
-      "name": "Target Relative Humidity"
+      "name": "Target Relative Humidity",
+
+      "rangeOptions": {
+        "icon": "humidity.png"
+      }
+
+    },
+    {
+      "iid": "00000010-0000-1000-8000-0026bb765291",
+      "name": "Current Relative Humidity",
+
+      "rangeOptions": {
+        "icon": "humidity.png"
+      }
     },
     {
       "iid": "0000000F-0000-1000-8000-0026BB765291",
@@ -82,7 +160,7 @@
         {
           "value": 0,
           "name": "Off",
-          "icon": "off.png"
+          "icon": "heatcooloff.png"
         },
         {
           "value": 1,
@@ -112,7 +190,7 @@
         {
           "value": 0,
           "name": "Off",
-          "icon": "off.png",
+          "icon": "heatcooloff.png",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -145,7 +223,7 @@
         {
           "value": 3,
           "name": "Auto",
-          "icon": "autooperatingmode.png",
+          "icon": "heatcoolauto.png",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -236,6 +314,74 @@
           "value": 1,
           "name": "Detected",
           "icon": "motiondetected.png"
+        }
+      ]
+    },
+    {
+      "iid": "00000036-0000-1000-8000-0026bb765291",
+      "name": "Temperature Display Units",
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Celsius",
+          "icon": "celsius.png"
+        },
+        {
+          "value": 1,
+          "name": "Fahrenheit",
+          "icon": "fahrenheit.png"
+        }
+      ]
+    },
+    {
+      "iid": "B7DDB9A3-54BB-4572-91D2-F1F5B0510F8C",
+      "name": "Current Program",
+      "forceButtonOptions" :  true,
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Home",
+          "icon": "home.png"
+        },
+        {
+          "value": 1,
+          "name": "Sleep",
+          "icon": "sleep.png"
+        },
+        {
+          "value": 2,
+          "name": "Away",
+          "icon": "away.png"
+        },
+        {
+          "value": 3,
+          "name": "Paused",
+          "icon": "paused.png"
+        },
+      ]
+    },
+    {
+      "iid": "1b300bc2-cffc-47ff-89f9-bd6ccf5f2853",
+      "name": "Set Program",
+      "forceButtonOptions": true,
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Home",
+          "icon": "home.png"
+        },
+        {
+          "value": 1,
+          "name": "Sleep",
+          "icon": "sleep.png"
+        },
+        {
+          "value": 2,
+          "name": "Away",
+          "icon": "away.png"
         }
       ]
     }

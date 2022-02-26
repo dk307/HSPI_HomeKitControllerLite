@@ -28,6 +28,12 @@ namespace Hspi.DeviceData
 
         public ulong Iid { get; }
 
+        public static double C2FConvert(double doubleValue)
+        {
+            doubleValue = ((doubleValue * 9) / 5) + 32;
+            return Math.Round(doubleValue, 3);
+        }
+
         public void SetValue(object? value)
         {
             switch (Format)
@@ -62,6 +68,7 @@ namespace Hspi.DeviceData
             var plugInExtra = HS.GetPropertyByRef(RefId, EProperty.PlugExtraData) as PlugExtraData;
             return plugInExtra?.ContainsNamed(CToFNeededPlugExtraTag) ?? false;
         }
+
         private void UpdateDoubleValue<T>(object? value)
         {
             try
@@ -76,7 +83,7 @@ namespace Hspi.DeviceData
 
                 if (cToFNeeded)
                 {
-                    doubleValue = ((doubleValue * 9) / 5) + 32;
+                    doubleValue = C2FConvert(doubleValue);
                 }
                 UpdateDeviceValue(doubleValue);
                 Log.Debug("Updated value {value} for the {name}", value, NameForLog);
