@@ -20,7 +20,7 @@ namespace HSPI_HomeKitControllerTest
                                         object existingValue,
                                         JsonSerializer serializer)
         {
-            StatusGraphic graphic = null;
+            StatusGraphic graphic;
             var jObject = JObject.Load(reader);
 
             var isRange = (bool)jObject["IsRange"];

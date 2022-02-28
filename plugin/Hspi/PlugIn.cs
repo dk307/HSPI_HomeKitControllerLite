@@ -39,7 +39,7 @@ namespace Hspi
             return result;
         }
 
-        public override void SetIOMulti(List<ControlEvent> colSends)
+        public override void SetIOMulti(List<ControlEvent> colSend)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace Hspi
             async Task SetIOMultiAsync()
             {
                 var deviceManagerCopy = await GetHomeKitDeviceManager().ConfigureAwait(false);
-                deviceManagerCopy?.HandleCommand(colSends);
+                deviceManagerCopy?.HandleCommand(colSend);
             }
         }
 

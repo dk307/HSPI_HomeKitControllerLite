@@ -20,7 +20,7 @@ namespace HomeKit
             var combined = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
             DiscoveredDevice? device = null;
-            Action<IZeroconfHost> callback = (IZeroconfHost host) =>
+            void callback(IZeroconfHost host)
             {
                 if (IsValidHomeKitDevice(host) && device == null)
                 {
@@ -31,7 +31,7 @@ namespace HomeKit
                         combined.Cancel();
                     }
                 }
-            };
+            }
 
             try
             {

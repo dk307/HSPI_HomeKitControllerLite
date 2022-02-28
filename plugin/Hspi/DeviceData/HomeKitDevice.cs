@@ -10,7 +10,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using static HomeKit.SecureConnection;
 using static System.FormattableString;
 
 #nullable enable
@@ -225,13 +224,13 @@ namespace Hspi.DeviceData
             var subscribedMap = manager.Connection.SubscriptionsToDevice.ToLookup(x => x.Aid);
 
             List<AidIidPair> polling = new();
-            foreach (var accessory in accessoryInfo.Accessories)
+            foreach (var aid in accessoryInfo.Accessories.Select(x=>x.Aid))
             {
-                var allFeatureDevices = hsDevices[accessory.Aid].CharacteristicFeatures.Keys;
-                var subscribedMapForAccessory = subscribedMap[accessory.Aid];
+                var allFeatureDevices = hsDevices[aid].CharacteristicFeatures.Keys;
+                var subscribedMapForAccessory = subscribedMap[aid];
                 var nonSubscribedFeatures = allFeatureDevices.Where(iid => !subscribedMapForAccessory.Any(x => x.Iid == iid));
 
-                polling.AddRange(nonSubscribedFeatures.Select(x => new AidIidPair(accessory.Aid, x)));
+                polling.AddRange(nonSubscribedFeatures.Select(x => new AidIidPair(aid, x)));
             }
 
             var aidIidPairs = polling.ToImmutableList();

@@ -125,7 +125,8 @@ namespace HomeKit
 
             if (result != null && result["characteristics"] is JArray characteristics)
             {
-                foreach (JToken row in characteristics) // expect only one
+                var row = characteristics.FirstOrDefault(); // expect only one
+                if (row != null)
                 {
                     ParseHapStatus(row, out var aid, out var iid, out var status);
 
@@ -243,7 +244,6 @@ namespace HomeKit
             iid = (ulong?)row["iid"];
             status = (HAPStatus?)row["status"]?.Value<Int64?>();
         }
-
 
         private async ValueTask<HashSet<AidIidPair>> ChangeSubscription(IEnumerable<AidIidPair> subscriptions,
                                                                           bool subscribe,

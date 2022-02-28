@@ -137,7 +137,7 @@ namespace HomeKit.Http
                     // Some headers such as User-Agent and Server use space as a separator (see: ProductInfoHeaderParser)
                     if (header.Value.Length > 1)
                     {
-                        HttpHeaderParser parser = header.Key.Parser;
+                        var parser = header.Key.Parser;
                         string separator = HttpHeaderParser.DefaultSeparator;
                         if (parser != null && parser.SupportsMultipleValues)
                         {
