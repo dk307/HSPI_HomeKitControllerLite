@@ -170,8 +170,7 @@ namespace Hspi.DeviceData
 
             var rangeOptions = mapping?.RangeOptions;
 
-            int decimalPlaces = (characteristic.StepValue.HasValue ?
-                    GetPrecision((decimal)characteristic.StepValue.Value) : 0);
+            int decimalPlaces = characteristic.DecimalPlaces ?? 0;
 
             if (readable)
             {
@@ -275,46 +274,6 @@ namespace Hspi.DeviceData
             }
         }
 
-        private static void ConvertStatusGraphicToF(StatusGraphic statusGraphic)
-        {
-            if (statusGraphic.IsRange)
-            {
-                var newTargetRange = new ValueRange(C2FConvert(statusGraphic.TargetRange.Min),
-                                                    C2FConvert(statusGraphic.TargetRange.Max))
-                {
-                    DecimalPlaces = statusGraphic.TargetRange.DecimalPlaces,
-                    Offset = statusGraphic.TargetRange.Offset,
-                    Prefix = statusGraphic.TargetRange.Prefix,
-                    Suffix = statusGraphic.TargetRange.Suffix,
-                };
-                statusGraphic.TargetRange = newTargetRange;
-            }
-            else
-            {
-                statusGraphic.Value = C2FConvert(statusGraphic.Value);
-            }
-        }
-
-        private static void ConvertStatusControlToF(StatusControl statusControl)
-        {
-            if (statusControl.IsRange)
-            {
-                var newTargetRange = new ValueRange(C2FConvert(statusControl.TargetRange.Min),
-                                                    C2FConvert(statusControl.TargetRange.Max))
-                {
-                    DecimalPlaces = statusControl.TargetRange.DecimalPlaces,
-                    Offset = statusControl.TargetRange.Offset,
-                    Prefix = statusControl.TargetRange.Prefix,
-                    Suffix = statusControl.TargetRange.Suffix,
-                };
-                statusControl.TargetRange = newTargetRange;
-            }
-            else
-            {
-                statusControl.TargetValue = C2FConvert(statusControl.TargetValue);
-            }
-        }
-
         private static void AddValidValuesGraphicsAndStatus(NewFeatureData newData,
                                                             ServiceType serviceType,
                                                             Characteristic characteristic,
@@ -356,6 +315,45 @@ namespace Hspi.DeviceData
             }
         }
 
+        private static void ConvertStatusControlToF(StatusControl statusControl)
+        {
+            if (statusControl.IsRange)
+            {
+                var newTargetRange = new ValueRange(C2FConvert(statusControl.TargetRange.Min, 3),
+                                                    C2FConvert(statusControl.TargetRange.Max, 3))
+                {
+                    DecimalPlaces = statusControl.TargetRange.DecimalPlaces,
+                    Offset = statusControl.TargetRange.Offset,
+                    Prefix = statusControl.TargetRange.Prefix,
+                    Suffix = statusControl.TargetRange.Suffix,
+                };
+                statusControl.TargetRange = newTargetRange;
+            }
+            else
+            {
+                statusControl.TargetValue = C2FConvert(statusControl.TargetValue, 3);
+            }
+        }
+
+        private static void ConvertStatusGraphicToF(StatusGraphic statusGraphic)
+        {
+            if (statusGraphic.IsRange)
+            {
+                var newTargetRange = new ValueRange(C2FConvert(statusGraphic.TargetRange.Min, 3),
+                                                    C2FConvert(statusGraphic.TargetRange.Max, 3))
+                {
+                    DecimalPlaces = statusGraphic.TargetRange.DecimalPlaces,
+                    Offset = statusGraphic.TargetRange.Offset,
+                    Prefix = statusGraphic.TargetRange.Prefix,
+                    Suffix = statusGraphic.TargetRange.Suffix,
+                };
+                statusGraphic.TargetRange = newTargetRange;
+            }
+            else
+            {
+                statusGraphic.Value = C2FConvert(statusGraphic.Value, 3);
+            }
+        }
         private static string CreateImagePath(string featureName)
         {
             return Path.ChangeExtension(Path.Combine(PlugInData.PlugInId, "images", featureName), "png");
@@ -415,16 +413,6 @@ namespace Hspi.DeviceData
             return null;
         }
 
-        private static int GetPrecision(decimal x)
-        {
-            int precision = 0;
-            while (x * (decimal)Math.Pow(10, precision) != Math.Round(x * (decimal)Math.Pow(10, precision)))
-            {
-                precision++;
-            }
-            return precision;
-        }
-
         private static bool IsTemperatureScaleF(IHsController hsController)
         {
             return Convert.ToBoolean(hsController.GetINISetting("Settings", "gGlobalTempScaleF", "True").Trim());
@@ -455,9 +443,9 @@ namespace Hspi.DeviceData
         private const string DefaultIcon = "default.png";
 
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
-                                                           {
-                                                               string json = Encoding.UTF8.GetString(Resource.HSMappings);
-                                                               return JsonHelper.DeserializeObject<HSMappings>(json);
-                                                           }, true);
+                                                                 {
+                                                                     string json = Encoding.UTF8.GetString(Resource.HSMappings);
+                                                                     return JsonHelper.DeserializeObject<HSMappings>(json);
+                                                                 }, true);
     }
 }

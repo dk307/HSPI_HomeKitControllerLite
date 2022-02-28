@@ -4,13 +4,12 @@
 
 namespace HomeKit.Model
 {
-    internal sealed record AidIidValue
+    internal record AidIidPair
     {
-        public AidIidValue(ulong aid, ulong iid, object? value)
+        public AidIidPair(ulong aid, ulong iid)
         {
             Aid = aid;
             Iid = iid;
-            Value = value;
         }
 
         [JsonProperty("aid", Required = Required.Always)]
@@ -18,6 +17,15 @@ namespace HomeKit.Model
 
         [JsonProperty("iid", Required = Required.Always)]
         public ulong Iid { get; init; }
+    }
+
+    internal sealed record AidIidValue : AidIidPair
+    {
+        public AidIidValue(ulong aid, ulong iid, object? value)
+            : base(aid, iid)
+        {
+            Value = value;
+        }
 
         [JsonProperty("value")]
         public object? Value { get; init; }

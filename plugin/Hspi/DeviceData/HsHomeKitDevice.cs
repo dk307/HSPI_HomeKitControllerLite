@@ -103,7 +103,10 @@ namespace Hspi.DeviceData
 
         protected void UpdateDeviceValue(string? data)
         {
-            HS.UpdatePropertyByRef(RefId, EProperty.Status, data);
+            if (!HS.UpdateFeatureValueStringByRef(RefId, data ?? string.Empty))
+            {
+                throw new InvalidOperationException($"Failed to update device {NameForLog}");
+            }
             HS.UpdatePropertyByRef(RefId, EProperty.InvalidValue, false);
         }
 

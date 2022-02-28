@@ -84,7 +84,7 @@ namespace HSPI_HomeKitControllerTest
             List<AccessoryValueChangedArgs> changedEventQueue = new();
             connection.AccessoryValueChangedEvent += (s, e) => changedEventQueue.Add(e);
 
-            await connection.RefreshValues(Token).ConfigureAwait(false);
+            await connection.RefreshValues(null, Token).ConfigureAwait(false);
 
             Assert.AreEqual(6, changedEventQueue.Count);
 
