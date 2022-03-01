@@ -217,6 +217,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="scripts\ecobee_thermostat.py" />
     <Content Include="scripts\temperaturesensor_accessory.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
