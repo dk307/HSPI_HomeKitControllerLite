@@ -381,13 +381,19 @@
     },
     {
       "iid": "fa128de6-9d7d-49a4-b6d8-4e4e234dee38",
-      "name": "Clear Hold",
+      "name": "Clear Program Hold",
       "forceButtonOptions": true,
 
       "buttonOptions": [
         {
           "value": 1,
-          "name": "Clear Hold"
+          "name": "Clear Hold",
+          "eControlUse": [
+            {
+              "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+              "value": 2 //Off
+            }
+          ]
         }
       ]
     },

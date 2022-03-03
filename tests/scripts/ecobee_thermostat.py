@@ -2,8 +2,10 @@ import logging
 import signal
 import argparse
 import uuid
+import json
 
 from pyhap.accessory import Accessory, Bridge
+from pyhap.service import Service
 from pyhap.characteristic import Characteristic
 from pyhap.accessory_driver import AccessoryDriver
 import pyhap.loader as loader
@@ -28,56 +30,39 @@ from pyhap.const import (
 
 logging.basicConfig(level=logging.DEBUG, format="[%(module)s] %(message)s")
 
-class ThermostatSensor(Accessory):
+class EcobeeThermostat(Accessory):
     category = CATEGORY_THERMOSTAT
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        service_thermostat = self.add_preload_service(
-            'Thermostat', ['Name',
-                           'CurrentTemperature',
-                           'TargetTemperature',
-                           'TemperatureDisplayUnits',
-                           'TargetHeatingCoolingState',
-                           'CurrentHeatingCoolingState',
-                           'CurrentRelativeHumidity',
-                           'TargetRelativeHumidity',
-                           'CoolingThresholdTemperature',
-                           'HeatingThresholdTemperature',
-                           'CurrentFanState',
-                           'TargetFanState'],
-        )
+        ecobee_json = EcobeeThermostat._read_file("ecobee.json")
 
-        self.set_primary_service(service_thermostat)
+        # thermostat 
+        thermostat_service = self.driver.loader.get_service('Thermostat')
+        for char_dict in ecobee_json["thermostatCharacteristics"]:
+            char = Characteristic.from_dict("Char", char_dict)
+            thermostat_service.add_characteristic(char)
+           
+        self.add_service(thermostat_service)
+        self.set_primary_service(thermostat_service)
 
-        # Predefined
-        self.char_current_temp = service_thermostat.configure_char('CurrentTemperature', value=23)
-        self.char_target_temp = service_thermostat.configure_char('TargetTemperature', value=20, setter_callback=self.set_target_temperature)
-        self.char_target_display_units = service_thermostat.configure_char('TemperatureDisplayUnits', value=1, setter_callback=self.set_target_display_units)
-        self.char_target_heating_cooling_state = service_thermostat.configure_char('TargetHeatingCoolingState', value=2, setter_callback=self.set_target_heating_cooling_state)
-        self.char_current_heating_cooling_state = service_thermostat.configure_char('CurrentHeatingCoolingState', value=0)
-        self.char_current_relative_humidity = service_thermostat.configure_char('CurrentRelativeHumidity', value=23)
-        self.char_target_relative_humidity = service_thermostat.configure_char('TargetRelativeHumidity', value=43, setter_callback=self.set_target_relative_humidity)
-        self.char_cooling_threshold_temp = service_thermostat.configure_char('CoolingThresholdTemperature', value=23, setter_callback=self.set_cooling_threshold_temperature)
-        self.char_currrent_fan_state = service_thermostat.configure_char('CurrentFanState', value=0)
-        self.char_target_fan_state = service_thermostat.configure_char('TargetFanState', value=1, setter_callback=self.set_target_fan_state)
+        # motion sensor
+        motion_sensor_service = self.driver.loader.get_service('MotionSensor')
+        for char_dict in ecobee_json["motionSensorCharacteristics"]:
+            char = Characteristic.from_dict("Char1", char_dict)
+            motion_sensor_service.add_characteristic(char)
+           
+        self.add_service(motion_sensor_service)
 
-        # custom one - Current Program
-        current_program_props = {
-            PROP_FORMAT: HAP_FORMAT_UINT8,
-            PROP_PERMISSIONS: HAP_PERMISSION_READ,
-            #PROP_VALID_VALUES: [0, 1, 2]
-        }
 
-        self.char_current_program = Characteristic(
-            'CurrentProgram',
-            uuid.UUID('{b7ddb9a3-54bb-4572-91d2-f1f5b0510f8c}'),
-            current_program_props,
-        )
-        service_thermostat.broker = self
-        service_thermostat.add_characteristic(self.char_current_program)
-
+        # occupancy sensor
+        occupancy_sensor_service = self.driver.loader.get_service('OccupancySensor')
+        for char_dict in ecobee_json["occupancySensorCharacteristics"]:
+            char = Characteristic.from_dict("Char1", char_dict)
+            occupancy_sensor_service.add_characteristic(char)
+           
+        self.add_service(occupancy_sensor_service)
 
     def set_target_temperature(self, value):
         logger.info("Set Target Temperature: %s", value)
@@ -100,8 +85,14 @@ class ThermostatSensor(Accessory):
     def set_target_fan_state(self, value):
         logger.info("Set Target Fan State: %s", value)
 
+    @staticmethod
+    def _read_file(path):
+        """Read file and return a dict."""
+        with open(path, "r") as file:
+            return json.load(file)
+
 def get_accessory(driver):
-    return ThermostatSensor(driver, 'EcoBee', aid=1)
+    return EcobeeThermostat(driver, 'EcoBee', aid=1)
     
 parser = argparse.ArgumentParser()
 parser.add_argument("pincode")

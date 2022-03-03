@@ -22,7 +22,7 @@ namespace HSPI_HomeKitControllerTest
             return new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All,
-                Converters = new List<JsonConverter>() { new PlugExtraDataConverter(), 
+                Converters = new List<JsonConverter>() { new PlugExtraDataConverter(),
                                                          new StatusGraphicReadConverter() }
             };
         }
@@ -36,10 +36,11 @@ namespace HSPI_HomeKitControllerTest
         }
 
         public static HapAccessory CreateTemperaturePairedAccessory(
-                    string script = "temperature_sensor_paried.py")
+                    string script = "temperature_sensor_paried.py",
+                    string accessoryFile = "temperaturesensor_accessory.txt")
         {
-            string fileName = Path.Combine("scripts", "temperaturesensor_accessory.txt");
-            string fileName2 = Path.Combine("scripts", "temperaturesensor_accessory2.txt");
+            string fileName = Path.Combine("scripts", accessoryFile);
+            string fileName2 = Path.Combine("scripts", "paired.txt");
 
             File.Copy(fileName, fileName2, true);
 
@@ -49,10 +50,15 @@ namespace HSPI_HomeKitControllerTest
 
         public static HapAccessory CreateTemperatureUnPairedAccessory(string pin)
         {
+            return CreateUnPairedAccessory("temperature_sensor_unparied.py", pin);
+        }
+
+        public static HapAccessory CreateUnPairedAccessory(string scriptName, string pin)
+        {
             string fileName = Guid.NewGuid().ToString("N") + ".obj";
 
             string args = $"{pin} {fileName}";
-            var hapAccessory = new HapAccessory("temperature_sensor_unparied.py", args);
+            var hapAccessory = new HapAccessory(scriptName, args);
             return hapAccessory;
         }
 

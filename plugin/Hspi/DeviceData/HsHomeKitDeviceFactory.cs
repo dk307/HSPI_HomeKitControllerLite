@@ -87,14 +87,20 @@ namespace Hspi.DeviceData
 
             if (characteristic.Format != CharacteristicFormat.String)
             {
-                if (((mapping != null) && mapping.ForceButtonOptions) ||
-                    ((characteristic.ValidValues != null) && (characteristic.ValidValues.Count > 0)))
+                bool didAdd = AddValidValuesGraphicsAndStatus(newData,
+                                                              serviceType,
+                                                              characteristic,
+                                                              writable,
+                                                              readable,
+                                                              mapping);
+                if (!didAdd)
                 {
-                    AddValidValuesGraphicsAndStatus(newData, serviceType, characteristic, writable, readable, mapping);
-                }
-                else
-                {
-                    AddRangedGraphicsAndStatus(newData, serviceType, characteristic, writable, readable, mapping);
+                    AddRangedGraphicsAndStatus(newData,
+                                               serviceType,
+                                               characteristic,
+                                               writable,
+                                               readable,
+                                               mapping);
                 }
             }
 
@@ -109,10 +115,11 @@ namespace Hspi.DeviceData
                                          Accessory accessory)
         {
             //find default enabled characteristics
+            static bool validServiceType(Service x) => x.Type != ServiceType.AccessoryInformation &&
+                                                       x.Type != ServiceType.ProtocolInformation;
             var defaultCharacteristics =
-                accessory.Services.Values.FirstOrDefault(x => x.Primary == true)?.Characteristics?.Values ??
-                accessory.Services.Values.FirstOrDefault(x => x.Type != ServiceType.AccessoryInformation &&
-                                                              x.Type != ServiceType.ProtocolInformation)?.Characteristics?.Values ??
+                accessory.Services.Values.FirstOrDefault(x => x.Primary == true && validServiceType(x))?.Characteristics?.Values ??
+                accessory.Services.Values.FirstOrDefault(validServiceType)?.Characteristics?.Values ??
                 Array.Empty<Characteristic>();
 
             //Ignore hidden
@@ -274,7 +281,7 @@ namespace Hspi.DeviceData
             }
         }
 
-        private static void AddValidValuesGraphicsAndStatus(NewFeatureData newData,
+        private static bool AddValidValuesGraphicsAndStatus(NewFeatureData newData,
                                                             ServiceType serviceType,
                                                             Characteristic characteristic,
                                                             bool writable,
@@ -282,11 +289,12 @@ namespace Hspi.DeviceData
                                                             HSMapping.HSMapping? mapping)
         {
             var list = characteristic.ValidValues ??
-                       mapping?.ButtonOptions?.Select(x => x.Value);
+                       mapping?.ButtonOptions?.Select(x => x.Value) ??
+                       (characteristic.Format == CharacteristicFormat.Bool ? new double[] { 0, 1 } : null);
 
             if (list == null)
             {
-                throw new InvalidOperationException("Creating Device with button options but no data provided");
+                return false;
             }
 
             foreach (var value in list)
@@ -295,7 +303,7 @@ namespace Hspi.DeviceData
 
                 if (readable)
                 {
-                    StatusGraphic statusGraphic = new(CreateImagePath(buttonMapping?.Icon ?? DefaultIcon),
+                    StatusGraphic statusGraphic = new(CreateImagePath(GetIcon(buttonMapping, characteristic, value)),
                                                       value,
                                                       buttonMapping?.Name ?? value.ToString(CultureInfo.InvariantCulture));
                     AddStatusGraphic(newData, statusGraphic);
@@ -303,7 +311,15 @@ namespace Hspi.DeviceData
 
                 if (writable)
                 {
-                    int controlUse = buttonMapping?.EControlUses?.FirstOrDefault(x => x.ServiceIId == serviceType.Id)?.Value ?? (int)EControlUse.NotSpecified;
+                    var controlUse = buttonMapping?.EControlUses?.FirstOrDefault(x => x.ServiceIId == serviceType.Id)?.Value;
+
+                    if ((characteristic.Format == CharacteristicFormat.Bool) &&
+                        (buttonMapping == null))
+                    {
+                        controlUse = (int)((value == 0) ? EControlUse.Off : EControlUse.On);
+                    }
+
+                    controlUse ??= (int)EControlUse.NotSpecified;
                     StatusControl statusControl = new(EControlType.Button)
                     {
                         ControlUse = (EControlUse)controlUse,
@@ -312,6 +328,26 @@ namespace Hspi.DeviceData
                     };
                     AddStatusControl(newData, statusControl);
                 }
+            }
+
+            return true;
+
+            static string GetIcon(ButtonOption? buttonMapping, Characteristic characteristic, double value)
+            {
+                if (buttonMapping != null)
+                {
+                    return buttonMapping?.Icon ?? DefaultIcon;
+                }
+
+                if (characteristic.Format == CharacteristicFormat.Bool)
+                {
+                    if (value == 0)
+                    {
+                        return OffIcon;
+                    }
+                    return OnIcon;
+                }
+                return DefaultIcon;
             }
         }
 
@@ -354,6 +390,7 @@ namespace Hspi.DeviceData
                 statusGraphic.Value = C2FConvert(statusGraphic.Value, 3);
             }
         }
+
         private static string CreateImagePath(string featureName)
         {
             return Path.ChangeExtension(Path.Combine(PlugInData.PlugInId, "images", featureName), "png");
@@ -441,11 +478,13 @@ namespace Hspi.DeviceData
         }
 
         private const string DefaultIcon = "default.png";
+        private const string OffIcon = "off.png";
+        private const string OnIcon = "on.png";
 
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
-                                                                 {
-                                                                     string json = Encoding.UTF8.GetString(Resource.HSMappings);
-                                                                     return JsonHelper.DeserializeObject<HSMappings>(json);
-                                                                 }, true);
+                                                                                            {
+                                                                                                string json = Encoding.UTF8.GetString(Resource.HSMappings);
+                                                                                                return JsonHelper.DeserializeObject<HSMappings>(json);
+                                                                                            }, true);
     }
 }
