@@ -24,8 +24,7 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task ConnectionWorking()
         {
-            using var hapAccessory = TestHelper.CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
-            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
             string hsData = Resource.TemperatureSensorPairedHS3DataJson;
 
             SetupHsDataForSyncing(hsData,
@@ -64,8 +63,7 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task ConnectionReconnect()
         {
-            var hapAccessory1 = TestHelper.CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
-            await hapAccessory1.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            using var hapAccessory1 = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
             string hsData = Resource.TemperatureSensorPairedHS3DataJson;
 
             SetupHsDataForSyncing(hsData,
@@ -112,8 +110,7 @@ namespace HSPI_HomeKitControllerTest
             Assert.AreEqual(0D, deviceOrFeatureData[refIds[1]][EProperty.Value]);
 
             //Restart accessory
-            using var hapAccessory2 = TestHelper.CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
-            await hapAccessory2.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            using var hapAccessory2 = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
 
             await onlineEvent2.WaitAsync(cancellationTokenSource.Token).ConfigureAwait(false);
             Assert.AreEqual(1D, deviceOrFeatureData[refIds[1]][EProperty.Value]);

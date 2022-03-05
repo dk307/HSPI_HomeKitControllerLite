@@ -16,6 +16,7 @@ using static System.FormattableString;
 
 namespace Hspi.DeviceData
 {
+    // Class to link between HS & network interface
     internal sealed class HomeKitDevice
     {
         public HomeKitDevice(IHsController hsController,
@@ -174,7 +175,7 @@ namespace Hspi.DeviceData
                     Log.Warning("Found a new accessory from the homekit device {name}. Creating new device in Homeseer.",
                                 manager.DisplayNameForLog);
 
-                    int refId = HsHomeKitDeviceFactory.CreateHsDevice(HS,
+                    int refId = HsHomeKitDeviceFactory.CreateDevice(HS,
                                                 manager.Connection.PairingInfo,
                                                 manager.Connection.Address,
                                                 accessory);
@@ -185,6 +186,7 @@ namespace Hspi.DeviceData
             }
 
             Interlocked.Exchange(ref this.hsDevices, rootDevices.ToImmutableDictionary());
+            Log.Information("Devices ready and listening for {name}", manager.DisplayNameForLog);
         }
 
         private void DeviceConnectionChangedEvent(object sender,
@@ -224,7 +226,7 @@ namespace Hspi.DeviceData
             var subscribedMap = manager.Connection.SubscriptionsToDevice.ToLookup(x => x.Aid);
 
             List<AidIidPair> polling = new();
-            foreach (var aid in accessoryInfo.Accessories.Select(x=>x.Aid))
+            foreach (var aid in accessoryInfo.Accessories.Select(x => x.Aid))
             {
                 var allFeatureDevices = hsDevices[aid].CharacteristicFeatures.Keys;
                 var subscribedMapForAccessory = subscribedMap[aid];

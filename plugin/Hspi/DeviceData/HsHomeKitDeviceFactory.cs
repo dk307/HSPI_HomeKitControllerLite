@@ -45,8 +45,8 @@ namespace Hspi.DeviceData
                .WithMiscFlags(EMiscFlag.StatusOnly)
                .AsType(EFeatureType.Generic, 0)
                .WithExtraData(CreatePlugInExtraforDeviceType(FeatureType.OnlineStatus))
-               .AddGraphicForValue(CreateImagePath("online"), OnValue, StatusOnline)
-               .AddGraphicForValue(CreateImagePath("offline"), OffValue, StatusOffline)
+               .AddGraphicForValue(GetImagePath("online"), OnValue, StatusOnline)
+               .AddGraphicForValue(GetImagePath("offline"), OffValue, StatusOffline)
                .PrepareForHsDevice(device.Ref);
 
             return hsController.CreateFeatureForDevice(newFeatureData);
@@ -109,10 +109,10 @@ namespace Hspi.DeviceData
             return hsController.CreateFeatureForDevice(newData);
         }
 
-        public static int CreateHsDevice(IHsController hsController,
-                                         PairingDeviceInfo pairingDeviceInfo,
-                                         IPEndPoint fallbackAddress,
-                                         Accessory accessory)
+        public static int CreateDevice(IHsController hsController,
+                                       PairingDeviceInfo pairingDeviceInfo,
+                                       IPEndPoint fallbackAddress,
+                                       Accessory accessory)
         {
             //find default enabled characteristics
             static bool validServiceType(Service x) => x.Type != ServiceType.AccessoryInformation &&
@@ -182,7 +182,7 @@ namespace Hspi.DeviceData
             if (readable)
             {
                 var rangeIcon = rangeOptions?.Icon;
-                StatusGraphic statusGraphic = new(CreateImagePath(rangeIcon ?? DefaultIcon),
+                StatusGraphic statusGraphic = new(GetImagePath(rangeIcon ?? DefaultIcon),
                                                   minValue,
                                                   maxValue);
                 statusGraphic.TargetRange.DecimalPlaces = decimalPlaces;
@@ -303,7 +303,7 @@ namespace Hspi.DeviceData
 
                 if (readable)
                 {
-                    StatusGraphic statusGraphic = new(CreateImagePath(GetIcon(buttonMapping, characteristic, value)),
+                    StatusGraphic statusGraphic = new(GetImagePath(GetIcon(buttonMapping, characteristic, value)),
                                                       value,
                                                       buttonMapping?.Name ?? value.ToString(CultureInfo.InvariantCulture));
                     AddStatusGraphic(newData, statusGraphic);
@@ -391,9 +391,9 @@ namespace Hspi.DeviceData
             }
         }
 
-        private static string CreateImagePath(string featureName)
+        private static string GetImagePath(string iconFileName)
         {
-            return Path.ChangeExtension(Path.Combine(PlugInData.PlugInId, "images", featureName), "png");
+            return Path.ChangeExtension(Path.Combine(PlugInData.PlugInId, "images", iconFileName), "png");
         }
 
         private static PlugExtraData CreatePlugInExtraforDeviceType(FeatureType featureType,
@@ -477,14 +477,14 @@ namespace Hspi.DeviceData
             return featureFactory;
         }
 
-        private const string DefaultIcon = "default.png";
-        private const string OffIcon = "off.png";
-        private const string OnIcon = "on.png";
+        private const string DefaultIcon = "default";
+        private const string OffIcon = "off";
+        private const string OnIcon = "on";
 
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
-                                                                                            {
-                                                                                                string json = Encoding.UTF8.GetString(Resource.HSMappings);
-                                                                                                return JsonHelper.DeserializeObject<HSMappings>(json);
-                                                                                            }, true);
+                                                                                                  {
+                                                                                                      string json = Encoding.UTF8.GetString(Resource.HSMappings);
+                                                                                                      return JsonHelper.DeserializeObject<HSMappings>(json);
+                                                                                                  }, true);
     }
 }

@@ -70,7 +70,7 @@ namespace HomeKit
         {
             var discoveredInfo = await HomeKitDiscover.DiscoverDeviceById(
                                               homeKitDeviceInformation.Id,
-                                              TimeSpan.FromSeconds(10),
+                                              TimeSpan.FromSeconds(15),
                                               token);
 
             if (discoveredInfo == null)

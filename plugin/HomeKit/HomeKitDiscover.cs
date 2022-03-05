@@ -14,7 +14,7 @@ namespace HomeKit
     internal static class HomeKitDiscover
     {
         public static async Task<DiscoveredDevice?> DiscoverDeviceById(string id, TimeSpan scanTime,
-                                                                     CancellationToken cancellationToken)
+                                                                       CancellationToken cancellationToken)
         {
 
             var combined = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -36,9 +36,9 @@ namespace HomeKit
             try
             {
                 await ZeroconfResolver.ResolveAsync(DiscoveredDevice.HapProtocol,
-                                                                  scanTime: scanTime,
-                                                                  callback: callback,
-                                                                  cancellationToken: combined.Token).ConfigureAwait(false);
+                                                    scanTime: scanTime,
+                                                    callback: callback,
+                                                    cancellationToken: combined.Token).ConfigureAwait(false);
             }
             catch (Exception ex) when (ex.IsCancelException())
             {

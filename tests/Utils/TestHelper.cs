@@ -12,6 +12,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace HSPI_HomeKitControllerTest
 {
@@ -35,41 +37,21 @@ namespace HSPI_HomeKitControllerTest
             };
         }
 
-        public static HapAccessory CreateTemperaturePairedAccessory(
-                    string script = "temperature_sensor_paried.py",
-                    string accessoryFile = "temperaturesensor_accessory.txt")
+        public static async Task<TemperatureSensorAccessory> CreateTemperaturePairedAccessory(CancellationToken token)
         {
-            string fileName = Path.Combine("scripts", accessoryFile);
-            string fileName2 = Path.Combine("scripts", "paired.txt");
-
-            File.Copy(fileName, fileName2, true);
-
-            var hapAccessory = new HapAccessory(script, fileName2);
+            var hapAccessory = new TemperatureSensorAccessory();
+            await hapAccessory.StartPaired(token).ConfigureAwait(false);
             return hapAccessory;
         }
 
-        public static HapAccessory CreateTemperatureUnPairedAccessory(string pin)
+        public static async Task<TemperatureSensorAccessory> CreateTemperatureUnPairedAccessory(string pin,
+                                                                                  CancellationToken token)
         {
-            return CreateUnPairedAccessory("temperature_sensor_unparied.py", pin);
-        }
-
-        public static HapAccessory CreateUnPairedAccessory(string scriptName, string pin)
-        {
-            string fileName = Guid.NewGuid().ToString("N") + ".obj";
-
-            string args = $"{pin} {fileName}";
-            var hapAccessory = new HapAccessory(scriptName, args);
+            var hapAccessory = new TemperatureSensorAccessory();
+            await hapAccessory.StartUnpaired(pin, token).ConfigureAwait(false);
             return hapAccessory;
         }
 
-        public static PairingDeviceInfo GetTemperatureSensorParingInfo()
-        {
-            string controllerFile = Path.Combine("scripts", "temperaturesensor_controller.txt");
-            var controllerFileData = File.ReadAllText(controllerFile, Encoding.UTF8);
-
-            var pairingInfo = JsonConvert.DeserializeObject<PairingDeviceInfo>(controllerFileData);
-            return pairingInfo;
-        }
 
         public static void SetupEPropertyGetOrSet(Mock<IHsController> mockHsController,
                                            SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)

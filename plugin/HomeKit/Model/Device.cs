@@ -1,19 +1,17 @@
-﻿using HomeKit.Utils;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
-using System.Net;
 
 namespace HomeKit.Model
 {
     internal record Device
     {
-        public Device(string id, 
-                      string displayName, 
-                      string model, 
-                      DeviceCategory categoryIdentifier, 
-                      ushort configurationNumber, 
-                      DeviceFeature feature, 
+        public Device(string id,
+                      string displayName,
+                      string model,
+                      DeviceCategory categoryIdentifier,
+                      ushort configurationNumber,
+                      DeviceFeature feature,
                       Version protocol)
         {
             Id = id;

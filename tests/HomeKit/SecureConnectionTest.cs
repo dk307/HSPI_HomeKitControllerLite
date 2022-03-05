@@ -23,9 +23,8 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task AccessoryValue()
         {
-            using HapAccessory hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
-            await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
-            using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
+            using var connection = await StartTemperatureAccessoryAsync(hapAccessory, Token).ConfigureAwait(false);
 
             var accessoryData = connection.DeviceReportedInfo;
 
@@ -42,14 +41,13 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task CancelTest()
         {
-            using var hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
-            await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
 
             var controllerCancellationTokenSource = new CancellationTokenSource();
 
             var combined = CancellationTokenSource.CreateLinkedTokenSource(Token, controllerCancellationTokenSource.Token);
 
-            using var connection = await StartTemperatureAccessoryAsync(combined.Token).ConfigureAwait(false);
+            using var connection = await StartTemperatureAccessoryAsync(hapAccessory, combined.Token).ConfigureAwait(false);
 
             // only cancel the controller
             controllerCancellationTokenSource.Cancel();
@@ -60,9 +58,8 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task DisconnectTest()
         {
-            var hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
-            await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
-            using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
+            var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
+            using var connection = await StartTemperatureAccessoryAsync(hapAccessory, Token).ConfigureAwait(false);
 
             hapAccessory.Dispose();
 
@@ -77,9 +74,8 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task RefreshValueEnqueuesOriginalValueOnSubscribe()
         {
-            using HapAccessory hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
-            await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
-            using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
+            using var connection = await StartTemperatureAccessoryAsync(hapAccessory, Token).ConfigureAwait(false);
 
             List<AccessoryValueChangedArgs> changedEventQueue = new();
             connection.AccessoryValueChangedEvent += (s, e) => changedEventQueue.Add(e);
@@ -98,18 +94,16 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task RemovePairing()
         {
-            using HapAccessory hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
-            await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
-            using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
+            using var connection = await StartTemperatureAccessoryAsync(hapAccessory, Token).ConfigureAwait(false);
 
             await connection.RemovePairing(Token).ConfigureAwait(false);
         }
         [TestMethod]
         public async Task SubscribeAllGetsNewValues()
         {
-            using HapAccessory hapAccessory = TestHelper.CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
-            await hapAccessory.WaitForSuccessStart(Token).ConfigureAwait(false);
-            using var connection = await StartTemperatureAccessoryAsync(Token).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
+            using var connection = await StartTemperatureAccessoryAsync(hapAccessory, Token).ConfigureAwait(false);
 
             AsyncProducerConsumerQueue<AccessoryValueChangedArgs> changedEventQueue = new();
             connection.AccessoryValueChangedEvent += (s, e) => changedEventQueue.Enqueue(e);
@@ -125,10 +119,10 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsNotNull(data.Value);
         }
 
-        private static async Task<SecureConnection>
-            StartTemperatureAccessoryAsync(CancellationToken token)
+        private static async Task<SecureConnection> StartTemperatureAccessoryAsync(HapAccessory hapAccessory,
+                                                                                   CancellationToken token)
         {
-            var pairingInfo = TestHelper.GetTemperatureSensorParingInfo();
+            var pairingInfo = hapAccessory.GetAccessoryParingInfo();
             var connection = new SecureConnection(pairingInfo);
 
             await connection.ConnectAndListen(new IPEndPoint(IPAddress.Any, 0), token).ConfigureAwait(false);

@@ -9,7 +9,7 @@
       "name": "Current Temperature",
 
       "rangeOptions": {
-        "icon": "temperature.png"
+        "icon": "temperature"
       },
 
       "deviceType": [
@@ -25,7 +25,7 @@
       "name": "Target Temperature",
 
       "rangeOptions": {
-        "icon": "temperature.png"
+        "icon": "temperature"
       }
     },
     {
@@ -41,7 +41,7 @@
       ],
 
       "rangeOptions": {
-        "icon": "temperaturechange.png",
+        "icon": "temperaturechange",
         "eControlUse": [
           {
             "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -55,7 +55,7 @@
       "name": "Home - Heating Threshold Temperature",
 
       "rangeOptions": {
-        "icon": "temperaturechange2.png",
+        "icon": "temperaturechange2",
       }
     },
     {
@@ -63,7 +63,7 @@
       "name": "Away - Heating Threshold Temperature",
 
       "rangeOptions": {
-        "icon": "temperaturechange2.png"
+        "icon": "temperaturechange2"
       }
     },
     {
@@ -71,7 +71,7 @@
       "name": "Sleep - Heating Threshold Temperature",
 
       "rangeOptions": {
-        "icon": "temperaturechange2.png"
+        "icon": "temperaturechange2"
       }
     },
     {
@@ -87,7 +87,7 @@
       ],
 
       "rangeOptions": {
-        "icon": "temperaturechange.png",
+        "icon": "temperaturechange",
         "eControlUse": [
           {
             "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -101,7 +101,7 @@
       "name": "Home - Cooling Threshold Temperature",
 
       "rangeOptions": {
-        "icon": "temperaturechange2.png"
+        "icon": "temperaturechange2"
       }
     },
     {
@@ -109,7 +109,7 @@
       "name": "Sleep - Cooling Threshold Temperature",
 
       "rangeOptions": {
-        "icon": "temperaturechange2.png"
+        "icon": "temperaturechange2"
       }
     },
     {
@@ -117,7 +117,7 @@
       "name": "Away - Cooling Threshold Temperature",
 
       "rangeOptions": {
-        "icon": "temperaturechange2.png"
+        "icon": "temperaturechange2"
       }
     },
     {
@@ -125,7 +125,7 @@
       "name": "Target Relative Humidity",
 
       "rangeOptions": {
-        "icon": "humidity.png"
+        "icon": "humidity"
       }
     },
     {
@@ -133,7 +133,7 @@
       "name": "Current Relative Humidity",
 
       "rangeOptions": {
-        "icon": "humidity.png"
+        "icon": "humidity"
       }
     },
     {
@@ -152,17 +152,17 @@
         {
           "value": 0,
           "name": "Off",
-          "icon": "heatcooloff.png"
+          "icon": "heatcooloff"
         },
         {
           "value": 1,
           "name": "Heating",
-          "icon": "heating.png"
+          "icon": "heating"
         },
         {
           "value": 2,
           "name": "Cooling",
-          "icon": "cooling.png"
+          "icon": "cooling"
         }
       ]
     },
@@ -182,7 +182,7 @@
         {
           "value": 0,
           "name": "Off",
-          "icon": "heatcooloff.png",
+          "icon": "heatcooloff",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -193,7 +193,7 @@
         {
           "value": 1,
           "name": "Heating",
-          "icon": "heating.png",
+          "icon": "heating",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -204,7 +204,7 @@
         {
           "value": 2,
           "name": "Cooling",
-          "icon": "cooling.png",
+          "icon": "cooling",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -215,7 +215,7 @@
         {
           "value": 3,
           "name": "Auto",
-          "icon": "heatcoolauto.png",
+          "icon": "heatcoolauto",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -242,17 +242,17 @@
         {
           "value": 0,
           "name": "Inactive",
-          "icon": "inactivefan.png"
+          "icon": "inactivefan"
         },
         {
           "value": 1,
           "name": "Idle",
-          "icon": "idlefan.png"
+          "icon": "idlefan"
         },
         {
           "value": 2,
           "name": "Blowing Air",
-          "icon": "blowingairfan.png"
+          "icon": "blowingairfan"
         }
       ]
     },
@@ -273,7 +273,7 @@
         {
           "value": 0,
           "name": "Manual On",
-          "icon": "manualonfan.png",
+          "icon": "manualonfan",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -284,7 +284,7 @@
         {
           "value": 1,
           "name": "Auto",
-          "icon": "autofan.png",
+          "icon": "autofan",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -302,12 +302,12 @@
         {
           "value": 0,
           "name": "Not Detected",
-          "icon": "motionnotdetected.png"
+          "icon": "motionnotdetected"
         },
         {
           "value": 1,
           "name": "Detected",
-          "icon": "motiondetected.png"
+          "icon": "motiondetected"
         }
       ]
     },
@@ -319,12 +319,12 @@
         {
           "value": 0,
           "name": "Celsius",
-          "icon": "celsius.png"
+          "icon": "celsius"
         },
         {
           "value": 1,
           "name": "Fahrenheit",
-          "icon": "fahrenheit.png"
+          "icon": "fahrenheit"
         }
       ]
     },
@@ -337,22 +337,22 @@
         {
           "value": 0,
           "name": "Home",
-          "icon": "home.png"
+          "icon": "home"
         },
         {
           "value": 1,
           "name": "Sleep",
-          "icon": "sleep.png"
+          "icon": "sleep"
         },
         {
           "value": 2,
           "name": "Away",
-          "icon": "away.png"
+          "icon": "away"
         },
         {
           "value": 3,
           "name": "On Hold",
-          "icon": "paused.png"
+          "icon": "paused"
         },
       ]
     },
@@ -365,17 +365,17 @@
         {
           "value": 0,
           "name": "Home",
-          "icon": "home.png"
+          "icon": "home"
         },
         {
           "value": 1,
           "name": "Sleep",
-          "icon": "sleep.png"
+          "icon": "sleep"
         },
         {
           "value": 2,
           "name": "Away",
-          "icon": "away.png"
+          "icon": "away"
         }
       ]
     },
@@ -402,7 +402,7 @@
       "name": "Fan Speed",
 
       "rangeOptions": {
-        "icon": "fanspeed.png"
+        "icon": "fanspeed"
       }
     },
     {
@@ -410,7 +410,7 @@
       "name": "Fan Speed",
 
       "rangeOptions": {
-        "icon": "fanspeed.png"
+        "icon": "fanspeed"
       }
     },
     {

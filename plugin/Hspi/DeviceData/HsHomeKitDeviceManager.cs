@@ -95,8 +95,6 @@ namespace Hspi.DeviceData
                             break;
                         }
                     }
-
-
                 }
                 catch (Exception ex)
                 {

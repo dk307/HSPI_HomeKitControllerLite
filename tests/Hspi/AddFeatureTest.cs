@@ -1,13 +1,10 @@
-﻿using HomeKit.Utils;
-using HomeSeer.PluginSdk.Devices;
+﻿using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Devices.Identification;
 using Hspi;
-using Hspi.DeviceData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,8 +21,8 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task FeatureAddedOnStart()
         {
-            using var hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
-            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None)
+                                                     .ConfigureAwait(false);
 
             var plugIn = TestHelper.CreatePlugInMock();
             var mockHsController =
@@ -33,7 +30,7 @@ namespace HSPI_HomeKitControllerTest
 
             int featureRefId = 9385;
             int refId = 8475;
-            PlugExtraData extraData = CreateTemperatureAccessoryDevicePlugExtraData();
+            PlugExtraData extraData = hapAccessory.CreateDevicePlugExtraData();
 
             // Capture create device data
             SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData = new();
@@ -86,22 +83,6 @@ namespace HSPI_HomeKitControllerTest
             Assert.AreEqual(Resource.TemperatureSensorPairedHS3DataJson, jsonData);
 
             plugIn.Object.ShutdownIO();
-        }
-
-
-        private static PlugExtraData CreateTemperatureAccessoryDevicePlugExtraData()
-        {
-            var extraData = new PlugExtraData();
-            extraData.AddNamed(HsHomeKitDevice.AidPlugExtraTag,
-                               JsonConvert.SerializeObject(1UL));
-            extraData.AddNamed(HsHomeKitDevice.EnabledCharacteristicPlugExtraTag,
-                               JsonConvert.SerializeObject(new ulong[] { 9 }));
-            extraData.AddNamed(HsHomeKitDevice.FallbackAddressPlugExtraTag,
-                               JsonConvert.SerializeObject(new IPEndPoint(IPAddress.Any, 0), new IPEndPointJsonConverter()));
-            extraData.AddNamed(HsHomeKitDevice.PairInfoPlugExtraTag,
-                               JsonConvert.SerializeObject(TestHelper.GetTemperatureSensorParingInfo()));
-
-            return extraData;
         }
 
         private readonly CancellationTokenSource cancellationTokenSource = new();

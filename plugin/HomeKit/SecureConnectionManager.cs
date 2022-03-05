@@ -16,10 +16,8 @@ namespace HomeKit
     {
         public delegate void DeviceConnectionChangedHandler(object sender, DeviceConnectionChangedArgs e);
 
-        public event SecureConnection.AccessoryValueChangedHandler? AccessoryValueChangedEvent;
-
+        public event AccessoryValueChangedHandler? AccessoryValueChangedEvent;
         public event DeviceConnectionChangedHandler? DeviceConnectionChangedEvent;
-
         public SecureConnection Connection
         {
             get
@@ -37,7 +35,7 @@ namespace HomeKit
 
         public async Task ConnectionAndListen(PairingDeviceInfo info,
                                               IPEndPoint fallbackEndPoint,
-                                              TimeSpan pollingInterval,
+                                              TimeSpan? pollingInterval,
                                               CancellationToken token)
         {
             try
@@ -68,7 +66,7 @@ namespace HomeKit
                 //listen and process events
                 while (!token.IsCancellationRequested)
                 {
-                    var waitTask = Task.Delay(pollingInterval, token);
+                    var waitTask = Task.Delay(pollingInterval ?? TimeSpan.MaxValue, token);
                     var finishedTask = await Task.WhenAny(listenTask, eventProcessTask, waitTask).ConfigureAwait(false);
 
                     if (waitTask == finishedTask)
