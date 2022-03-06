@@ -1,4 +1,5 @@
-﻿using HomeKit.Model;
+﻿using HomeKit.Exceptions;
+using HomeKit.Model;
 using Hspi.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -6,6 +7,7 @@ using Nito.AsyncEx;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
@@ -39,6 +41,8 @@ namespace HomeKit
         }
 
         public PairingDeviceInfo PairingInfo => pairingInfo;
+
+        public ImmutableHashSet<AidIidPair> SubscriptionsToDevice => subscriptionsToDevice;
 
         public override async Task<Task> ConnectAndListen(IPEndPoint fallbackAddress, CancellationToken token)
         {
@@ -100,6 +104,72 @@ namespace HomeKit
             throw new InvalidOperationException("No Readable Value found");
         }
 
+        public async Task PutCharacteristic(AidIidValue id, CancellationToken token)
+        {
+            Log.Information("Making update to {value}", id);
+            JObject request = new();
+
+            JArray characteristicsRequest = new();
+            var requestData = new JObject
+                {
+                    { "aid", id.Aid  },
+                    { "iid", id.Iid  },
+                    { "value", id.Value!= null ?JToken.FromObject(id.Value) : null }
+                };
+            characteristicsRequest.Add(requestData);
+            request["characteristics"] = characteristicsRequest;
+
+            var result = await HandleJsonRequest<JObject, JObject>(HttpMethod.Put, request,
+                                                     "/characteristics", string.Empty,
+                                                     cancellationToken: token).ConfigureAwait(false);
+
+            if (result != null && result["characteristics"] is JArray characteristics)
+            {
+                var row = characteristics.FirstOrDefault(); // expect only one
+                if (row != null)
+                {
+                    ParseHapStatus(row, out var aid, out var iid, out var status);
+
+                    Log.Warning("Failed to update {Name} aid:{aid} iid:{iid} failed with {status}",
+                                    DisplayName, aid, iid, status);
+
+                    throw new AccessoryException(aid, iid, status);
+                }
+            }
+        }
+
+        public async Task RefreshValues(IEnumerable<AidIidPair>? iids, CancellationToken token)
+        {
+            // this lock prevents case where RefreshValues overlap & processing of the events overlap
+            using var _ = await enqueueLock.LockAsync(token).ConfigureAwait(false);
+            foreach (var accessory in DeviceReportedInfo.Accessories)
+            {
+                var readableCharacterestics = iids?.Where(x => x.Aid == accessory.Aid).Select(x => x.Iid) ??
+                                              accessory.GetAllReadableCharacteristics().Select(x => x.Iid);
+
+                if (!readableCharacterestics.Any())
+                {
+                    continue;
+                }
+
+                var data = string.Join(",", readableCharacterestics.Select(x => Invariant($"{accessory.Aid}.{x}")));
+
+                var result = await this.HandleJsonRequest<JObject, CharacteristicsValuesList>(HttpMethod.Get,
+                                                                                 null,
+                                                                                 CharacteristicsTarget,
+                                                                                 "id=" + data,
+                                                                                 cancellationToken: token);
+                if (result != null)
+                {
+                    EnqueueResults(result);
+                }
+                else
+                {
+                    Log.Warning("Failed to refresh values {values} for {name}", data, DisplayName);
+                }
+            }
+        }
+
         public async Task RemovePairing(CancellationToken token)
         {
             CheckHasDeviceInfo();
@@ -111,12 +181,12 @@ namespace HomeKit
             Log.Information("Removed Pairing for {Name}", DisplayName);
         }
 
-        internal record AidIidPair(ulong Aid, ulong Iid);
-
         public async Task<Task> TrySubscribeAll(CancellationToken token)
         {
             using var _ = await connectionLock.LockAsync(token).ConfigureAwait(false);
+
             CheckHasDeviceInfo();
+            var builder = subscriptionsToDevice.ToBuilder();
             foreach (var accessory in this.DeviceReportedInfo.Accessories)
             {
                 var neededSubscriptions = accessory.Services.Values.SelectMany(
@@ -127,13 +197,15 @@ namespace HomeKit
 
                 foreach (var AidIidPair in changedSubscriptions)
                 {
-                    subscriptionsToDevice.Add(AidIidPair);
+                    builder.Add(AidIidPair);
                 }
 
                 if (neededSubscriptions.Count() != changedSubscriptions.Count)
                 {
                     Log.Warning("Some of the device subscriptions failed for {Name}:{accessory}", DisplayName, accessory.Name);
                 }
+
+                Interlocked.Exchange(ref subscriptionsToDevice, builder.ToImmutableHashSet());
 
                 Log.Information("Subscribed for {count} events from {Name}:{accessory}",
                                     subscriptionsToDevice.Count, DisplayName, accessory.Name);
@@ -150,17 +222,29 @@ namespace HomeKit
         public async Task TryUnsubscribeAll(CancellationToken token)
         {
             using var _ = await connectionLock.LockAsync(token).ConfigureAwait(false);
+
+            var builder = subscriptionsToDevice.ToBuilder();
+
             foreach (var accessories in this.subscriptionsToDevice.ToLookup(x => x.Aid))
             {
                 var changedSubscriptions = await ChangeSubscription(accessories, false, token).ConfigureAwait(false);
 
                 foreach (var AidIidPair in changedSubscriptions)
                 {
-                    subscriptionsToDevice.Remove(AidIidPair);
+                    builder.Remove(AidIidPair);
                 }
             }
 
+            Interlocked.Exchange(ref subscriptionsToDevice, builder.ToImmutableHashSet());
+
             Log.Information("Unsubscribed for events from {Name}", DisplayName);
+        }
+
+        private static void ParseHapStatus(JToken row, out ulong? aid, out ulong? iid, out HAPStatus? status)
+        {
+            aid = (ulong?)row["aid"];
+            iid = (ulong?)row["iid"];
+            status = (HAPStatus?)row["status"]?.Value<Int64?>();
         }
 
         private async ValueTask<HashSet<AidIidPair>> ChangeSubscription(IEnumerable<AidIidPair> subscriptions,
@@ -193,12 +277,10 @@ namespace HomeKit
             {
                 foreach (JToken row in characteristics)
                 {
-                    var aid = (ulong?)row["aid"];
-                    var iid = (ulong?)row["iid"];
-                    var status = (string?)row["status"];
+                    ParseHapStatus(row, out var aid, out var iid, out var status);
 
-                    Log.Warning("AidIidPair to aid:{aid} iid:{iid} failed with {status} for {Name}",
-                                    aid, iid, status, DisplayName);
+                    Log.Warning("Failed to change subscription for {name} aid:{aid} iid:{iid} failed with {status} for {Name}",
+                                    DisplayName, aid, iid, status);
                     if (aid != null && iid != null)
                     {
                         doneSubscriptions.Remove(new AidIidPair(aid.Value, iid.Value));
@@ -249,6 +331,9 @@ namespace HomeKit
                 try
                 {
                     var result = JsonConvert.DeserializeObject<CharacteristicsValuesList>(jsonEventMessage);
+
+                    // this lock prevents case where RefreshValues overlap & processing of the events overlap
+                    using var _ = await enqueueLock.LockAsync(cancellationToken).ConfigureAwait(false);
                     EnqueueResults(result);
                 }
                 catch (Exception ex)
@@ -259,36 +344,12 @@ namespace HomeKit
             }
         }
 
-        public async Task RefreshValues(CancellationToken token)
-        {
-            foreach (var accessory in DeviceReportedInfo.Accessories)
-            {
-                var readableCharacterestics = accessory.Services.Values.SelectMany(
-                    x => x.Characteristics.Values.Where(c => c.Permissions.Contains(CharacteristicPermissions.PairedRead)));
-
-                var data = string.Join(",", readableCharacterestics.Select(x => Invariant($"{accessory.Aid}.{x.Iid}")));
-
-                var result = await this.HandleJsonRequest<JObject, CharacteristicsValuesList>(HttpMethod.Get,
-                                                                                 null,
-                                                                                 CharacteristicsTarget,
-                                                                                 "id=" + data,
-                                                                                 cancellationToken: token);
-                if (result != null)
-                {
-                    EnqueueResults(result);
-                }
-                else
-                {
-                    Log.Warning("Failed to refresh values {values} for {name}", data, DisplayName);
-                }
-            }
-        }
-
         private const string CharacteristicsTarget = "/characteristics";
         private readonly AsyncLock connectionLock = new();
+        private readonly AsyncLock enqueueLock = new();
         private readonly PairingDeviceInfo pairingInfo;
-        private readonly HashSet<AidIidPair> subscriptionsToDevice = new();
         private DeviceReportedInfo? deviceReportedInfo;
         private Task? processEventTask;
+        private ImmutableHashSet<AidIidPair> subscriptionsToDevice = ImmutableHashSet<AidIidPair>.Empty;
     }
 }

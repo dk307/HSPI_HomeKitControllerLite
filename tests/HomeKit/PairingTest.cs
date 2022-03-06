@@ -22,8 +22,7 @@ namespace HSPI_HomeKitControllerTest
         public async Task DiscoverAndPairing()
         {
             string pin = "233-34-235";
-            using HapAccessory hapAccessory = TestHelper.CreateTemperatureUnPairedAccessory(pin);
-            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperatureUnPairedAccessory(pin, cancellationTokenSource.Token);
             var discoveredDevice = await DiscoverAndVerify().ConfigureAwait(false);
 
             var pairing = await InsecureConnection.StartNewPairing(discoveredDevice,
@@ -36,22 +35,17 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsFalse(pairing.ControllerDevicePublicKey.IsEmpty);
         }
 
-
         [TestMethod]
         public async Task DiscoverAndPairingFailure()
         {
             string pin = "233-34-245";
-            string fileName = Guid.NewGuid().ToString("N") + ".obj";
 
-            string args = $"{pin} {fileName}";
-            using var hapAccessory = new HapAccessory("temperature_sensor_unparied.py", args);
-            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperatureUnPairedAccessory(pin, cancellationTokenSource.Token);
             DiscoveredDevice discoveredDevice = await DiscoverAndVerify().ConfigureAwait(false);
             await Assert.ThrowsExceptionAsync<PairingException>(() => InsecureConnection.StartNewPairing(discoveredDevice,
                                                      "123-45-687",
                                                      cancellationTokenSource.Token));
         }
-
 
         private async Task<DiscoveredDevice> DiscoverAndVerify()
         {
@@ -69,6 +63,6 @@ namespace HSPI_HomeKitControllerTest
             return discoveredDevice;
         }
 
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource cancellationTokenSource = new();
     }
 }

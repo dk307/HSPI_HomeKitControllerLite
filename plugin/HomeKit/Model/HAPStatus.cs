@@ -1,6 +1,8 @@
-﻿namespace HomeKit.Model
+﻿using System;
+
+namespace HomeKit.Model
 {
-    public enum HAPStatus
+    public enum HAPStatus : Int64
     {
         SUCCESS = 0,
         INSUFFICIENT_PRIVILEGES = -70401,

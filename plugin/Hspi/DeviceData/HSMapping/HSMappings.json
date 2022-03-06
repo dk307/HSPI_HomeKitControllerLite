@@ -1,11 +1,15 @@
 {
   "mappings": [
     {
+      "iid": "1621f556-1367-443c-af19-82af018e99de",
+      "name": "Timestamp"
+    },
+    {
       "iid": "00000011-0000-1000-8000-0026BB765291",
       "name": "Current Temperature",
 
       "rangeOptions": {
-        "icon": "temperature.png"
+        "icon": "temperature"
       },
 
       "deviceType": [
@@ -18,7 +22,11 @@
     },
     {
       "iid": "00000035-0000-1000-8000-0026BB765291",
-      "name": "Target Temperature"
+      "name": "Target Temperature",
+
+      "rangeOptions": {
+        "icon": "temperature"
+      }
     },
     {
       "iid": "00000012-0000-1000-8000-0026BB765291",
@@ -33,12 +41,37 @@
       ],
 
       "rangeOptions": {
+        "icon": "temperaturechange",
         "eControlUse": [
           {
             "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
             "value": 12 //HeatSetPoint
           }
         ]
+      }
+    },
+    {
+      "iid": "e4489bbc-5227-4569-93e5-b345e3e5508f",
+      "name": "Home - Heating Threshold Temperature",
+
+      "rangeOptions": {
+        "icon": "temperaturechange2",
+      }
+    },
+    {
+      "iid": "05b97374-6dc0-439b-a0fa-ca33f612d425",
+      "name": "Away - Heating Threshold Temperature",
+
+      "rangeOptions": {
+        "icon": "temperaturechange2"
+      }
+    },
+    {
+      "iid": "73aab542-892a-4439-879a-d2a883724b69",
+      "name": "Sleep - Heating Threshold Temperature",
+
+      "rangeOptions": {
+        "icon": "temperaturechange2"
       }
     },
     {
@@ -54,6 +87,7 @@
       ],
 
       "rangeOptions": {
+        "icon": "temperaturechange",
         "eControlUse": [
           {
             "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -63,8 +97,44 @@
       }
     },
     {
+      "iid": "7d381baa-20f9-40e5-9be9-aeb92d4becef",
+      "name": "Home - Cooling Threshold Temperature",
+
+      "rangeOptions": {
+        "icon": "temperaturechange2"
+      }
+    },
+    {
+      "iid": "5da985f0-898a-4850-b987-b76c6c78d670",
+      "name": "Sleep - Cooling Threshold Temperature",
+
+      "rangeOptions": {
+        "icon": "temperaturechange2"
+      }
+    },
+    {
+      "iid": "a251f6e7-ac46-4190-9c5d-3d06277bdf9f",
+      "name": "Away - Cooling Threshold Temperature",
+
+      "rangeOptions": {
+        "icon": "temperaturechange2"
+      }
+    },
+    {
       "iid": "00000034-0000-1000-8000-0026BB765291",
-      "name": "Target Relative Humidity"
+      "name": "Target Relative Humidity",
+
+      "rangeOptions": {
+        "icon": "humidity"
+      }
+    },
+    {
+      "iid": "00000010-0000-1000-8000-0026bb765291",
+      "name": "Current Relative Humidity",
+
+      "rangeOptions": {
+        "icon": "humidity"
+      }
     },
     {
       "iid": "0000000F-0000-1000-8000-0026BB765291",
@@ -82,17 +152,17 @@
         {
           "value": 0,
           "name": "Off",
-          "icon": "off.png"
+          "icon": "heatcooloff"
         },
         {
           "value": 1,
           "name": "Heating",
-          "icon": "heating.png"
+          "icon": "heating"
         },
         {
           "value": 2,
           "name": "Cooling",
-          "icon": "cooling.png"
+          "icon": "cooling"
         }
       ]
     },
@@ -112,7 +182,7 @@
         {
           "value": 0,
           "name": "Off",
-          "icon": "off.png",
+          "icon": "heatcooloff",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -123,7 +193,7 @@
         {
           "value": 1,
           "name": "Heating",
-          "icon": "heating.png",
+          "icon": "heating",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -134,7 +204,7 @@
         {
           "value": 2,
           "name": "Cooling",
-          "icon": "cooling.png",
+          "icon": "cooling",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -145,7 +215,7 @@
         {
           "value": 3,
           "name": "Auto",
-          "icon": "autooperatingmode.png",
+          "icon": "heatcoolauto",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -158,6 +228,7 @@
     {
       "iid": "000000AF-0000-1000-8000-0026BB765291",
       "name": "Current Fan State",
+      "forceButtonOptions": true,
 
       "deviceType": [
         {
@@ -171,23 +242,24 @@
         {
           "value": 0,
           "name": "Inactive",
-          "icon": "inactivefan.png"
+          "icon": "inactivefan"
         },
         {
           "value": 1,
           "name": "Idle",
-          "icon": "idlefan.png"
+          "icon": "idlefan"
         },
         {
           "value": 2,
           "name": "Blowing Air",
-          "icon": "blowingairfan.png"
+          "icon": "blowingairfan"
         }
       ]
     },
     {
       "iid": "000000BF-0000-1000-8000-0026BB765291",
       "name": "Target Fan State",
+      "forceButtonOptions": true,
 
       "deviceType": [
         {
@@ -201,7 +273,7 @@
         {
           "value": 0,
           "name": "Manual On",
-          "icon": "manualonfan.png",
+          "icon": "manualonfan",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -212,7 +284,7 @@
         {
           "value": 1,
           "name": "Auto",
-          "icon": "autofan.png",
+          "icon": "autofan",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -230,14 +302,120 @@
         {
           "value": 0,
           "name": "Not Detected",
-          "icon": "motionnotdetected.png"
+          "icon": "motionnotdetected"
         },
         {
           "value": 1,
           "name": "Detected",
-          "icon": "motiondetected.png"
+          "icon": "motiondetected"
         }
       ]
+    },
+    {
+      "iid": "00000036-0000-1000-8000-0026bb765291",
+      "name": "Temperature Display Units",
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Celsius",
+          "icon": "celsius"
+        },
+        {
+          "value": 1,
+          "name": "Fahrenheit",
+          "icon": "fahrenheit"
+        }
+      ]
+    },
+    {
+      "iid": "b7ddb9a3-54bb-4572-91d2-f1f5b0510f8c",
+      "name": "Current Program",
+      "forceButtonOptions": true,
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Home",
+          "icon": "home"
+        },
+        {
+          "value": 1,
+          "name": "Sleep",
+          "icon": "sleep"
+        },
+        {
+          "value": 2,
+          "name": "Away",
+          "icon": "away"
+        },
+        {
+          "value": 3,
+          "name": "On Hold",
+          "icon": "paused"
+        },
+      ]
+    },
+    {
+      "iid": "1b300bc2-cffc-47ff-89f9-bd6ccf5f2853",
+      "name": "Set Program",
+      "forceButtonOptions": true,
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Home",
+          "icon": "home"
+        },
+        {
+          "value": 1,
+          "name": "Sleep",
+          "icon": "sleep"
+        },
+        {
+          "value": 2,
+          "name": "Away",
+          "icon": "away"
+        }
+      ]
+    },
+    {
+      "iid": "fa128de6-9d7d-49a4-b6d8-4e4e234dee38",
+      "name": "Clear Program Hold",
+      "forceButtonOptions": true,
+
+      "buttonOptions": [
+        {
+          "value": 1,
+          "name": "Clear Hold",
+          "eControlUse": [
+            {
+              "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
+              "value": 2 //Off
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "iid": "c35da3c0-e004-40e3-b153-46655cdd9214",
+      "name": "Fan Speed",
+
+      "rangeOptions": {
+        "icon": "fanspeed"
+      }
+    },
+    {
+      "iid": "48f62aec-4171-4b4a-8f0e-1eeb6708b3fb",
+      "name": "Fan Speed",
+
+      "rangeOptions": {
+        "icon": "fanspeed"
+      }
+    },
+    {
+      "iid": "1b1515f2-cc45-409f-991f-c480987f92c3",
+      "name": "Notifications"
     }
   ]
 }

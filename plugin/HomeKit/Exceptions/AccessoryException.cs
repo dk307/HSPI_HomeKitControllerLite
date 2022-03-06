@@ -4,18 +4,26 @@ using System.Runtime.Serialization;
 
 namespace HomeKit.Exceptions
 {
-
-
     [Serializable]
     public class AccessoryException : Exception
     {
-        public HAPStatus? Status { get;  }
+        public ulong? Aid { get; }
+        public ulong? Iid { get; }
+        public HAPStatus? Status { get; }
 
         public AccessoryException()
         {
         }
 
-        public AccessoryException(HAPStatus status)
+        public AccessoryException(ulong? aid, ulong? iid, HAPStatus? status)
+            : base($"Accessory operation for Aid:{aid} Iid:{iid} failed with {status}")
+        {
+            Aid = aid;
+            Iid = iid;
+            this.Status = status;
+        }
+        public AccessoryException(HAPStatus? status)
+            : base($"Accessory operation failed with {status}")
         {
             this.Status = status;
         }
@@ -30,6 +38,7 @@ namespace HomeKit.Exceptions
 
         protected AccessoryException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
+            // TODO:: implement this
         }
     }
 }

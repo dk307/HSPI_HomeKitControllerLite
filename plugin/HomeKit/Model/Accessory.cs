@@ -1,5 +1,6 @@
 ﻿using HomeKit.Utils;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -45,6 +46,11 @@ namespace HomeKit.Model
             }
 
             return (null, null);
+        }
+
+        public IEnumerable<Characteristic> GetAllReadableCharacteristics()
+        {
+            return Services.Values.SelectMany(x => x.GetAllReadableCharacteristics());
         }
     }
 }

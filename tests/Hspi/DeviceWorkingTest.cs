@@ -1,11 +1,13 @@
 ﻿using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
+using HomeSeer.PluginSdk.Devices.Controls;
 using Hspi;
 using Hspi.DeviceData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -24,29 +26,33 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task ConnectionWorking()
         {
-            using var hapAccessory = TestHelper.CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
-            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
-            string hsData = Resource.TemperatureSensorPairedHS3DataJson;
-
-            SetupHsDataForSyncing(hsData,
-                                  out Mock<PlugIn> plugIn,
-                                  out Mock<IHsController> mockHsController,
-                                  out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData);
+            using var hapAccessory =
+                await TestHelper.CreateChangingTemperaturePairedAccessory(cancellationTokenSource.Token).ConfigureAwait(false);
+            string hsData = hapAccessory.GetHsDeviceAndFeaturesString();
 
             Nito.AsyncEx.AsyncManualResetEvent asyncManualResetEvent = new(false);
-
             int count = 0;
-            mockHsController.Setup(x => x.UpdateFeatureValueByRef(deviceOrFeatureData.Keys.Last(), It.IsAny<double>()))
-                            .Returns((int devOrFeatRef, double value) =>
-                            {
-                                deviceOrFeatureData[devOrFeatRef][EProperty.Value] = value;
-                                if (count == 3)
-                                {
-                                    asyncManualResetEvent.Set();
-                                }
-                                count++;
-                                return true;
-                            });
+
+            SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData = null;
+
+            void updateValueCallback(int devOrFeatRef, EProperty property, object value)
+            {
+                // wait for temp changing 3 times
+                if (deviceOrFeatureData.Keys.Last() == devOrFeatRef)
+                {
+                    if (count == 3)
+                    {
+                        asyncManualResetEvent.Set();
+                    }
+                    count++;
+                }
+            }
+
+            SetupHsDataForSyncing(hsData,
+                                  updateValueCallback,
+                                  out Mock<PlugIn> plugIn,
+                                  out Mock<IHsController> mockHsController,
+                                  out deviceOrFeatureData);
 
             Assert.IsTrue(plugIn.Object.InitIO());
 
@@ -62,44 +68,104 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
-        public async Task ConnectionReconnect()
+        public async Task ChangeValueInAccessory()
+
         {
-            var hapAccessory1 = TestHelper.CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
-            await hapAccessory1.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
-            string hsData = Resource.TemperatureSensorPairedHS3DataJson;
+            using var hapAccessory = await TestHelper.CreateEcobeeThermostatPairedAccessory(CancellationToken.None).ConfigureAwait(false);
+            string hsData = hapAccessory.GetHsDeviceAndFeaturesString();
+
+            Nito.AsyncEx.AsyncManualResetEvent onlineEvent = new(false);
+            Nito.AsyncEx.AsyncManualResetEvent targetTemperatureSetOnUpdate = new(false);
+
+            int[] refIds = null;
+            const int TargetTemperatureRefId = 9390;
+
+            void updateValueCallback(int devOrFeatRef, EProperty property, object value)
+            {
+                if (refIds[1] == devOrFeatRef &&
+                    property == EProperty.Value &&
+                    (double)value == 1 &&
+                    !onlineEvent.IsSet)
+                {
+                    onlineEvent.Set();
+                }
+                else if (TargetTemperatureRefId == devOrFeatRef &&
+                         property == EProperty.Value &&
+                         (double)value == 86D && 
+                         !targetTemperatureSetOnUpdate.IsSet)
+                {
+                    targetTemperatureSetOnUpdate.Set();
+                }
+            }
 
             SetupHsDataForSyncing(hsData,
+                                  updateValueCallback,
                                   out Mock<PlugIn> plugIn,
                                   out Mock<IHsController> mockHsController,
                                   out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData);
+
+            refIds = deviceOrFeatureData.Keys.ToArray();
+
+            Assert.IsTrue(plugIn.Object.InitIO());
+            await onlineEvent.WaitAsync(cancellationTokenSource.Token).ConfigureAwait(false);
+
+            //online now
+
+            // Target temperature
+            ControlEvent controlEvent = new(TargetTemperatureRefId)
+            {
+                ControlValue = 86D
+            };
+
+            plugIn.Object.SetIOMulti(new List<ControlEvent> { controlEvent });
+            await targetTemperatureSetOnUpdate.WaitAsync(cancellationTokenSource.Token).ConfigureAwait(false);
+
+            Assert.AreEqual(86D, deviceOrFeatureData[TargetTemperatureRefId][EProperty.Value]);
+
+            plugIn.Object.ShutdownIO();
+        }
+
+        [TestMethod]
+        public async Task ConnectionReconnect()
+        {
+            using var hapAccessory1 = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
+            string hsData = hapAccessory1.GetHsDeviceAndFeaturesString();
 
             Nito.AsyncEx.AsyncManualResetEvent onlineEvent = new(false);
             Nito.AsyncEx.AsyncManualResetEvent onlineEvent2 = new(false);
             Nito.AsyncEx.AsyncManualResetEvent offlineEvent = new(false);
 
-            var refIds = deviceOrFeatureData.Keys.ToArray();
+            int[] refIds = null;
+            void updateValueCallback(int devOrFeatRef, EProperty property, object value)
+            {
+                // wait for connection changing 3 times
+                if (refIds[1] == devOrFeatRef && property == EProperty.Value)
+                {
+                    if ((double)value == 1)
+                    {
+                        if (!onlineEvent.IsSet)
+                        {
+                            onlineEvent.Set();
+                        }
+                        else
+                        {
+                            onlineEvent2.Set();
+                        }
+                    }
+                    else
+                    {
+                        offlineEvent.Set();
+                    }
+                }
+            }
 
-            mockHsController.Setup(x => x.UpdateFeatureValueByRef(refIds[1], It.IsAny<double>()))
-                            .Returns((int devOrFeatRef, double value) =>
-                            {
-                                deviceOrFeatureData[devOrFeatRef][EProperty.Value] = value;
-                                if (value == 1)
-                                {
-                                    if (!onlineEvent.IsSet)
-                                    {
-                                        onlineEvent.Set();
-                                    }
-                                    else
-                                    {
-                                        onlineEvent2.Set();
-                                    }
-                                }
-                                else
-                                {
-                                    offlineEvent.Set();
-                                }
-                                return true;
-                            });
+            SetupHsDataForSyncing(hsData,
+                                  updateValueCallback,
+                                  out Mock<PlugIn> plugIn,
+                                  out Mock<IHsController> mockHsController,
+                                  out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData);
+
+            refIds = deviceOrFeatureData.Keys.ToArray();
 
             Assert.IsTrue(plugIn.Object.InitIO());
 
@@ -112,8 +178,7 @@ namespace HSPI_HomeKitControllerTest
             Assert.AreEqual(0D, deviceOrFeatureData[refIds[1]][EProperty.Value]);
 
             //Restart accessory
-            using var hapAccessory2 = TestHelper.CreateTemperaturePairedAccessory("temperature_sensor_paried_changing.py");
-            await hapAccessory2.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            using var hapAccessory2 = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
 
             await onlineEvent2.WaitAsync(cancellationTokenSource.Token).ConfigureAwait(false);
             Assert.AreEqual(1D, deviceOrFeatureData[refIds[1]][EProperty.Value]);
@@ -122,15 +187,15 @@ namespace HSPI_HomeKitControllerTest
         }
 
         private static void SetupHsDataForSyncing(string hsData,
-                                                   out Mock<PlugIn> plugIn,
-                                                   out Mock<IHsController> mockHsController,
-                                                   out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
+                                                  Action<int, EProperty, object> updateValueCallback,
+                                                  out Mock<PlugIn> plugIn,
+                                                  out Mock<IHsController> mockHsController,
+                                                  out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
         {
             plugIn = TestHelper.CreatePlugInMock();
             mockHsController = TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
             deviceOrFeatureData = JsonConvert.DeserializeObject<
-                SortedDictionary<int, Dictionary<EProperty, object>>>(hsData,
-                TestHelper.CreateJsonSerializerForHsData());
+                SortedDictionary<int, Dictionary<EProperty, object>>>(hsData, TestHelper.CreateJsonSerializer());
 
             foreach (var changes in deviceOrFeatureData)
             {
@@ -175,7 +240,7 @@ namespace HSPI_HomeKitControllerTest
             mockHsController.Setup(x => x.GetDeviceWithFeaturesByRef(deviceRefId))
                             .Returns(device);
 
-            TestHelper.SetupEPropertyGetOrSet(mockHsController, deviceOrFeatureData);
+            TestHelper.SetupEPropertyGetOrSet(mockHsController, deviceOrFeatureData, updateValueCallback);
 
             mockHsController.Setup(x => x.GetRefsByInterface(PlugInData.PlugInId, true))
                             .Returns(new List<int>() { deviceRefId });

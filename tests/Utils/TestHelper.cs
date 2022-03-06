@@ -1,5 +1,4 @@
-﻿using HomeKit.Model;
-using HomeSeer.PluginSdk;
+﻿using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Logging;
 using Hspi;
@@ -8,22 +7,27 @@ using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace HSPI_HomeKitControllerTest
 {
     internal static class TestHelper
     {
-        public static JsonSerializerSettings CreateJsonSerializerForHsData()
+        public static JsonSerializerSettings CreateJsonSerializer()
         {
             return new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All,
-                Converters = new List<JsonConverter>() { new PlugExtraDataConverter(), 
-                                                         new StatusGraphicReadConverter() }
+                Formatting = Formatting.Indented,
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+
+                Converters = new List<JsonConverter>() { new PlugExtraDataConverter(),
+                                                         new StatusGraphicReadConverter(),
+                                                         new StatusControlReadConverter()}
             };
         }
 
@@ -35,42 +39,49 @@ namespace HSPI_HomeKitControllerTest
             };
         }
 
-        public static HapAccessory CreateTemperaturePairedAccessory(
-                    string script = "temperature_sensor_paried.py")
+        public static async Task<TemperatureSensorAccessory>
+            CreateTemperaturePairedAccessory(CancellationToken token)
         {
-            string fileName = Path.Combine("scripts", "temperaturesensor_accessory.txt");
-            string fileName2 = Path.Combine("scripts", "temperaturesensor_accessory2.txt");
-
-            File.Copy(fileName, fileName2, true);
-
-            var hapAccessory = new HapAccessory(script, fileName2);
+            var hapAccessory = new TemperatureSensorAccessory();
+            await hapAccessory.StartPaired(token).ConfigureAwait(false);
             return hapAccessory;
         }
 
-        public static HapAccessory CreateTemperatureUnPairedAccessory(string pin)
+        public static async Task<EcobeeThermostatAccessory>
+            CreateEcobeeThermostatPairedAccessory(CancellationToken token)
         {
-            string fileName = Guid.NewGuid().ToString("N") + ".obj";
-
-            string args = $"{pin} {fileName}";
-            var hapAccessory = new HapAccessory("temperature_sensor_unparied.py", args);
+            var hapAccessory = new EcobeeThermostatAccessory();
+            await hapAccessory.StartPaired(token).ConfigureAwait(false);
             return hapAccessory;
         }
 
-        public static PairingDeviceInfo GetTemperatureSensorParingInfo()
+        public static async Task<TemperatureSensorAccessory>
+            CreateChangingTemperaturePairedAccessory(CancellationToken token)
         {
-            string controllerFile = Path.Combine("scripts", "temperaturesensor_controller.txt");
-            var controllerFileData = File.ReadAllText(controllerFile, Encoding.UTF8);
+            var hapAccessory = new TemperatureSensorAccessory(true);
+            await hapAccessory.StartPaired(token).ConfigureAwait(false);
+            return hapAccessory;
+        }
 
-            var pairingInfo = JsonConvert.DeserializeObject<PairingDeviceInfo>(controllerFileData);
-            return pairingInfo;
+        public static async Task<TemperatureSensorAccessory> CreateTemperatureUnPairedAccessory(string pin,
+                                                                                  CancellationToken token)
+        {
+            var hapAccessory = new TemperatureSensorAccessory();
+            await hapAccessory.StartUnpaired(pin, token).ConfigureAwait(false);
+            return hapAccessory;
         }
 
         public static void SetupEPropertyGetOrSet(Mock<IHsController> mockHsController,
-                                           SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
+                                                  SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData,
+                                                  Action<int, EProperty, object> updateValueCallback = null)
         {
             mockHsController.Setup(x => x.GetPropertyByRef(It.IsAny<int>(), It.IsAny<EProperty>()))
                 .Returns((int devOrFeatRef, EProperty property) =>
                 {
+                    if (property == EProperty.DisplayedStatus)
+                    {
+                        property = EProperty.Name;
+                    }
                     return deviceOrFeatureData[devOrFeatRef][property];
                 });
 
@@ -78,6 +89,15 @@ namespace HSPI_HomeKitControllerTest
                 .Returns((int devOrFeatRef, double value) =>
                 {
                     deviceOrFeatureData[devOrFeatRef][EProperty.Value] = value;
+                    updateValueCallback?.Invoke(devOrFeatRef, EProperty.Value, value);
+                    return true;
+                });
+
+            mockHsController.Setup(x => x.UpdateFeatureValueStringByRef(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns((int devOrFeatRef, string value) =>
+                {
+                    deviceOrFeatureData[devOrFeatRef][EProperty.StatusString] = value;
+                    updateValueCallback?.Invoke(devOrFeatRef, EProperty.Value, value);
                     return true;
                 });
 
@@ -85,6 +105,7 @@ namespace HSPI_HomeKitControllerTest
                 .Callback((int devOrFeatRef, EProperty property, object value) =>
                 {
                     deviceOrFeatureData[devOrFeatRef][property] = value;
+                    updateValueCallback?.Invoke(devOrFeatRef, property, value);
                 });
         }
 

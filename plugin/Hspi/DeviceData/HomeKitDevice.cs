@@ -1,6 +1,7 @@
 ﻿using HomeKit;
 using HomeKit.Model;
 using HomeSeer.PluginSdk;
+using HomeSeer.PluginSdk.Devices.Controls;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using static System.FormattableString;
 
 namespace Hspi.DeviceData
 {
+    // Class to link between HS & network interface
     internal sealed class HomeKitDevice
     {
         public HomeKitDevice(IHsController hsController,
@@ -23,7 +25,7 @@ namespace Hspi.DeviceData
         {
             if (!refIds.Any())
             {
-                throw new ArgumentException(nameof(refIds));
+                throw new ArgumentException("Is Empty", nameof(refIds));
             }
 
             this.HS = hsController;
@@ -40,16 +42,41 @@ namespace Hspi.DeviceData
                                                          TimeSpan.FromSeconds(15));
         }
 
+        public async Task<bool> CanProcessCommand(ControlEvent colSend,
+                                                  CancellationToken token)
+        {
+            var devices = hsDevices;
+
+            foreach (var pair in devices)
+            {
+                var (canProcess, valueToSend) = pair.Value.GetValueToSend(colSend);
+
+                if (canProcess)
+                {
+                    if (valueToSend != null)
+                    {
+                        await manager.Connection.PutCharacteristic(valueToSend, cancellationToken).ConfigureAwait(false);
+                        Log.Information("Updated {value} for {name}", valueToSend, manager.DisplayNameForLog);
+
+                        await manager.Connection.RefreshValues(pollingIids.Add(valueToSend), token).ConfigureAwait(false);
+                    }
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private void AccessoryValueChangedEvent(object sender, AccessoryValueChangedArgs e)
         {
-            Log.Debug("Update for {name} with Aid:{aid} Iid:{iid} value:{value}", manager.DisplayNameForLog, e.Aid, e.Iid, e.Value);
+            Log.Debug("Update received from {name} with {value}", manager.DisplayNameForLog, e);
             if (hsDevices.TryGetValue(e.Aid, out var rootDevice))
             {
                 rootDevice.SetValue(e.Iid, e.Value);
             }
             else
             {
-                Log.Warning("Unknown value update for {aid} for {name}", e.Aid, manager.DisplayNameForLog);
+                Log.Warning("Unknown update received for {value} for {name}", e, manager.DisplayNameForLog);
             }
         }
 
@@ -69,7 +96,7 @@ namespace Hspi.DeviceData
 
                 if ((service == null) || (characteristic == null))
                 {
-                    Log.Warning("Enabled Characteristic not found on {name}", manager.DisplayNameForLog);
+                    Log.Warning("Enabled Characteristic {id} not found on {name}", enabledCharacteristic, manager.DisplayNameForLog);
                     continue;
                 }
 
@@ -87,7 +114,7 @@ namespace Hspi.DeviceData
                                                                             refId,
                                                                             service.Type,
                                                                             characteristic);
-                    HsHomeKitCharacteristicFeatureDevice item = new(HS, featureRefId, characteristic.Format);
+                    HsHomeKitCharacteristicFeatureDevice item = new(HS, featureRefId, characteristic.Format, characteristic.DecimalPlaces);
                     featureRefIds.Add(item);
 
                     Log.Information("Created {featureName} for {deviceName}", item.NameForLog, device.Name);
@@ -96,7 +123,7 @@ namespace Hspi.DeviceData
                 {
                     var feature = device.Features[index];
                     Log.Debug("Found {featureName} for {deviceName}", feature.Name, device.Name);
-                    featureRefIds.Add(new HsHomeKitCharacteristicFeatureDevice(HS, feature.Ref, characteristic.Format));
+                    featureRefIds.Add(new HsHomeKitCharacteristicFeatureDevice(HS, feature.Ref, characteristic.Format, characteristic.DecimalPlaces));
                 }
             }
 
@@ -148,7 +175,7 @@ namespace Hspi.DeviceData
                     Log.Warning("Found a new accessory from the homekit device {name}. Creating new device in Homeseer.",
                                 manager.DisplayNameForLog);
 
-                    int refId = HsHomeKitDeviceFactory.CreateHsDevice(HS,
+                    int refId = HsHomeKitDeviceFactory.CreateDevice(HS,
                                                 manager.Connection.PairingInfo,
                                                 manager.Connection.Address,
                                                 accessory);
@@ -159,6 +186,7 @@ namespace Hspi.DeviceData
             }
 
             Interlocked.Exchange(ref this.hsDevices, rootDevices.ToImmutableDictionary());
+            Log.Information("Devices ready and listening for {name}", manager.DisplayNameForLog);
         }
 
         private void DeviceConnectionChangedEvent(object sender,
@@ -170,6 +198,8 @@ namespace Hspi.DeviceData
                 if (this.hsDevices.Count == 0)
                 {
                     CreateFeaturesAndDevices();
+
+                    SetupPollingForNonEventCharacteristics();
                 }
 
                 // update last connected address
@@ -190,6 +220,26 @@ namespace Hspi.DeviceData
             }
         }
 
+        private void SetupPollingForNonEventCharacteristics()
+        {
+            var accessoryInfo = manager.Connection.DeviceReportedInfo;
+            var subscribedMap = manager.Connection.SubscriptionsToDevice.ToLookup(x => x.Aid);
+
+            List<AidIidPair> polling = new();
+            foreach (var aid in accessoryInfo.Accessories.Select(x => x.Aid))
+            {
+                var allFeatureDevices = hsDevices[aid].CharacteristicFeatures.Keys;
+                var subscribedMapForAccessory = subscribedMap[aid];
+                var nonSubscribedFeatures = allFeatureDevices.Where(iid => !subscribedMapForAccessory.Any(x => x.Iid == iid));
+
+                polling.AddRange(nonSubscribedFeatures.Select(x => new AidIidPair(aid, x)));
+            }
+
+            var aidIidPairs = polling.ToImmutableList();
+            Interlocked.Exchange(ref this.pollingIids, aidIidPairs);
+            manager.SetPolling(aidIidPairs);
+        }
+
         private async Task UpdateDeviceProperties()
         {
             //open first device
@@ -199,6 +249,7 @@ namespace Hspi.DeviceData
 
             await manager.ConnectionAndListen(pairingInfo,
                                               fallbackAddress,
+                                              TimeSpan.FromSeconds(30),
                                               cancellationToken).ConfigureAwait(false);
         }
 
@@ -210,5 +261,7 @@ namespace Hspi.DeviceData
         // aid to device dict
         private ImmutableDictionary<ulong, HsHomeKitRootDevice> hsDevices =
             ImmutableDictionary<ulong, HsHomeKitRootDevice>.Empty;
+
+        private ImmutableList<AidIidPair> pollingIids = ImmutableList<AidIidPair>.Empty;
     }
 }

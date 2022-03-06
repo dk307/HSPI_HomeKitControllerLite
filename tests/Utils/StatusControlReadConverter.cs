@@ -6,13 +6,13 @@ using System;
 
 namespace HSPI_HomeKitControllerTest
 {
-    internal sealed class StatusGraphicReadConverter : JsonConverter
+    internal sealed class StatusControlReadConverter : JsonConverter
     {
         public override bool CanWrite => false;
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(StatusGraphic).IsAssignableFrom(objectType);
+            return typeof(StatusControl).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader,
@@ -20,11 +20,12 @@ namespace HSPI_HomeKitControllerTest
                                         object existingValue,
                                         JsonSerializer serializer)
         {
-            StatusGraphic graphic;
             var jObject = JObject.Load(reader);
 
+            var controlType = (int)jObject["ControlType"];
+            var graphic = new StatusControl((EControlType)controlType);
+
             var isRange = (bool)jObject["IsRange"];
-            var graphicPath = (string)jObject["Graphic"];
 
             if (isRange)
             {
@@ -38,12 +39,11 @@ namespace HSPI_HomeKitControllerTest
                 valueRange.Prefix = (string)jToken["Prefix"];
                 valueRange.Suffix = (string)jToken["Suffix"];
 
-                graphic = new StatusGraphic(graphicPath, valueRange);
+                graphic.TargetRange = valueRange;
             }
             else
             {
-                var value = (double)jObject["Value"];
-                graphic = new StatusGraphic(graphicPath, value);
+                graphic.TargetValue = (double)jObject["TargetValue"];
             }
 
             graphic.Label = (string)jObject["Label"];
@@ -52,8 +52,9 @@ namespace HSPI_HomeKitControllerTest
 
             return graphic;
         }
+
         public override void WriteJson(JsonWriter writer,
-                                       object value, 
+                                       object value,
                                        JsonSerializer serializer)
         {
             throw new NotImplementedException();

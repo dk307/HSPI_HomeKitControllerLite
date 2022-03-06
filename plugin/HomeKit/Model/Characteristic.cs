@@ -1,6 +1,7 @@
 ﻿using HomeKit.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -100,6 +101,19 @@ namespace HomeKit.Model
 
         [JsonProperty("pid")]
         public long? Pid { get; init; }
+
+        [JsonIgnore]
+        public int? DecimalPlaces => StepValue != null ? GetPrecision((decimal)StepValue) : null;
+
+        private static int GetPrecision(decimal x)
+        {
+            int precision = 0;
+            while (x * (decimal)Math.Pow(10, precision) != Math.Round(x * (decimal)Math.Pow(10, precision)))
+            {
+                precision++;
+            }
+            return precision;
+        }
 
         [JsonIgnore]
         public bool SupportsNotifications => Permissions.Contains(CharacteristicPermissions.Events);

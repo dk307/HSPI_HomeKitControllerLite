@@ -27,7 +27,7 @@ namespace Hspi.DeviceData
         {
             try
             {
-                return hsController.GetNameByRef(refId);
+                return (string)hsController.GetPropertyByRef(refId, EProperty.DisplayedStatus);
             }
             catch
             {
@@ -103,13 +103,15 @@ namespace Hspi.DeviceData
 
         protected void UpdateDeviceValue(string? data)
         {
-            HS.UpdatePropertyByRef(RefId, EProperty.Status, data);
+            if (!HS.UpdateFeatureValueStringByRef(RefId, data ?? string.Empty))
+            {
+                throw new InvalidOperationException($"Failed to update device {NameForLog}");
+            }
             HS.UpdatePropertyByRef(RefId, EProperty.InvalidValue, false);
         }
 
         //Extra data Tags
         public const string AidPlugExtraTag = "accessory.aid";
-
         public const string CToFNeededPlugExtraTag = "c2f.needed";
         public const string DeviceTypePlugExtraTag = "device.type";
         public const string EnabledCharacteristicPlugExtraTag = "enabled.characteristic";

@@ -1,0 +1,409 @@
+{
+  "thermostatCharacteristics": [
+    {
+      "UUID": "F",
+      "Format": "uint8",
+      "value": 0,
+      "Permissions": [ "pr", "ev" ],
+      "ev": false,
+      "enc": false,
+      "minValue": 0,
+      "maxValue": 2,
+      "minStep": 1,
+      "ValidValues": {
+        "off": 0,
+        "heating": 1,
+        "cooling": 2
+      }
+    },
+    {
+      "UUID": "33",
+      "Format": "uint8",
+      "value": 1,
+      "Permissions": [ "pr", "pw", "ev" ],
+      "ev": false,
+      "enc": false,
+      "minValue": 0,
+      "maxValue": 3,
+      "minStep": 1,
+      "ValidValues": {
+        "Off": 0,
+        "Heating": 1,
+        "Cooling": 2,
+        "Auto": 3
+      }
+    },
+    {
+      "UUID": "11",
+      "Format": "float",
+      "value": 22.5,
+      "Permissions": [ "pr", "ev" ],
+      "ev": false,
+      "enc": false,
+      "unit": "celsius",
+      "minValue": 0,
+      "maxValue": 40.0,
+      "minStep": 0.1
+    },
+    {
+      "UUID": "35",
+      "Format": "float",
+      "value": 21.7,
+      "Permissions": [ "pr", "pw", "ev" ],
+      "ev": false,
+      "enc": false,
+      "unit": "celsius",
+      "minValue": 7.2,
+      "maxValue": 33.3,
+      "minStep": 0.1
+    },
+    {
+      "iid": 21,
+      "UUID": "36",
+      "Format": "uint8",
+      "value": 1,
+      "Permissions": [ "pr", "pw", "ev" ],
+      "ev": false,
+      "enc": false,
+      "minValue": 0,
+      "maxValue": 1,
+      "minStep": 1,
+      "ValidValues": {
+        "Celsius": 0,
+        "Fahrenheit": 1
+      }
+    },
+    {
+      "UUID": "D",
+      "Format": "float",
+      "value": 25.6,
+      "Permissions": [ "pr", "pw", "ev" ],
+      "ev": false,
+      "enc": false,
+      "unit": "celsius",
+      "minValue": 18.3,
+      "maxValue": 33.3,
+      "minStep": 0.1
+    },
+    {
+      "UUID": "12",
+      "Format": "float",
+      "value": 21.7,
+      "Permissions": [ "pr", "pw", "ev" ],
+      "ev": false,
+      "enc": false,
+      "unit": "celsius",
+      "minValue": 7.2,
+      "maxValue": 26.1,
+      "minStep": 0.1
+    },
+    {
+      "UUID": "10",
+      "Format": "float",
+      "value": 37.0,
+      "Permissions": [ "pr", "ev" ],
+      "ev": false,
+      "enc": false,
+      "unit": "percentage",
+      "minValue": 0,
+      "maxValue": 100.0,
+      "minStep": 1.0
+    },
+    {
+      "UUID": "34",
+      "Format": "float",
+      "value": 36.0,
+      "Permissions": [ "pr", "pw", "ev" ],
+      "ev": false,
+      "enc": false,
+      "unit": "percentage",
+      "minValue": 20.0,
+      "maxValue": 50.0,
+      "minStep": 1.0
+    },
+    {
+      "iid": 27,
+      "UUID": "23",
+      "Format": "string",
+      "value": "Home",
+      "Permissions": [ "pr" ],
+      "ev": false,
+      "enc": false
+    },
+    {
+      "UUID": "BF",
+      "Format": "uint8",
+      "value": 1,
+      "Permissions": [ "pr", "pw", "ev" ],
+      "ev": false,
+      "enc": false,
+      "minValue": 0,
+      "maxValue": 1,
+      "minStep": 1
+    },
+    {
+      "UUID": "AF",
+      "Format": "uint8",
+      "value": 0,
+      "Permissions": [ "pr", "ev" ],
+      "ev": false,
+      "enc": false,
+      "minValue": 0,
+      "maxValue": 2,
+      "minStep": 1
+    },
+    {
+      "iid": 33,
+      "UUID": "B7DDB9A3-54BB-4572-91D2-F1F5B0510F8C",
+      "Format": "uint8",
+      "value": 0,
+      "Permissions": [ "pr" ],
+      "ev": false,
+      "enc": false,
+      "minValue": 0,
+      "maxValue": 3,
+      "minStep": 1
+    },
+    {
+      "UUID": "E4489BBC-5227-4569-93E5-B345E3E5508F",
+      "Format": "float",
+      "value": 21.7,
+      "Permissions": [ "pr", "pw" ],
+      "ev": false,
+      "enc": false,
+      "unit": "celsius",
+      "minValue": 7.2,
+      "maxValue": 26.1,
+      "minStep": 0.1
+    },
+    {
+      "UUID": "7D381BAA-20F9-40E5-9BE9-AEB92D4BECEF",
+      "Format": "float",
+      "value": 25.6,
+      "Permissions": [ "pr", "pw" ],
+      "ev": false,
+      "enc": false,
+      "unit": "celsius",
+      "minValue": 18.3,
+      "maxValue": 33.3,
+      "minStep": 0.1
+    },
+    {
+      "UUID": "73AAB542-892A-4439-879A-D2A883724B69",
+      "Format": "float",
+      "value": 17.8,
+      "Permissions": [ "pr", "pw" ],
+      "ev": false,
+      "enc": false,
+      "unit": "celsius",
+      "minValue": 7.2,
+      "maxValue": 26.1,
+      "minStep": 0.1
+    },
+    {
+      "UUID": "5DA985F0-898A-4850-B987-B76C6C78D670",
+      "Format": "float",
+      "value": 27.8,
+      "Permissions": [ "pr", "pw" ],
+      "ev": false,
+      "enc": false,
+      "unit": "celsius",
+      "minValue": 18.3,
+      "maxValue": 33.3,
+      "minStep": 0.1
+    },
+    {
+      "UUID": "05B97374-6DC0-439B-A0FA-CA33F612D425",
+      "Format": "float",
+      "value": 21.1,
+      "Permissions": [ "pr", "pw" ],
+      "ev": false,
+      "enc": false,
+      "unit": "celsius",
+      "minValue": 7.2,
+      "maxValue": 26.1,
+      "minStep": 0.1
+    },
+    {
+      "iid": 39,
+      "UUID": "A251F6E7-AC46-4190-9C5D-3D06277BDF9F",
+      "Format": "float",
+      "value": 27.8,
+      "Permissions": [ "pr", "pw" ],
+      "ev": false,
+      "enc": false,
+      "unit": "celsius",
+      "minValue": 18.3,
+      "maxValue": 33.3,
+      "minStep": 0.1
+    },
+    {
+      "UUID": "1B300BC2-CFFC-47FF-89F9-BD6CCF5F2853",
+      "Format": "uint8",
+      "Permissions": [ "pw" ],
+      "minValue": 0,
+      "maxValue": 3,
+      "minStep": 1
+    },
+    {
+      "UUID": "1621F556-1367-443C-AF19-82AF018E99DE",
+      "Format": "string",
+      "value": "2022-02-25T23:30:00-08:00U",
+      "Permissions": [ "pr", "pw" ],
+      "ev": false,
+      "enc": false
+    },
+    {
+      "UUID": "FA128DE6-9D7D-49A4-B6D8-4E4E234DEE38",
+      "Format": "bool",
+      "Permissions": [ "pw" ]
+    },
+    {
+      "UUID": "4A6AE4F6-036C-495D-87CC-B3702B437741",
+      "Format": "uint8",
+      "value": 1,
+      "Permissions": [ "pr" ],
+      "ev": false,
+      "enc": false,
+      "minValue": 0,
+      "maxValue": 4,
+      "minStep": 1
+    },
+    {
+      "UUID": "DB7BF261-7042-4194-8BD1-3AA22830AEDD",
+      "Format": "uint8",
+      "value": 0,
+      "Permissions": [ "pr" ],
+      "ev": false,
+      "enc": false,
+      "minValue": 0,
+      "maxValue": 3,
+      "minStep": 1
+    },
+    {
+      "UUID": "41935E3E-B54D-42E9-B8B9-D33C6319F0AF",
+      "Format": "bool",
+      "value": 0,
+      "Permissions": [ "pr" ],
+      "ev": false,
+      "enc": false
+    },
+    {
+      "iid": 52,
+      "UUID": "C35DA3C0-E004-40E3-B153-46655CDD9214",
+      "Format": "uint8",
+      "value": 100,
+      "Permissions": [ "pr", "pw" ],
+      "ev": false,
+      "enc": false,
+      "unit": "percentage",
+      "minValue": 0,
+      "maxValue": 100,
+      "minStep": 1
+    },
+    {
+      "UUID": "48F62AEC-4171-4B4A-8F0E-1EEB6708B3FB",
+      "Format": "uint8",
+      "value": 0,
+      "Permissions": [ "pr" ],
+      "ev": false,
+      "enc": false,
+      "unit": "percentage",
+      "minValue": 0,
+      "maxValue": 100,
+      "minStep": 1
+    },
+    {
+      "UUID": "1B1515F2-CC45-409F-991F-C480987F92C3",
+      "Format": "string",
+      "value": "The Hive is humming along. You have no pending alerts or reminders.",
+      "Permissions": [ "pr" ],
+      "ev": false,
+      "enc": false,
+      "maxLen": 256
+    }
+  ],
+  "motionSensorCharacteristics": [
+    {
+      "UUID": "22",
+      "Format": "bool",
+      "value": 1,
+      "Permissions": [ "pr", "ev" ],
+      "ev": false,
+      "enc": false
+    },
+    {
+      "UUID": "23",
+      "Format": "string",
+      "value": "Upstairs",
+      "Permissions": [ "pr" ],
+      "ev": false,
+      "enc": false,
+      "maxLen": 200
+    },
+    {
+      "UUID": "75",
+      "Format": "bool",
+      "value": 1,
+      "Permissions": [ "pr", "ev" ],
+      "ev": false,
+      "enc": false
+    },
+    {
+      "UUID": "79",
+      "Format": "uint8",
+      "value": 0,
+      "Permissions": [ "pr", "ev" ],
+      "ev": false,
+      "enc": false,
+      "minValue": 0,
+      "maxValue": 1,
+      "minStep": 1
+    },
+    {
+      "UUID": "BFE61C70-4A40-11E6-BDF4-0800200C9A66",
+      "Format": "int",
+      "value": 264,
+      "Permissions": [ "pr" ],
+      "ev": false,
+      "enc": false,
+      "unit": "seconds",
+      "minValue": -1,
+      "maxValue": 86400,
+      "minStep": 1
+    }
+  ],
+  "occupancySensorCharacteristics": [
+    {
+      "UUID": "23",
+      "Format": "string",
+      "value": "Home",
+      "Permissions": [ "pr" ],
+      "ev": false,
+      "enc": false
+    },
+    {
+      "UUID": "71",
+      "Format": "uint8",
+      "value": 1,
+      "Permissions": [ "pr", "ev" ],
+      "ev": false,
+      "enc": false,
+      "minValue": 0,
+      "maxValue": 1,
+      "minStep": 1
+    },
+    {
+      "UUID": "A8F798E0-4A40-11E6-BDF4-0800200C9A66",
+      "Format": "int",
+      "value": 311,
+      "Permissions": [ "pr", "ev" ],
+      "ev": false,
+      "enc": false,
+      "unit": "seconds",
+      "minValue": -1,
+      "maxValue": 86400,
+      "minStep": 1
+    }
+  ]
+}

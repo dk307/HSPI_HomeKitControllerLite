@@ -18,6 +18,9 @@ namespace HomeKit.Model
         [EnumMember(Value = "uint32")]
         UnsignedInt32,
 
+        [EnumMember(Value = "uint64")]
+        UnsignedInt64,
+
         [EnumMember(Value = "int")]
         Integer,
 

@@ -102,7 +102,7 @@ namespace HomeKit
             }
 
             // #7) create iOSDeviceInfo
-            var iOSPairingIdAsBytes = pairingInfo.ControllerPairingIdAsBytes;
+            var iOSPairingIdAsBytes = pairingInfo.GetControllerPairingIdAsBytes();
             var iosDeviceInfo = iosKeyPublic.Concat(iOSPairingIdAsBytes)
                                              .Concat(accessorySessionPublicKeyBytes).ToArray();
 
@@ -147,7 +147,7 @@ namespace HomeKit
             var tlvValues = new TlvValue[] {
                 new TlvValue( TlvType.State, Tlv8.M1),
                 new TlvValue( TlvType.Method, Tlv8.RemovePairing),
-                new TlvValue( TlvType.Identifier, pairingInfo.ControllerPairingIdAsBytes),
+                new TlvValue( TlvType.Identifier, pairingInfo.GetControllerPairingIdAsBytes()),
             };
 
             var responseDict = await PostTlv(tlvValues, PairingTarget, string.Empty, cancellationToken)

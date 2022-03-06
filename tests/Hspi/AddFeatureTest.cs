@@ -1,13 +1,8 @@
-﻿using HomeKit.Utils;
-using HomeSeer.PluginSdk.Devices;
-using HomeSeer.PluginSdk.Devices.Identification;
-using Hspi;
-using Hspi.DeviceData;
+﻿using HomeSeer.PluginSdk.Devices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,31 +17,31 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
-        public async Task FeatureAddedOnStart()
+        public async Task FeatureAddedOnStartForTemperatureSensor()
         {
-            using var hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
-            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(cancellationTokenSource.Token).ConfigureAwait(false);
+            await FeatureAddedOnStart(hapAccessory).ConfigureAwait(false);
+        }
 
+        [TestMethod]
+        public async Task FeatureAddedOnStartForEcobeeThermostat()
+        {
+            using var hapAccessory = await TestHelper.CreateEcobeeThermostatPairedAccessory(cancellationTokenSource.Token).ConfigureAwait(false);
+            await FeatureAddedOnStart(hapAccessory).ConfigureAwait(false);
+        }
+
+        private async Task FeatureAddedOnStart(HapAccessory hapAccessory)
+        {
             var plugIn = TestHelper.CreatePlugInMock();
-            var mockHsController =
-                TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
+            var mockHsController = TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
 
-            int featureRefId = 9385;
-            int refId = 8475;
-            PlugExtraData extraData = CreateTemperatureAccessoryDevicePlugExtraData();
+            HsDevice device = hapAccessory.SetDeviceRefExpectations(mockHsController);
 
             // Capture create device data
             SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData = new();
+            deviceOrFeatureData.Add(device.Ref, device.Changes);
 
-            HsDevice device = new(refId);
-            device.Changes[EProperty.PlugExtraData] = extraData;
-            device.Changes[EProperty.Relationship] = ERelationship.Device;
-
-            mockHsController.Setup(x => x.GetDeviceWithFeaturesByRef(refId))
-                            .Returns(device);
-
-            deviceOrFeatureData.Add(refId, device.Changes);
-
+            int featureRefId = HapAccessory.StartFeatureRefId;
             mockHsController.Setup(x => x.CreateFeatureForDevice(It.IsAny<NewFeatureData>()))
                             .Returns((NewFeatureData r) =>
                             {
@@ -55,53 +50,35 @@ namespace HSPI_HomeKitControllerTest
                                 return featureRefId;
                             });
 
-            TestHelper.SetupEPropertyGetOrSet(mockHsController, deviceOrFeatureData);
-
-            mockHsController.Setup(x => x.GetRefsByInterface(PlugInData.PlugInId, true))
-                            .Returns(new List<int>() { refId });
-
-            mockHsController.Setup(x => x.GetDeviceWithFeaturesByRef(refId))
-                            .Returns(device);
-
             Nito.AsyncEx.AsyncManualResetEvent asyncManualResetEvent = new(false);
 
-            mockHsController.Setup(x => x.UpdateFeatureValueByRef(It.IsAny<int>(), 120.2))
-                            .Returns((int devOrFeatRef, double value) =>
-                            {
-                                deviceOrFeatureData[devOrFeatRef][EProperty.Value] = value;
-                                asyncManualResetEvent.Set();
-                                return true;
-                            });
+            int count = 0;
+            void updateValueCallback(int a, EProperty n, object w)
+            {
+                count++;
+
+                if (count == (hapAccessory.InitialUpdatesExpected))
+                {
+                    asyncManualResetEvent.Set();
+                }
+            }
+
+            TestHelper.SetupEPropertyGetOrSet(mockHsController, deviceOrFeatureData, updateValueCallback);
 
             Assert.IsTrue(plugIn.Object.InitIO());
 
             await asyncManualResetEvent.WaitAsync(cancellationTokenSource.Token).ConfigureAwait(false);
 
-            Assert.AreEqual(3, deviceOrFeatureData.Count);
+            // -1 for root
+            Assert.AreEqual(hapAccessory.ExpectedDeviceCreates, deviceOrFeatureData.Count - 1);
 
             // remove as it is different on machines
-            ((PlugExtraData)deviceOrFeatureData[refId][EProperty.PlugExtraData]).RemoveNamed("fallback.address");
+            ((PlugExtraData)deviceOrFeatureData[device.Ref][EProperty.PlugExtraData]).RemoveNamed("fallback.address");
 
-            string jsonData = JsonConvert.SerializeObject(deviceOrFeatureData, TestHelper.CreateJsonSerializerForHsData());
-            Assert.AreEqual(Resource.TemperatureSensorPairedHS3DataJson, jsonData);
+            string jsonData = JsonConvert.SerializeObject(deviceOrFeatureData, TestHelper.CreateJsonSerializer());
+            Assert.AreEqual(hapAccessory.GetHsDeviceAndFeaturesString(), jsonData);
 
             plugIn.Object.ShutdownIO();
-        }
-
-
-        private static PlugExtraData CreateTemperatureAccessoryDevicePlugExtraData()
-        {
-            var extraData = new PlugExtraData();
-            extraData.AddNamed(HsHomeKitDevice.AidPlugExtraTag,
-                               JsonConvert.SerializeObject(1UL));
-            extraData.AddNamed(HsHomeKitDevice.EnabledCharacteristicPlugExtraTag,
-                               JsonConvert.SerializeObject(new ulong[] { 9 }));
-            extraData.AddNamed(HsHomeKitDevice.FallbackAddressPlugExtraTag,
-                               JsonConvert.SerializeObject(new IPEndPoint(IPAddress.Any, 0), new IPEndPointJsonConverter()));
-            extraData.AddNamed(HsHomeKitDevice.PairInfoPlugExtraTag,
-                               JsonConvert.SerializeObject(TestHelper.GetTemperatureSensorParingInfo()));
-
-            return extraData;
         }
 
         private readonly CancellationTokenSource cancellationTokenSource = new();

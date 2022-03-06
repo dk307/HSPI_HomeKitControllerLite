@@ -9,21 +9,17 @@ using System.Threading.Tasks;
 
 namespace HSPI_HomeKitControllerTest
 {
-    internal sealed class HapAccessory : IDisposable
+    public sealed class PythonScriptWrapper : IDisposable
     {
-        public HapAccessory(string script, string args)
+        public PythonScriptWrapper(string scriptPath, string args)
         {
-            string codeBase = new Uri(typeof(HapAccessory).Assembly.CodeBase).LocalPath;
-            string workingDirectory = Path.GetDirectoryName(codeBase);
-            string scriptPath = Path.Combine(workingDirectory, "scripts", script);
-
             Assert.IsTrue(File.Exists(scriptPath));
 
             ProcessStartInfo start = new()
             {
                 FileName = "python",
                 Arguments = string.Format("-u \"{0}\" {1}", scriptPath, args),
-                WorkingDirectory = workingDirectory,
+                WorkingDirectory = Path.GetDirectoryName(scriptPath),
                 UseShellExecute = false,
                 CreateNoWindow = false,
                 RedirectStandardOutput = true,
@@ -37,7 +33,7 @@ namespace HSPI_HomeKitControllerTest
             process.BeginErrorReadLine();
         }
 
-        ~HapAccessory() => Dispose();
+        ~PythonScriptWrapper() => Dispose();
 
         public void Dispose()
         {
@@ -97,12 +93,11 @@ namespace HSPI_HomeKitControllerTest
             }
         }
 
+        private readonly string[] errorsInStart = new string[] { "error while attempting to bind on address" };
         private readonly Process process;
 
         private readonly Regex startedRegEx = new(@"^\s*\[accessory_driver\]\s*AccessoryDriver\s*for\s*\w+\s*started\ssuccessfully\s*$",
                                                                 RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
-
-        private readonly string[] errorsInStart = new string[] { "error while attempting to bind on address" };
 
         private readonly AsyncManualResetEvent startedSuccessFully = new();
         private bool startSuccess = false;

@@ -1,15 +1,17 @@
 ﻿using HomeKit.Utils;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace HomeKit.Model
 {
     internal sealed record Service
     {
-        public Service(ulong iid, 
-                       ServiceType type, 
-                       bool? primary, 
-                       bool? hidden, 
+        public Service(ulong iid,
+                       ServiceType type,
+                       bool? primary,
+                       bool? hidden,
                        IImmutableDictionary<ulong, Characteristic> characteristics)
         {
             Iid = iid;
@@ -35,5 +37,10 @@ namespace HomeKit.Model
         [JsonProperty("characteristics")]
         [JsonConverter(typeof(CharacteristicListConverter))]
         public IImmutableDictionary<ulong, Characteristic> Characteristics { get; init; }
+
+        public IEnumerable<Characteristic> GetAllReadableCharacteristics()
+        {
+            return Characteristics.Values.Where(c => c.Permissions.Contains(CharacteristicPermissions.PairedRead));
+        }
     }
 }

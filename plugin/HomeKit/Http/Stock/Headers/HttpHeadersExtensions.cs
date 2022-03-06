@@ -9,15 +9,15 @@ namespace System.Net.Http.Headers
     {
         internal static IEnumerable<KeyValuePair<HeaderDescriptor, string[]>> GetHeaderDescriptorsAndValues(this HttpHeaders headers)
         {
-            List<KeyValuePair<HeaderDescriptor, string[]>> result = new List<KeyValuePair<HeaderDescriptor, string[]>>();
+            List<KeyValuePair<HeaderDescriptor, string[]>> result = new();
             foreach (KeyValuePair<string, IEnumerable<string>> header in headers)
             {
-                KnownHeader knownHeader = KnownHeaders.TryGetKnownHeader(header.Key);
+                var knownHeader = KnownHeaders.TryGetKnownHeader(header.Key);
                 if (knownHeader == null)
                 {
                     knownHeader = new KnownHeader(header.Key);
                 }
-                HeaderDescriptor descriptor = new HeaderDescriptor(knownHeader);
+                HeaderDescriptor descriptor = new(knownHeader);
                 result.Add(new KeyValuePair<HeaderDescriptor, string[]>(descriptor, header.Value.ToArray()));
             }
 

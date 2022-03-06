@@ -14,13 +14,13 @@ namespace HomeKit
     internal static class HomeKitDiscover
     {
         public static async Task<DiscoveredDevice?> DiscoverDeviceById(string id, TimeSpan scanTime,
-                                                                     CancellationToken cancellationToken)
+                                                                       CancellationToken cancellationToken)
         {
 
             var combined = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
             DiscoveredDevice? device = null;
-            Action<IZeroconfHost> callback = (IZeroconfHost host) =>
+            void callback(IZeroconfHost host)
             {
                 if (IsValidHomeKitDevice(host) && device == null)
                 {
@@ -31,14 +31,14 @@ namespace HomeKit
                         combined.Cancel();
                     }
                 }
-            };
+            }
 
             try
             {
                 await ZeroconfResolver.ResolveAsync(DiscoveredDevice.HapProtocol,
-                                                                  scanTime: scanTime,
-                                                                  callback: callback,
-                                                                  cancellationToken: combined.Token).ConfigureAwait(false);
+                                                    scanTime: scanTime,
+                                                    callback: callback,
+                                                    cancellationToken: combined.Token).ConfigureAwait(false);
             }
             catch (Exception ex) when (ex.IsCancelException())
             {

@@ -59,7 +59,7 @@ namespace Hspi
                 throw new InvalidOperationException(Invariant($"No Aid 1 accessory found for {discoveredDevice.DisplayName}"));
             }
 
-            int refId = HsHomeKitDeviceFactory.CreateHsDevice(hsController,
+            int refId = HsHomeKitDeviceFactory.CreateDevice(hsController,
                                                               pairingInfo,
                                                               discoveredDevice.Address,
                                                               accessory1Aid);
@@ -71,8 +71,8 @@ namespace Hspi
         }
 
         private static async Task<(string, bool)> PostBackProcAsync(string data,
-                                                                            IHsController hsController,
-                                                            CancellationToken cancellationToken)
+                                                                    IHsController hsController,
+                                                                    CancellationToken cancellationToken)
         {
             try
             {

@@ -1,0 +1,1149 @@
+{
+  "names": [
+    {
+      "name": "Accessory Identifier",
+      "id": "00000057-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Accessory Properties",
+      "id": "000000A6-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Access Code Control Point",
+      "id": "00000262-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Access Code Supported Configuration",
+      "id": "00000261-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Access Control Level",
+      "id": "000000E5-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Active",
+      "id": "000000B0-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Active Identifier",
+      "id": "000000E7-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Activity Interval",
+      "id": "0000023B-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Administrator Only Access",
+      "id": "00000001-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Airplay Enable",
+      "id": "0000025B-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Air Purifier State Current",
+      "id": "000000A9-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Air Purifier State Target",
+      "id": "000000A8-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Air Quality",
+      "id": "00000095-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "App Matching Identifier",
+      "id": "000000A4-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Asset Update Readiness",
+      "id": "00000269-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Audio Feedback",
+      "id": "00000005-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Battery Level",
+      "id": "00000068-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Brightness",
+      "id": "00000008-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Button Event",
+      "id": "00000126-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Camera Operating Mode Indicator",
+      "id": "0000021D-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Carbon Dioxide Detected",
+      "id": "00000092-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Carbon Dioxide Level",
+      "id": "00000093-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Carbon Dioxide Peak Level",
+      "id": "00000094-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Carbon Monoxide Detected",
+      "id": "00000069-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Carbon Monoxide Level",
+      "id": "00000090-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Carbon Monoxide Peak Level",
+      "id": "00000091-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Category",
+      "id": "000000A3-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Cca Energy Detect Threshold",
+      "id": "00000246-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Cca Signal Detect Threshold",
+      "id": "00000245-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Characteristic Value Active Transition Count",
+      "id": "0000024B-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Characteristic Value Transition Control",
+      "id": "00000143-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Charging State",
+      "id": "0000008F-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Closed Captions",
+      "id": "000000DD-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Color Temperature",
+      "id": "000000CE-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Configuration State",
+      "id": "00000263-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Configured Name",
+      "id": "000000E3-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Configure Bridged Accessory",
+      "id": "000000A0-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Configure Bridged Accessory Status",
+      "id": "0000009D-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Contact State",
+      "id": "0000006A-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Current Heater Cooler State",
+      "id": "000000B1-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Current Humidifier Dehumidifier State",
+      "id": "000000B3-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Current Media State",
+      "id": "000000E0-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Current Time",
+      "id": "0000009B-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Current Transport",
+      "id": "0000022B-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Current Visibility State",
+      "id": "00000135-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Day Of The Week",
+      "id": "00000098-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Density No2",
+      "id": "000000C4-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Density Ozone",
+      "id": "000000C3-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Density Pm10",
+      "id": "000000C7-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Density Pm25",
+      "id": "000000C6-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Density So2",
+      "id": "000000C5-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Density Voc",
+      "id": "000000C8-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Diagonal Field Of View",
+      "id": "00000224-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Discovered Bridged Accessories",
+      "id": "0000009F-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Discover Bridged Accessories",
+      "id": "0000009E-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Display Order",
+      "id": "00000136-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Door State Current",
+      "id": "0000000E-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Door State Target",
+      "id": "00000032-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Event Retransmission Maximum",
+      "id": "0000023D-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Event Snapshots Active",
+      "id": "00000223-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Event Transmission Counters",
+      "id": "0000023E-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Fan State Current",
+      "id": "000000AF-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Fan State Target",
+      "id": "000000BF-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Filter Change Indication",
+      "id": "000000AC-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Filter Life Level",
+      "id": "000000AB-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Filter Reset Indication",
+      "id": "000000AD-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Firmware Revision",
+      "id": "00000052-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Hardware Finish",
+      "id": "0000026C-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Hardware Revision",
+      "id": "00000053-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Heart Beat",
+      "id": "0000024A-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Heating Cooling Current",
+      "id": "0000000F-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Heating Cooling Target",
+      "id": "00000033-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Homekit Camera Active",
+      "id": "0000021B-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Horizontal Tilt Current",
+      "id": "0000006C-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Horizontal Tilt Target",
+      "id": "0000007B-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Hue",
+      "id": "00000013-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Identifier",
+      "id": "000000E6-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Identify",
+      "id": "00000014-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Image Mirror",
+      "id": "0000011F-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Image Rotation",
+      "id": "0000011E-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Input Device Type",
+      "id": "000000DC-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Input Event",
+      "id": "00000073-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Input Source Type",
+      "id": "000000DB-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "In Use",
+      "id": "000000D2-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Is Configured",
+      "id": "000000D6-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Leak Detected",
+      "id": "00000070-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Light Level Current",
+      "id": "0000006B-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Link Quality",
+      "id": "0000009C-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Lock Management Auto Secure Timeout",
+      "id": "0000001A-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Lock Management Control Point",
+      "id": "00000019-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Lock Mechanism Current State",
+      "id": "0000001D-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Lock Mechanism Last Known Action",
+      "id": "0000001C-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Lock Mechanism Target State",
+      "id": "0000001E-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Lock Physical Controls",
+      "id": "000000A7-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Logs",
+      "id": "0000001F-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Mac Retransmission Maximum",
+      "id": "00000247-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Mac Transmission Counters",
+      "id": "00000248-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Managed Network Enable",
+      "id": "00000215-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Manually Disabled",
+      "id": "00000227-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Manufacturer",
+      "id": "00000020-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Maximum Transmit Power",
+      "id": "00000243-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Model",
+      "id": "00000021-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Motion Detected",
+      "id": "00000022-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Multifunction Button",
+      "id": "0000026B-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Mute",
+      "id": "0000011A-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Name",
+      "id": "00000023-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Network Access Violation Control",
+      "id": "0000021F-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Network Client Profile Control",
+      "id": "0000020C-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Network Client Status Control",
+      "id": "0000020D-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Nfc Access Control Point",
+      "id": "00000264-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Nfc Access Supported Configuration",
+      "id": "00000265-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Night Vision",
+      "id": "0000011B-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Obstruction Detected",
+      "id": "00000024-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Occupancy Detected",
+      "id": "00000071-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "On",
+      "id": "00000025-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Operating State Response",
+      "id": "00000232-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Outlet In Use",
+      "id": "00000026-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Pairing Features",
+      "id": "0000004F-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Pairing Pairings",
+      "id": "00000050-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Pair Setup",
+      "id": "0000004C-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Pair Verify",
+      "id": "0000004E-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Password Setting",
+      "id": "000000E4-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Periodic Snapshots Active",
+      "id": "00000225-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Picture Mode",
+      "id": "000000E2-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Ping",
+      "id": "0000023C-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Position Current",
+      "id": "0000006D-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Position Hold",
+      "id": "0000006F-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Position State",
+      "id": "00000072-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Position Target",
+      "id": "0000007C-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Power Mode Selection",
+      "id": "000000DF-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Product Data",
+      "id": "00000220-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Programmable Switch Output State",
+      "id": "00000074-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Program Mode",
+      "id": "000000D1-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Reachable",
+      "id": "00000063-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Received Signal Strength Indication",
+      "id": "0000023F-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Receiver Sensitivity",
+      "id": "00000244-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Recording Audio Active",
+      "id": "00000226-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Relative Humidity Current",
+      "id": "00000010-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Relative Humidity Dehumidifier Threshold",
+      "id": "000000C9-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Relative Humidity Humidifier Threshold",
+      "id": "000000CA-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Relative Humidity Target",
+      "id": "00000034-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Relay Control Point",
+      "id": "0000005E-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Relay Enabled",
+      "id": "0000005B-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Relay State",
+      "id": "0000005C-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Remaining Duration",
+      "id": "000000D4-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Remote Key",
+      "id": "000000E1-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Rotation Direction",
+      "id": "00000028-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Rotation Speed",
+      "id": "00000029-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Router Status",
+      "id": "0000020E-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Saturation",
+      "id": "0000002F-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Security System Alarm Type",
+      "id": "0000008E-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Security System State Current",
+      "id": "00000066-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Security System State Target",
+      "id": "00000067-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Selected Audio Stream Configuration",
+      "id": "00000128-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Selected Camera Recording Configuration",
+      "id": "00000209-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Selected Diagnostics Modes",
+      "id": "0000024D-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Selected Rtp Stream Configuration",
+      "id": "00000117-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Serial Number",
+      "id": "00000030-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Service Label Index",
+      "id": "000000CB-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Service Label Namespace",
+      "id": "000000CD-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Setup Data Stream Transport",
+      "id": "00000131-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Setup Endpoints",
+      "id": "00000118-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Setup Transfer Transport",
+      "id": "00000201-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Set Duration",
+      "id": "000000D3-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Signal To Noise Ratio",
+      "id": "00000241-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Siri Enable",
+      "id": "00000255-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Siri Endpoint Session Status",
+      "id": "00000254-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Siri Engine Version",
+      "id": "0000025A-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Siri Input Type",
+      "id": "00000132-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Siri Light On Use",
+      "id": "00000258-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Siri Listening",
+      "id": "00000256-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Siri Touch To Use",
+      "id": "00000257-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Slat State Current",
+      "id": "000000AA-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Sleep Discovery Mode",
+      "id": "000000E8-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Sleep Interval",
+      "id": "0000023A-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Smoke Detected",
+      "id": "00000076-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Software Revision",
+      "id": "00000054-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Status Active",
+      "id": "00000075-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Status Fault",
+      "id": "00000077-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Status Lo Batt",
+      "id": "00000079-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Status Tampered",
+      "id": "0000007A-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Streaming Status",
+      "id": "00000120-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Supported Asset Types",
+      "id": "00000268-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Supported Audio Configuration",
+      "id": "00000115-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Supported Audio Recording Configuration",
+      "id": "00000207-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Supported Camera Recording Configuration",
+      "id": "00000205-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Supported Characteristic Value Transition Configuration",
+      "id": "00000144-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Supported Data Stream Transport Data Configuration",
+      "id": "00000130-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Supported Diagnostics Modes",
+      "id": "0000024C-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Supported Diagnostics Snapshot",
+      "id": "00000238-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Supported Router Configuration",
+      "id": "00000210-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Supported Rtp Configuration",
+      "id": "00000116-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Supported Transfer Transport Configuration",
+      "id": "00000202-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Supported Video Recording Configuration",
+      "id": "00000206-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Supported Video Stream Configuration",
+      "id": "00000114-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Swing Mode",
+      "id": "000000B6-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Target Control List",
+      "id": "00000124-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Target Control Supported Configuration",
+      "id": "00000123-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Target Heater Cooler State",
+      "id": "000000B2-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Target Humidifier Dehumidifier State",
+      "id": "000000B4-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Target Media State",
+      "id": "00000137-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Target Visibility State",
+      "id": "00000134-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Temperature Cooling Threshold",
+      "id": "0000000D-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Temperature Current",
+      "id": "00000011-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Temperature Heating Threshold",
+      "id": "00000012-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Temperature Target",
+      "id": "00000035-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Temperature Units",
+      "id": "00000036-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Third Party Camera Active",
+      "id": "0000021C-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Thread Control Point",
+      "id": "00000704-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Thread Node Capabilities",
+      "id": "00000702-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Thread Openthread Version",
+      "id": "00000706-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Thread Status",
+      "id": "00000703-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Tilt Current",
+      "id": "000000C1-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Tilt Target",
+      "id": "000000C2-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Time Update",
+      "id": "0000009A-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Transmit Power",
+      "id": "00000242-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Tunneled Accessory Advertising",
+      "id": "00000060-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Tunneled Accessory Connected",
+      "id": "00000059-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Tunneled Accessory State Number",
+      "id": "00000058-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Tunnel Connection Timeout",
+      "id": "00000061-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Type Slat",
+      "id": "000000C0-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Valve Type",
+      "id": "000000D5-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Version",
+      "id": "00000037-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Vertical Tilt Current",
+      "id": "0000006E-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Vertical Tilt Target",
+      "id": "0000007D-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Volume",
+      "id": "00000119-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Volume Control Type",
+      "id": "000000E9-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Volume Selector",
+      "id": "000000EA-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Wake Configuration",
+      "id": "00000222-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Wan Configuration List",
+      "id": "00000211-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Wan Status List",
+      "id": "00000212-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Water Level",
+      "id": "000000B5-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Wi Fi Capabilities",
+      "id": "0000022C-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Wi Fi Configuration Control",
+      "id": "0000022D-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Wi Fi Satellite Status",
+      "id": "0000021E-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Zoom Digital",
+      "id": "0000011D-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Zoom Optical",
+      "id": "0000011C-0000-1000-8000-0026BB765291"
+    },
+    {
+      "name": "Eve Energy Voltage",
+      "id": "E863F10A-079E-48FF-8F27-9C2605A29F52"
+    },
+    {
+      "name": "Eve Energy Ampere",
+      "id": "E863F126-079E-48FF-8F27-9C2605A29F52"
+    },
+    {
+      "name": "Eve Energy Watt",
+      "id": "E863F10D-079E-48FF-8F27-9C2605A29F52"
+    },
+    {
+      "name": "Eve Energy Kw Hour",
+      "id": "E863F10C-079E-48FF-8F27-9C2605A29F52"
+    },
+    {
+      "name": "Eve Motion Sensitivity",
+      "id": "E863F120-079E-48FF-8F27-9C2605A29F52"
+    },
+    {
+      "name": "Eve Motion Duration",
+      "id": "E863F12D-079E-48FF-8F27-9C2605A29F52"
+    },
+    {
+      "name": "Eve Room Air Quality Ppm",
+      "id": "E863F10B-079E-48FF-8F27-9C2605A29F52"
+    },
+    {
+      "name": "Eve Degree Air Pressure",
+      "id": "E863F10F-079E-48FF-8F27-9C2605A29F52"
+    },
+    {
+      "name": "Eve Degree Elevation",
+      "id": "E863F130-079E-48FF-8F27-9C2605A29F52"
+    },
+    {
+      "name": "Haa Setup",
+      "id": "F0000102-0218-2017-81BF-Af2B7C833922"
+    },
+    {
+      "name": "Haa Update",
+      "id": "F0000101-0218-2017-81BF-Af2B7C833922"
+    },
+    {
+      "name": "Koogeek Realtime Energy",
+      "id": "4AAAF931-0DEC-11E5-B939-0800200C9A66"
+    },
+    {
+      "name": "Koogeek Realtime Energy_2",
+      "id": "7BBBA96E-Eb2D-11E5-A837-0800200C9A66"
+    },
+    {
+      "name": "Vocolinc Humidifier Spray Level",
+      "id": "69D52519-0A4E-4898-8335-4739F9116D0A"
+    },
+    {
+      "name": "Vocolinc Humidifier Timer Setting",
+      "id": "F84B3138-E44F-49B9-Aa91-9E1736C247C0"
+    },
+    {
+      "name": "Vocolinc Humidifier Countdown",
+      "id": "43CE176B-2933-4034-98A7-Ad215BEEBF2F"
+    },
+    {
+      "name": "Vocolinc Lightbulb Light Timer Setting",
+      "id": "A30DFE91-271A-42A5-88BA-00E3FF5488AD"
+    },
+
+    {
+      "name": "Vocolinc Lightbulb Light Effect Mode",
+      "id": "146889FC-7C42-429B-93AB-E80F79759E90"
+    },
+    {
+      "name": "Vocolinc Lightbulb Light Effect Flag",
+      "id": "9D4B479D-9EFB-4739-98F3-B33E6543BF7B"
+    },
+    {
+      "name": "Vocolinc Lightbulb Flashing Mode",
+      "id": "2C42B339-6EC9-4ED5-8DBF-Ffccc721B144"
+    },
+    {
+      "name": "Vocolinc Lightbulb Smoothing Mode",
+      "id": "A3663C89-Dc18-42EF-8297-910A4C0C9B61"
+    },
+    {
+      "name": "Vocolinc Lightbulb Breathing Mode",
+      "id": "6533B15C-Aecb-455F-8896-20B125390F61"
+    },
+    {
+      "name": "Vocolinc Outlet Energy",
+      "id": "Fc093458-18F0-4B1D-8360-Bb68A3FCC9C5"
+    },
+    {
+      "name": "Ecobee Current Mode",
+      "id": "B7DDB9A3-54BB-4572-91D2-F1F5B0510F8C"
+    },
+    {
+      "name": "Ecobee Home Target Heat",
+      "id": "E4489BBC-5227-4569-93E5-B345E3E5508F"
+    },
+    {
+      "name": "Ecobee Home Target Cool",
+      "id": "7D381BAA-20F9-40E5-9BE9-Aeb92D4BECEF"
+    },
+    {
+      "name": "Ecobee Sleep Target Heat",
+      "id": "73AAB542-892A-4439-879A-D2A883724B69"
+    },
+    {
+      "name": "Ecobee Sleep Target Cool",
+      "id": "5DA985F0-898A-4850-B987-B76C6C78D670"
+    },
+    {
+      "name": "Ecobee Away Target Heat",
+      "id": "05B97374-6DC0-439B-A0FA-Ca33F612D425"
+    },
+    {
+      "name": "Ecobee Away Target Cool",
+      "id": "A251F6E7-Ac46-4190-9C5D-3D06277BDF9F"
+    },
+    {
+      "name": "Ecobee Set Hold Schedule",
+      "id": "1B300BC2-Cffc-47FF-89F9-Bd6CCF5F2853"
+    },
+    {
+      "name": "Ecobee Timestamp",
+      "id": "1621F556-1367-443C-Af19-82AF018E99DE"
+    },
+    {
+      "name": "Ecobee Clear Hold",
+      "id": "Fa128DE6-9D7D-49A4-B6D8-4E4E234DEE38"
+    },
+    {
+      "name": "Ecobee Fan Write Speed",
+      "id": "C35DA3C0-E004-40E3-B153-46655CDD9214"
+    },
+    {
+      "name": "Ecobee Fan Read Speed",
+      "id": "48F62AEC-4171-4B4A-8F0E-1EEB6708B3FB"
+    },
+    {
+      "name": "Connectsense Energy Amps",
+      "id": "00000004-0000-1000-8000-001D4B474349"
+    },
+    {
+      "name": "Connectsense State Timer",
+      "id": "00000005-0000-1000-8000-001D4B474349"
+    },
+    {
+      "name": "Connectsense Total Amps",
+      "id": "00000006-0000-1000-8000-001D4B474349"
+    },
+    {
+      "name": "Connectsense Energy Voltage",
+      "id": "00000008-0000-1000-8000-001D4B474349"
+    },
+    {
+      "name": "Connectsense Energy Amps_20",
+      "id": "00000009-0000-1000-8000-001D4B474349"
+    },
+    {
+      "name": "Connectsense Energy Watt",
+      "id": "0000000A-0000-1000-8000-001D4B474349"
+    },
+    {
+      "name": "Connectsense Energy Power Factor",
+      "id": "0000000B-0000-1000-8000-001D4B474349"
+    },
+    {
+      "name": "Connectsense Energy Kw Hour",
+      "id": "0000000C-0000-1000-8000-001D4B474349"
+    },
+    {
+      "name": "Connectsense Assigned Name",
+      "id": "0000000E-0000-1000-8000-001D4B474349"
+    },
+    {
+      "name": "Connectsense Device Type",
+      "id": "0000000F-0000-1000-8000-001D4B474349"
+    },
+    {
+      "name": "Aqara Gateway Volume",
+      "id": "Ee56B186-B0D3-528E-8C79-C21FC9BCF437"
+    },
+    {
+      "name": "Aqara Pairing Mode",
+      "id": "B1C09E4C-E202-4827-B343-B0F32F727CFF"
+    },
+    {
+      "name": "Aqara E1 Gateway Volume",
+      "id": "Ee56B186-B0D3-488E-8C79-C21FC9BCF437"
+    },
+    {
+      "name": "Aqara E1 Pairing Mode",
+      "id": "B1C09E4C-E202-4827-B863-B0F32F727CFF"
+    }
+  ]
+}

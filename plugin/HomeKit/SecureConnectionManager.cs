@@ -1,8 +1,10 @@
 ﻿using HomeKit.Model;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using static HomeKit.SecureConnection;
 
 #nullable enable
 
@@ -14,10 +16,8 @@ namespace HomeKit
     {
         public delegate void DeviceConnectionChangedHandler(object sender, DeviceConnectionChangedArgs e);
 
-        public event SecureConnection.AccessoryValueChangedHandler? AccessoryValueChangedEvent;
-
+        public event AccessoryValueChangedHandler? AccessoryValueChangedEvent;
         public event DeviceConnectionChangedHandler? DeviceConnectionChangedEvent;
-
         public SecureConnection Connection
         {
             get
@@ -35,6 +35,7 @@ namespace HomeKit
 
         public async Task ConnectionAndListen(PairingDeviceInfo info,
                                               IPEndPoint fallbackEndPoint,
+                                              TimeSpan? pollingInterval,
                                               CancellationToken token)
         {
             try
@@ -59,11 +60,25 @@ namespace HomeKit
 
                 EnqueueConnectionEvent(true);
 
-                await secureHomeKitConnection.RefreshValues(token).ConfigureAwait(false);
+                // get all values initially to refresh even the vent ones.
+                await secureHomeKitConnection.RefreshValues(null, token).ConfigureAwait(false);
 
                 //listen and process events
-                var finishedTask = await Task.WhenAny(listenTask, eventProcessTask).ConfigureAwait(false);
-                await finishedTask.ConfigureAwait(false);
+                while (!token.IsCancellationRequested)
+                {
+                    var waitTask = Task.Delay(pollingInterval ?? TimeSpan.MaxValue, token);
+                    var finishedTask = await Task.WhenAny(listenTask, eventProcessTask, waitTask).ConfigureAwait(false);
+
+                    if (waitTask == finishedTask)
+                    {
+                        await secureHomeKitConnection.RefreshValues(pollingIids, token).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await finishedTask.ConfigureAwait(false);
+                    }
+                }
+
                 await listenTask.ConfigureAwait(false);
                 await eventProcessTask.ConfigureAwait(false);
             }
@@ -71,6 +86,11 @@ namespace HomeKit
             {
                 EnqueueConnectionEvent(false);
             }
+        }
+
+        public void SetPolling(IEnumerable<AidIidPair>? iids)
+        {
+            Interlocked.Exchange(ref pollingIids, iids);
         }
 
         private void AccessoryValueChangedEventForward(object sender, AccessoryValueChangedArgs e)
@@ -90,5 +110,6 @@ namespace HomeKit
         private volatile SecureConnection? connection;
         private bool? lastConnectionEvent;
         private string? lastDisplayName;
+        private IEnumerable<AidIidPair>? pollingIids;
     }
 }

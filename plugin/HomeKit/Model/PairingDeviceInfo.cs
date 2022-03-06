@@ -6,7 +6,7 @@ using System.Text;
 
 namespace HomeKit.Model
 {
-    internal sealed record PairingDeviceInfo(Device DeviceInformation,
+    public sealed record PairingDeviceInfo(Device DeviceInformation,
                                 ImmutableArray<byte> AccessoryPairingId,
                                 ImmutableArray<byte> AccessoryPublicKey,  // Public Key
                                 Guid ControllerPairingId,
@@ -14,8 +14,7 @@ namespace HomeKit.Model
                                 ImmutableArray<byte> ControllerDevicePublicKey, // public key
                                 bool EnableKeepAliveForConnection)
     {
-        [JsonIgnore]
-        public byte[] ControllerPairingIdAsBytes => EncodeGuid(ControllerPairingId);
+        public byte[] GetControllerPairingIdAsBytes() => EncodeGuid(ControllerPairingId);
 
         public static byte[] EncodeGuid(Guid id)
         {

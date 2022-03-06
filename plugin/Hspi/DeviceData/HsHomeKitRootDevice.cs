@@ -2,10 +2,12 @@
 using HomeKit.Utils;
 using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
+using HomeSeer.PluginSdk.Devices.Controls;
 using Newtonsoft.Json;
 using Serilog;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Net;
 
 #nullable enable
@@ -37,10 +39,10 @@ namespace Hspi.DeviceData
             return GetPlugExtraData<ulong>(hsController, refId, AidPlugExtraTag);
         }
 
-        public static ImmutableArray<ulong> GetEnabledCharacteristic(PlugExtraData plugExtraData)
+        public static ImmutableSortedSet<ulong> GetEnabledCharacteristic(PlugExtraData plugExtraData)
         {
-            return GetPlugExtraData<ImmutableArray<ulong>>(plugExtraData,
-                                                           EnabledCharacteristicPlugExtraTag);
+            return GetPlugExtraData<ImmutableSortedSet<ulong>>(plugExtraData,
+                                                               EnabledCharacteristicPlugExtraTag);
         }
 
         public static IPEndPoint GetFallBackAddress(IHsController hsController, int refId)
@@ -94,6 +96,30 @@ namespace Hspi.DeviceData
         private ulong GetAid()
         {
             return GetPlugExtraData<ulong>(AidPlugExtraTag);
+        }
+
+        public (bool, AidIidValue?) GetValueToSend(ControlEvent colSend)
+        {
+            int refId = colSend.TargetRef;
+
+            if (refId == this.RefId)
+            {
+                Log.Warning("Unknown command {command} for {RefId} ", colSend.ControlValue, RefId);
+                return (true, null);
+            }
+            else if (CharacteristicFeatures.Values.FirstOrDefault(x => x.RefId == refId)
+                        is HsHomeKitCharacteristicFeatureDevice hsHomeKitCharacteristicFeatureDevice)
+            {
+                var valueToSend = hsHomeKitCharacteristicFeatureDevice.GetValuetoSend(colSend);
+                return (true, new AidIidValue(Aid, hsHomeKitCharacteristicFeatureDevice.Iid, valueToSend));
+            }
+            else if (ConnectedFeature.RefId == refId)
+            {
+                Log.Warning("Unknown command {command} for Connected Device {RefId} ", colSend.ControlValue, RefId);
+                return (true, null);
+            }
+
+            return (false, null);
         }
     }
 }

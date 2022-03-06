@@ -1,11 +1,14 @@
 ﻿using HomeSeer.PluginSdk;
+using HomeSeer.PluginSdk.Devices.Controls;
 using Hspi.Utils;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 #nullable enable
 
@@ -72,6 +75,32 @@ namespace Hspi.DeviceData
             }
 
             return devices;
+        }
+
+        public async Task HandleCommand(IEnumerable<ControlEvent> colSends)
+        {
+            foreach (var colSend in colSends)
+            {
+                try
+                {
+                    Log.Debug("Command {command} for {RefId}",
+                        colSend.ControlString ?? colSend.Label ?? colSend.ControlValue.ToString(CultureInfo.InvariantCulture),
+                        colSend.TargetRef);
+                    foreach (var device in homeKitDevices)
+                    {
+                        bool done = await device.Value.CanProcessCommand(colSend, combinedToken.Token).ConfigureAwait(false);
+
+                        if (done)
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Failed to process {command} with {ex}", colSend.ControlValue, ex.GetFullMessage());
+                }
+            }
         }
 
         private readonly CancellationTokenSource combinedToken;

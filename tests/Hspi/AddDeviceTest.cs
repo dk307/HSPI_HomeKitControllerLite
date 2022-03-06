@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 
 namespace HSPI_HomeKitControllerTest
 {
-
     [TestClass]
     public class AddDeviceTest
     {
@@ -27,8 +26,8 @@ namespace HSPI_HomeKitControllerTest
         public async Task AddDevice()
         {
             string pin = "133-34-295";
-            using var hapAccessory = TestHelper.CreateTemperatureUnPairedAccessory(pin);
-            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperatureUnPairedAccessory(pin, cancellationTokenSource.Token)
+                                                     .ConfigureAwait(false);
 
             var plugIn = TestHelper.CreatePlugInMock();
             var hsControllerMock =
@@ -84,8 +83,8 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task AddDeviceIgnoresAlreadyPairedOnesAsync()
         {
-            using var hapAccessory = TestHelper.CreateTemperaturePairedAccessory();
-            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(cancellationTokenSource.Token)
+                                                     .ConfigureAwait(false);
 
             var plugIn = TestHelper.CreatePlugInMock();
             TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
@@ -112,8 +111,8 @@ namespace HSPI_HomeKitControllerTest
         public async Task AddDeviceWithAuthFailure()
         {
             string pin = "133-34-295";
-            using var hapAccessory = TestHelper.CreateTemperatureUnPairedAccessory(pin);
-            await hapAccessory.WaitForSuccessStart(cancellationTokenSource.Token).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperatureUnPairedAccessory(pin, cancellationTokenSource.Token)
+                                                     .ConfigureAwait(false);
 
             var plugIn = TestHelper.CreatePlugInMock();
             TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
