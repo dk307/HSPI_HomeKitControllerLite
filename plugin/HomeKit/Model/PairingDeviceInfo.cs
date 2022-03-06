@@ -6,7 +6,7 @@ using System.Text;
 
 namespace HomeKit.Model
 {
-    internal sealed record PairingDeviceInfo(Device DeviceInformation,
+    public sealed record PairingDeviceInfo(Device DeviceInformation,
                                 ImmutableArray<byte> AccessoryPairingId,
                                 ImmutableArray<byte> AccessoryPublicKey,  // Public Key
                                 Guid ControllerPairingId,

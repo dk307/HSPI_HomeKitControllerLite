@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace HSPI_HomeKitControllerTest
 {
-    internal abstract class HapAccessory : IDisposable
+    public abstract class HapAccessory : IDisposable
     {
         protected HapAccessory(string dirName , string scriptFile = null)
         {

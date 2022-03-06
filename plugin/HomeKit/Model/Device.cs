@@ -4,7 +4,7 @@ using System;
 
 namespace HomeKit.Model
 {
-    internal record Device
+    public record Device
     {
         public Device(string id,
                       string displayName,

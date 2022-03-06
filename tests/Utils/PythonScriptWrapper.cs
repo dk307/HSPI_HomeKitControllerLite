@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HSPI_HomeKitControllerTest
 {
-    internal sealed class PythonScriptWrapper : IDisposable
+    public sealed class PythonScriptWrapper : IDisposable
     {
         public PythonScriptWrapper(string scriptPath, string args)
         {

@@ -21,6 +21,7 @@ namespace HSPI_HomeKitControllerTest
             return new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All,
+                Formatting = Formatting.Indented,
                 Converters = new List<JsonConverter>() { new PlugExtraDataConverter(),
                                                          new StatusGraphicReadConverter() }
             };

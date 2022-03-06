@@ -17,14 +17,16 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
-        public async Task FeatureAddedOnStart()
+        public async Task FeatureAddedOnStartForTemperatureSensor()
         {
-            using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None)
-                                                     .ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(cancellationTokenSource.Token).ConfigureAwait(false);
+            await FeatureAddedOnStart(hapAccessory).ConfigureAwait(false);
+        }
 
+        private async Task FeatureAddedOnStart(HapAccessory hapAccessory)
+        {
             var plugIn = TestHelper.CreatePlugInMock();
-            var mockHsController =
-                TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
+            var mockHsController = TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
 
             HsDevice device = hapAccessory.SetDeviceRefExpectations(mockHsController);
 

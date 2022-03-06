@@ -33,7 +33,7 @@ namespace HSPI_HomeKitControllerTest
             Assert.AreEqual("Sensor1", accessoryData.Accessories[0].Name);
 
 
-            var json = JsonConvert.SerializeObject(accessoryData);
+            var json = JsonConvert.SerializeObject(accessoryData, TestHelper.CreateJsonSerializerForHsData());
 
             Assert.AreEqual(hapAccessory.GetAccessoryDeviceDataString(), json);
         }
