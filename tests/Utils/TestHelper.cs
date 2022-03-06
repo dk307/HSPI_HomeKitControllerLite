@@ -22,8 +22,12 @@ namespace HSPI_HomeKitControllerTest
             {
                 TypeNameHandling = TypeNameHandling.All,
                 Formatting = Formatting.Indented,
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+
                 Converters = new List<JsonConverter>() { new PlugExtraDataConverter(),
-                                                         new StatusGraphicReadConverter() }
+                                                         new StatusGraphicReadConverter(),
+                                                         new StatusControlReadConverter()}
             };
         }
 

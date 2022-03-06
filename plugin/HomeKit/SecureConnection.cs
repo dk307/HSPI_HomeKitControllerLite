@@ -140,6 +140,8 @@ namespace HomeKit
 
         public async Task RefreshValues(IEnumerable<AidIidPair>? iids, CancellationToken token)
         {
+            // this lock prevents case where RefreshValues overlap & processing of the events overlap
+            using var _ = await enqueueLock.LockAsync(token).ConfigureAwait(false);
             foreach (var accessory in DeviceReportedInfo.Accessories)
             {
                 var readableCharacterestics = iids?.Where(x => x.Aid == accessory.Aid).Select(x => x.Iid) ??
@@ -329,6 +331,9 @@ namespace HomeKit
                 try
                 {
                     var result = JsonConvert.DeserializeObject<CharacteristicsValuesList>(jsonEventMessage);
+
+                    // this lock prevents case where RefreshValues overlap & processing of the events overlap
+                    using var _ = await enqueueLock.LockAsync(cancellationToken).ConfigureAwait(false);
                     EnqueueResults(result);
                 }
                 catch (Exception ex)
@@ -341,6 +346,7 @@ namespace HomeKit
 
         private const string CharacteristicsTarget = "/characteristics";
         private readonly AsyncLock connectionLock = new();
+        private readonly AsyncLock enqueueLock = new();
         private readonly PairingDeviceInfo pairingInfo;
         private DeviceReportedInfo? deviceReportedInfo;
         private Task? processEventTask;

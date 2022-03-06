@@ -63,6 +63,6 @@ namespace HSPI_HomeKitControllerTest
             return discoveredDevice;
         }
 
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource cancellationTokenSource = new();
     }
 }

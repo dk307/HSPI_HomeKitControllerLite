@@ -12,7 +12,7 @@ namespace System.Net.Http.Headers
             List<KeyValuePair<HeaderDescriptor, string[]>> result = new();
             foreach (KeyValuePair<string, IEnumerable<string>> header in headers)
             {
-                KnownHeader knownHeader = KnownHeaders.TryGetKnownHeader(header.Key);
+                var knownHeader = KnownHeaders.TryGetKnownHeader(header.Key);
                 if (knownHeader == null)
                 {
                     knownHeader = new KnownHeader(header.Key);

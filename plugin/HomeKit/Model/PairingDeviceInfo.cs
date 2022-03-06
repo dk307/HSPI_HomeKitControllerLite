@@ -14,8 +14,7 @@ namespace HomeKit.Model
                                 ImmutableArray<byte> ControllerDevicePublicKey, // public key
                                 bool EnableKeepAliveForConnection)
     {
-        [JsonIgnore]
-        public byte[] ControllerPairingIdAsBytes => EncodeGuid(ControllerPairingId);
+        public byte[] GetControllerPairingIdAsBytes() => EncodeGuid(ControllerPairingId);
 
         public static byte[] EncodeGuid(Guid id)
         {

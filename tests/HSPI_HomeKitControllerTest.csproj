@@ -85,6 +85,7 @@
     <Compile Include="Hspi\AddFeatureTest.cs" />
     <Compile Include="Utils\Initialize.cs" />
     <Compile Include="ShippedDllsTest.cs" />
+    <Compile Include="Utils\StatusControlReadConverter.cs" />
     <Compile Include="Utils\StatusGraphicReadConverter.cs" />
     <Compile Include="Utils\TestHelper.cs" />
     <Compile Include="Hspi\PluginTest.cs" />
