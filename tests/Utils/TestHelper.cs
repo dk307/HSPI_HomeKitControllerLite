@@ -1,5 +1,4 @@
-﻿using HomeKit.Model;
-using HomeSeer.PluginSdk;
+﻿using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Logging;
 using Hspi;
@@ -8,10 +7,8 @@ using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,9 +34,18 @@ namespace HSPI_HomeKitControllerTest
             };
         }
 
-        public static async Task<TemperatureSensorAccessory> CreateTemperaturePairedAccessory(CancellationToken token)
+        public static async Task<TemperatureSensorAccessory> 
+            CreateTemperaturePairedAccessory(CancellationToken token)
         {
             var hapAccessory = new TemperatureSensorAccessory();
+            await hapAccessory.StartPaired(token).ConfigureAwait(false);
+            return hapAccessory;
+        }
+
+        public static async Task<TemperatureSensorAccessory> 
+            CreateChangingTemperaturePairedAccessory(CancellationToken token)
+        {
+            var hapAccessory = new TemperatureSensorAccessory(true);
             await hapAccessory.StartPaired(token).ConfigureAwait(false);
             return hapAccessory;
         }
@@ -52,13 +58,17 @@ namespace HSPI_HomeKitControllerTest
             return hapAccessory;
         }
 
-
         public static void SetupEPropertyGetOrSet(Mock<IHsController> mockHsController,
-                                           SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
+                                                  SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData,
+                                                  Action<int, EProperty, object> updateValueCallback = null)
         {
             mockHsController.Setup(x => x.GetPropertyByRef(It.IsAny<int>(), It.IsAny<EProperty>()))
                 .Returns((int devOrFeatRef, EProperty property) =>
                 {
+                    if (property == EProperty.DisplayedStatus)
+                    {
+                        property = EProperty.Name;
+                    }
                     return deviceOrFeatureData[devOrFeatRef][property];
                 });
 
@@ -66,6 +76,7 @@ namespace HSPI_HomeKitControllerTest
                 .Returns((int devOrFeatRef, double value) =>
                 {
                     deviceOrFeatureData[devOrFeatRef][EProperty.Value] = value;
+                    updateValueCallback?.Invoke(devOrFeatRef, EProperty.Value, value);
                     return true;
                 });
 
@@ -73,6 +84,7 @@ namespace HSPI_HomeKitControllerTest
                 .Callback((int devOrFeatRef, EProperty property, object value) =>
                 {
                     deviceOrFeatureData[devOrFeatRef][property] = value;
+                    updateValueCallback?.Invoke(devOrFeatRef, property, value);
                 });
         }
 

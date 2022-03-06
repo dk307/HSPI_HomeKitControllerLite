@@ -24,8 +24,9 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task ConnectionWorking()
         {
-            using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
-            string hsData = Resource.TemperatureSensorPairedHS3DataJson;
+            using var hapAccessory = 
+                await TestHelper.CreateChangingTemperaturePairedAccessory(cancellationTokenSource.Token).ConfigureAwait(false);
+            string hsData = hapAccessory.GetHsDeviceAndFeaturesString();
 
             SetupHsDataForSyncing(hsData,
                                   out Mock<PlugIn> plugIn,
@@ -64,7 +65,7 @@ namespace HSPI_HomeKitControllerTest
         public async Task ConnectionReconnect()
         {
             using var hapAccessory1 = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
-            string hsData = Resource.TemperatureSensorPairedHS3DataJson;
+            string hsData = hapAccessory1.GetHsDeviceAndFeaturesString();
 
             SetupHsDataForSyncing(hsData,
                                   out Mock<PlugIn> plugIn,

@@ -83,11 +83,6 @@
     <Compile Include="Hspi\AddDeviceTest.cs" />
     <Compile Include="Hspi\AddFeatureTest.cs" />
     <Compile Include="Utils\Initialize.cs" />
-    <Compile Include="Resource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
     <Compile Include="ShippedDllsTest.cs" />
     <Compile Include="Utils\StatusGraphicReadConverter.cs" />
     <Compile Include="Utils\TestHelper.cs" />
@@ -105,10 +100,16 @@
     <None Include="scripts\temperaturesensor\accessory.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="scripts\temperaturesensor\accessorydevicedata.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="scripts\temperaturesensor\controller.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="scripts\temperaturesensor\enabledCharacteristics.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="scripts\temperaturesensor\hsdeviceandfeatures.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -228,25 +229,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="scripts\ecobeethermostat\ecobeethermostat.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="scripts\temperaturesensor_accessory.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\temperaturesensor_controller.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\temperature_sensor_paried_changing.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\temperature_sensor_paried.py">
+    <Content Include="scripts\temperaturesensor\temperaturesensor_changing.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="scripts\temperaturesensor\temperaturesensor.py">

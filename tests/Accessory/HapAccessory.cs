@@ -1,8 +1,12 @@
 ﻿using HomeKit;
 using HomeKit.Model;
 using HomeKit.Utils;
+using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
+using HomeSeer.PluginSdk.Devices.Identification;
+using Hspi;
 using Hspi.DeviceData;
+using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,15 +19,17 @@ using System.Threading.Tasks;
 
 namespace HSPI_HomeKitControllerTest
 {
-
-    internal class HapAccessory : IDisposable
+    internal abstract class HapAccessory : IDisposable
     {
-        public HapAccessory(string dirName)
+        protected HapAccessory(string dirName , string scriptFile = null)
         {
-            this.scriptFile = Path.Combine(GetWorkingDirectory(), dirName, dirName + ".py");
-            this.accessoryFile = Path.Combine(GetWorkingDirectory(), dirName, "accessory.json");
-            this.controllerFile = Path.Combine(GetWorkingDirectory(), dirName, "controller.json");
-            this.defaultEnabledCharacteristics = Path.Combine(GetWorkingDirectory(), dirName, "enabledCharacteristics.json");
+            string workingDirectory = GetWorkingDirectory();
+            this.scriptFile = Path.Combine(workingDirectory, dirName, (scriptFile ?? dirName) + ".py");
+            this.accessoryFile = Path.Combine(workingDirectory, dirName, "accessory.json");
+            this.controllerFile = Path.Combine(workingDirectory, dirName, "controller.json");
+            this.defaultEnabledCharacteristics = Path.Combine(workingDirectory, dirName, "enabledCharacteristics.json");
+            this.hsDeviceAndFeatures = Path.Combine(workingDirectory, dirName, "hsdeviceandfeatures.json");
+            this.accessoryDeviceData = Path.Combine(workingDirectory, dirName, "accessorydevicedata.json");
         }
 
         ~HapAccessory()
@@ -32,6 +38,8 @@ namespace HSPI_HomeKitControllerTest
             Dispose(disposing: false);
         }
 
+        public abstract int ExpctedDeviceCreates { get; }
+        public abstract int InitialUpdatesExpected { get; }
         public PlugExtraData CreateDevicePlugExtraData()
         {
             var extraData = new PlugExtraData();
@@ -54,6 +62,8 @@ namespace HSPI_HomeKitControllerTest
             GC.SuppressFinalize(this);
         }
 
+        public string GetAccessoryDeviceDataString() => File.ReadAllText(this.accessoryDeviceData, Encoding.UTF8);
+
         public PairingDeviceInfo GetAccessoryParingInfo()
         {
             var controllerFileData = File.ReadAllText(this.controllerFile, Encoding.UTF8);
@@ -67,6 +77,8 @@ namespace HSPI_HomeKitControllerTest
             var pairingInfo = JsonConvert.DeserializeObject<List<int>>(controllerFileData);
             return pairingInfo;
         }
+
+        public string GetHsDeviceAndFeaturesString() => File.ReadAllText(this.hsDeviceAndFeatures, Encoding.UTF8);
 
         public async Task PairAndCreate(CancellationToken cancellationToken)
         {
@@ -100,6 +112,25 @@ namespace HSPI_HomeKitControllerTest
             File.WriteAllText(Path.Combine(workingDirectory, "scripts", this.controllerFile), data);
         }
 
+        public HsDevice SetDeviceRefExpectations(Mock<IHsController> mockHsController)
+        {
+            HsDevice device = new(StartDeviceRefId);
+            device.Changes[EProperty.PlugExtraData] = CreateDevicePlugExtraData();
+            device.Changes[EProperty.Relationship] = ERelationship.Device;
+            device.Changes[EProperty.Name] = "Test Device";
+
+            mockHsController.Setup(x => x.GetDeviceWithFeaturesByRef(device.Ref))
+                            .Returns(device);
+
+            mockHsController.Setup(x => x.GetRefsByInterface(PlugInData.PlugInId, true))
+                            .Returns(new List<int>() { device.Ref });
+
+            mockHsController.Setup(x => x.GetDeviceWithFeaturesByRef(device.Ref))
+                            .Returns(device);
+
+            return device;
+        }
+
         public async Task StartPaired(CancellationToken cancellationToken)
         {
             string fileName2 = Path.ChangeExtension(accessoryFile, ".tmp");
@@ -115,6 +146,13 @@ namespace HSPI_HomeKitControllerTest
         {
             this.scriptRunner = CreateUnPairedAccessory(scriptFile, pin, null);
             await scriptRunner.WaitForSuccessStart(cancellationToken).ConfigureAwait(false);
+        }
+
+        protected static string GetWorkingDirectory()
+        {
+            string codeBase = new Uri(typeof(PythonScriptWrapper).Assembly.CodeBase).LocalPath;
+            string workingDirectory = Path.Combine(Path.GetDirectoryName(codeBase), "scripts");
+            return workingDirectory;
         }
 
         protected virtual void Dispose(bool disposing)
@@ -140,19 +178,15 @@ namespace HSPI_HomeKitControllerTest
             var hapAccessory = new PythonScriptWrapper(scriptName, args);
             return hapAccessory;
         }
-
-        private static string GetWorkingDirectory()
-        {
-            string codeBase = new Uri(typeof(PythonScriptWrapper).Assembly.CodeBase).LocalPath;
-            string workingDirectory = Path.Combine(Path.GetDirectoryName(codeBase), "scripts");
-            return workingDirectory;
-        }
-
+        public const int StartDeviceRefId = 8475;
+        public const int StartFeatureRefId = 9385;
         protected readonly string accessoryFile;
         protected readonly string controllerFile;
         protected readonly string defaultEnabledCharacteristics;
         protected readonly string scriptFile;
         protected PythonScriptWrapper scriptRunner;
+        private readonly string accessoryDeviceData;
+        private readonly string hsDeviceAndFeatures;
         private bool disposedValue;
     }
 }

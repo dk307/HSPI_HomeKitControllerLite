@@ -15,21 +15,24 @@ class TemperatureSensor(Accessory):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         serv_temp = self.add_preload_service('TemperatureSensor')
-        self.char_temp = serv_temp.configure_char('CurrentTemperature')
+        self.char_temp = serv_temp.configure_char('CurrentTemperature', value=89)
 
     @Accessory.run_at_interval(1)
     def run(self):
         self.char_temp.set_value(random.randint(11, 60))
 
+
 def get_accessory(driver):
-    return TemperatureSensor(driver, 'Sensor1')
+    return TemperatureSensor(driver, 'Sensor1', aid=1)
     
 parser = argparse.ArgumentParser()
+parser.add_argument("pincode")
 parser.add_argument("persist_file")
 args = parser.parse_args()
 
-driver = AccessoryDriver(persist_file=args.persist_file)
+driver = AccessoryDriver(pincode=args.pincode.encode("UTF-8"), persist_file=args.persist_file)
 driver.add_accessory(accessory=get_accessory(driver))
 signal.signal(signal.SIGTERM, driver.signal_handler)
 driver.start()

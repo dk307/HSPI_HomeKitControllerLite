@@ -32,10 +32,10 @@ namespace HSPI_HomeKitControllerTest
             Assert.AreEqual("default", accessoryData.Accessories[0].SerialNumber);
             Assert.AreEqual("Sensor1", accessoryData.Accessories[0].Name);
 
-            Assert.AreEqual(2, accessoryData.Accessories[0].Services.Count);
 
-            Assert.AreEqual(Resource.TemperatureSensorPairedAccessoryJson,
-                            JsonConvert.SerializeObject(accessoryData));
+            var json = JsonConvert.SerializeObject(accessoryData);
+
+            Assert.AreEqual(hapAccessory.GetAccessoryDeviceDataString(), json);
         }
 
         [TestMethod]
@@ -82,13 +82,13 @@ namespace HSPI_HomeKitControllerTest
 
             await connection.RefreshValues(null, Token).ConfigureAwait(false);
 
-            Assert.AreEqual(6, changedEventQueue.Count);
+            Assert.AreEqual(7, changedEventQueue.Count);
 
-            var data = changedEventQueue[5];
+            var data = changedEventQueue[6];
 
             Assert.AreEqual(1UL, data.Aid);
-            Assert.AreEqual(9UL, data.Iid);
-            Assert.AreEqual(49.0D, data.Value);
+            Assert.AreEqual(11UL, data.Iid);
+            Assert.AreEqual(89.0D, data.Value);
         }
 
         [TestMethod]
@@ -102,7 +102,7 @@ namespace HSPI_HomeKitControllerTest
         [TestMethod]
         public async Task SubscribeAllGetsNewValues()
         {
-            using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
+            using var hapAccessory = await TestHelper.CreateChangingTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
             using var connection = await StartTemperatureAccessoryAsync(hapAccessory, Token).ConfigureAwait(false);
 
             AsyncProducerConsumerQueue<AccessoryValueChangedArgs> changedEventQueue = new();
@@ -115,7 +115,7 @@ namespace HSPI_HomeKitControllerTest
 
             Assert.IsNotNull(data);
             Assert.AreEqual(1UL, data.Aid);
-            Assert.AreEqual(9UL, data.Iid);
+            Assert.AreEqual(11UL, data.Iid);
             Assert.IsNotNull(data.Value);
         }
 
