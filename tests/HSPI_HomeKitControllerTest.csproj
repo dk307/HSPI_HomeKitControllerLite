@@ -93,11 +93,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="scripts\ecobeethermostat\accessory.json" />
+    <None Include="scripts\ecobeethermostat\accessory.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="scripts\ecobeethermostat\accessorydevicedata.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="scripts\ecobeethermostat\controller.json" />
+    <None Include="scripts\ecobeethermostat\controller.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="scripts\ecobeethermostat\ecobee.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

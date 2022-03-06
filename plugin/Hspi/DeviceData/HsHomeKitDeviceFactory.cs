@@ -52,8 +52,48 @@ namespace Hspi.DeviceData
             return hsController.CreateFeatureForDevice(newFeatureData);
         }
 
+        public static int CreateDevice(IHsController hsController,
+                                       PairingDeviceInfo pairingDeviceInfo,
+                                       IPEndPoint fallbackAddress,
+                                       Accessory accessory)
+        {
+            //find default enabled characteristics
+            static bool validServiceType(Service x) => x.Type != ServiceType.AccessoryInformation &&
+                                                       x.Type != ServiceType.ProtocolInformation;
+            var defaultCharacteristics =
+                accessory.Services.Values.FirstOrDefault(x => x.Primary == true && validServiceType(x))?.Characteristics?.Values ??
+                accessory.Services.Values.FirstOrDefault(validServiceType)?.Characteristics?.Values ??
+                Array.Empty<Characteristic>();
+
+            //Ignore hidden
+            defaultCharacteristics = defaultCharacteristics.Where(x => !x.Permissions.Contains(CharacteristicPermissions.Hidden));
+
+            var extraData = CreateRootPlugInExtraData(pairingDeviceInfo,
+                                                      fallbackAddress,
+                                                      accessory.Aid,
+                                                      defaultCharacteristics.Select(x => x.Iid));
+
+            string friendlyName = accessory.Name ??
+                                  pairingDeviceInfo.DeviceInformation.DisplayName ??
+                                  pairingDeviceInfo.DeviceInformation.Model ??
+                                  Invariant($"HomeKit Device - {pairingDeviceInfo.DeviceInformation.Id}");
+
+            var (deviceType, subFeatureType) = DetermineRootDeviceType(pairingDeviceInfo.DeviceInformation);
+            var newDeviceData = DeviceFactory.CreateDevice(PlugInData.PlugInId)
+                                             .WithName(friendlyName)
+                                             .AsType(deviceType, subFeatureType)
+                                             .WithLocation(PlugInData.PlugInName)
+                                             .WithMiscFlags(EMiscFlag.SetDoesNotChangeLastChange)
+                                             .WithExtraData(extraData)
+                                             .PrepareForHs();
+
+            int refId = hsController.CreateDevice(newDeviceData);
+            Log.Information("Created device {friendlyName}", friendlyName);
+            return refId;
+        }
+
         public static int CreateFeature(IHsController hsController,
-                                        int refId,
+                                                int refId,
                                         ServiceType serviceType,
                                         Characteristic characteristic)
         {
@@ -108,47 +148,6 @@ namespace Hspi.DeviceData
 
             return hsController.CreateFeatureForDevice(newData);
         }
-
-        public static int CreateDevice(IHsController hsController,
-                                       PairingDeviceInfo pairingDeviceInfo,
-                                       IPEndPoint fallbackAddress,
-                                       Accessory accessory)
-        {
-            //find default enabled characteristics
-            static bool validServiceType(Service x) => x.Type != ServiceType.AccessoryInformation &&
-                                                       x.Type != ServiceType.ProtocolInformation;
-            var defaultCharacteristics =
-                accessory.Services.Values.FirstOrDefault(x => x.Primary == true && validServiceType(x))?.Characteristics?.Values ??
-                accessory.Services.Values.FirstOrDefault(validServiceType)?.Characteristics?.Values ??
-                Array.Empty<Characteristic>();
-
-            //Ignore hidden
-            defaultCharacteristics = defaultCharacteristics.Where(x => !x.Permissions.Contains(CharacteristicPermissions.Hidden));
-
-            var extraData = CreateRootPlugInExtraData(pairingDeviceInfo,
-                                                      fallbackAddress,
-                                                      accessory.Aid,
-                                                      defaultCharacteristics.Select(x => x.Iid));
-
-            string friendlyName = accessory.Name ??
-                                  pairingDeviceInfo.DeviceInformation.DisplayName ??
-                                  pairingDeviceInfo.DeviceInformation.Model ??
-                                  Invariant($"HomeKit Device - {pairingDeviceInfo.DeviceInformation.Id}");
-
-            var (deviceType, subFeatureType) = DetermineRootDeviceType(pairingDeviceInfo.DeviceInformation);
-            var newDeviceData = DeviceFactory.CreateDevice(PlugInData.PlugInId)
-                                             .WithName(friendlyName)
-                                             .AsType(deviceType, subFeatureType)
-                                             .WithLocation(PlugInData.PlugInName)
-                                             .WithMiscFlags(EMiscFlag.SetDoesNotChangeLastChange)
-                                             .WithExtraData(extraData)
-                                             .PrepareForHs();
-
-            int refId = hsController.CreateDevice(newDeviceData);
-            Log.Information("Created device {friendlyName}", friendlyName);
-            return refId;
-        }
-
         private static void AddPlugExtraValue(NewFeatureData data,
                                               string key,
                                               string value)
@@ -331,24 +330,6 @@ namespace Hspi.DeviceData
             }
 
             return true;
-
-            static string GetIcon(ButtonOption? buttonMapping, Characteristic characteristic, double value)
-            {
-                if (buttonMapping != null)
-                {
-                    return buttonMapping?.Icon ?? DefaultIcon;
-                }
-
-                if (characteristic.Format == CharacteristicFormat.Bool)
-                {
-                    if (value == 0)
-                    {
-                        return OffIcon;
-                    }
-                    return OnIcon;
-                }
-                return DefaultIcon;
-            }
         }
 
         private static void ConvertStatusControlToF(StatusControl statusControl)
@@ -389,11 +370,6 @@ namespace Hspi.DeviceData
             {
                 statusGraphic.Value = C2FConvert(statusGraphic.Value, 3);
             }
-        }
-
-        private static string GetImagePath(string iconFileName)
-        {
-            return Path.ChangeExtension(Path.Combine(PlugInData.PlugInId, "images", iconFileName), "png");
         }
 
         private static PlugExtraData CreatePlugInExtraforDeviceType(FeatureType featureType,
@@ -450,6 +426,27 @@ namespace Hspi.DeviceData
             return null;
         }
 
+        private static string GetIcon(ButtonOption? buttonMapping, Characteristic characteristic, double value)
+        {
+            if (buttonMapping != null)
+            {
+                return buttonMapping?.Icon ?? DefaultIcon;
+            }
+
+            if (characteristic.Format == CharacteristicFormat.Bool)
+            {
+                if (value == 0)
+                {
+                    return OffIcon;
+                }
+                return OnIcon;
+            }
+            return DefaultIcon;
+        }
+        private static string GetImagePath(string iconFileName)
+        {
+            return Path.ChangeExtension(Path.Combine(PlugInData.PlugInId, "images", iconFileName), "png");
+        }
         private static bool IsTemperatureScaleF(IHsController hsController)
         {
             return Convert.ToBoolean(hsController.GetINISetting("Settings", "gGlobalTempScaleF", "True").Trim());
@@ -482,9 +479,9 @@ namespace Hspi.DeviceData
         private const string OnIcon = "on";
 
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
-                                                                                                  {
-                                                                                                      string json = Encoding.UTF8.GetString(Resource.HSMappings);
-                                                                                                      return JsonHelper.DeserializeObject<HSMappings>(json);
-                                                                                                  }, true);
+                                                                                                     {
+                                                                                                         string json = Encoding.UTF8.GetString(Resource.HSMappings);
+                                                                                                         return JsonHelper.DeserializeObject<HSMappings>(json);
+                                                                                                     }, true);
     }
 }

@@ -25,8 +25,14 @@ namespace HomeKit.Model
 
             var result = (jObject["names"] as JArray).Select(x =>
             {
-                var id = Guid.Parse(x["id"].Value<string>());
-                var name = x["name"].Value<string>();
+                var idString = (string?)x["id"];
+                var name = (string?)x["name"];
+
+                if (!Guid.TryParse(idString, out var id) || name == null)
+                {
+                    throw new InvalidProgramException("CharacteristicType name map is invalid");
+                }
+ 
                 return new ValueTuple<Guid, string>(id, name);
             }).ToImmutableDictionary(x => x.Item1, x => x.Item2);
 

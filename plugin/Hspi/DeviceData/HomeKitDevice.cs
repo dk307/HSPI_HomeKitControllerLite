@@ -25,7 +25,7 @@ namespace Hspi.DeviceData
         {
             if (!refIds.Any())
             {
-                throw new ArgumentException(nameof(refIds));
+                throw new ArgumentException("Is Empty", nameof(refIds));
             }
 
             this.HS = hsController;
