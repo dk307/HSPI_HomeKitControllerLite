@@ -11,33 +11,18 @@
             "$type": "HomeKit.Model.Service, HSPI_HomeKitController",
             "iid": 1,
             "type": "0000003e-0000-1000-8000-0026bb765291",
-            "primary": null,
-            "hidden": null,
             "characteristics": [
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
                 "iid": 2,
                 "type": "00000014-0000-1000-8000-0026bb765291",
-                "value": null,
                 "perms": {
                   "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
                   "$values": [
                     "pw"
                   ]
                 },
-                "ev": null,
-                "format": "bool",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "bool"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -50,19 +35,7 @@
                     "pr"
                   ]
                 },
-                "ev": null,
-                "format": "string",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "string"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -75,19 +48,7 @@
                     "pr"
                   ]
                 },
-                "ev": null,
-                "format": "string",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "string"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -100,19 +61,7 @@
                     "pr"
                   ]
                 },
-                "ev": null,
-                "format": "string",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "string"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -125,19 +74,7 @@
                     "pr"
                   ]
                 },
-                "ev": null,
-                "format": "string",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "string"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -150,19 +87,7 @@
                     "pr"
                   ]
                 },
-                "ev": null,
-                "format": "string",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "string"
               }
             ]
           },
@@ -170,8 +95,6 @@
             "$type": "HomeKit.Model.Service, HSPI_HomeKitController",
             "iid": 8,
             "type": "000000a2-0000-1000-8000-0026bb765291",
-            "primary": null,
-            "hidden": null,
             "characteristics": [
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -185,19 +108,7 @@
                     "ev"
                   ]
                 },
-                "ev": null,
-                "format": "string",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "string"
               }
             ]
           },
@@ -205,8 +116,6 @@
             "$type": "HomeKit.Model.Service, HSPI_HomeKitController",
             "iid": 10,
             "type": "0000008a-0000-1000-8000-0026bb765291",
-            "primary": null,
-            "hidden": null,
             "characteristics": [
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -220,25 +129,16 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "float",
-                "description": null,
                 "unit": "celsius",
                 "minValue": -273.1,
                 "maxValue": 1000.0,
-                "minStep": 0.1,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 0.1
               }
             ]
           }
         ],
         "Name": "Sensor1",
-        "Version": null,
         "Model": "",
         "SerialNumber": "default",
         "FirmwareRevision": ""

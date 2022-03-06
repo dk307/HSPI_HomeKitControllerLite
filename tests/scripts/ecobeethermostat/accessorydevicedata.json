@@ -12,32 +12,18 @@
             "iid": 1,
             "type": "0000003e-0000-1000-8000-0026bb765291",
             "primary": false,
-            "hidden": null,
             "characteristics": [
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
                 "iid": 2,
                 "type": "00000014-0000-1000-8000-0026bb765291",
-                "value": null,
                 "perms": {
                   "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
                   "$values": [
                     "pw"
                   ]
                 },
-                "ev": null,
-                "format": "bool",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "bool"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -50,19 +36,7 @@
                     "pr"
                   ]
                 },
-                "ev": null,
-                "format": "string",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "string"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -75,19 +49,7 @@
                     "pr"
                   ]
                 },
-                "ev": null,
-                "format": "string",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "string"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -100,19 +62,7 @@
                     "pr"
                   ]
                 },
-                "ev": null,
-                "format": "string",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "string"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -125,19 +75,7 @@
                     "pr"
                   ]
                 },
-                "ev": null,
-                "format": "string",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "string"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -150,19 +88,7 @@
                     "pr"
                   ]
                 },
-                "ev": null,
-                "format": "string",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "string"
               }
             ]
           },
@@ -171,7 +97,6 @@
             "iid": 8,
             "type": "000000a2-0000-1000-8000-0026bb765291",
             "primary": false,
-            "hidden": null,
             "characteristics": [
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -185,19 +110,7 @@
                     "ev"
                   ]
                 },
-                "ev": null,
-                "format": "string",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "string"
               }
             ]
           },
@@ -206,7 +119,6 @@
             "iid": 10,
             "type": "0000004a-0000-1000-8000-0026bb765291",
             "primary": true,
-            "hidden": null,
             "characteristics": [
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -220,15 +132,7 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "uint8",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
                 "valid-values": {
                   "$type": "System.Collections.Immutable.ImmutableList`1[[System.Double, mscorlib]], System.Collections.Immutable",
                   "$values": [
@@ -236,10 +140,7 @@
                     1.0,
                     2.0
                   ]
-                },
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                }
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -254,15 +155,7 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "uint8",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
                 "valid-values": {
                   "$type": "System.Collections.Immutable.ImmutableList`1[[System.Double, mscorlib]], System.Collections.Immutable",
                   "$values": [
@@ -271,10 +164,7 @@
                     2.0,
                     3.0
                   ]
-                },
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                }
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -288,19 +178,11 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "float",
-                "description": null,
                 "unit": "celsius",
                 "minValue": -273.1,
                 "maxValue": 1000.0,
-                "minStep": 0.1,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 0.1
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -315,19 +197,11 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "float",
-                "description": null,
                 "unit": "celsius",
                 "minValue": 10.0,
                 "maxValue": 38.0,
-                "minStep": 0.1,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 0.1
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -342,25 +216,14 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "uint8",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
                 "valid-values": {
                   "$type": "System.Collections.Immutable.ImmutableList`1[[System.Double, mscorlib]], System.Collections.Immutable",
                   "$values": [
                     0.0,
                     1.0
                   ]
-                },
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                }
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -375,19 +238,12 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "float",
                 "description": "Char",
                 "unit": "celsius",
                 "minValue": 18.3,
                 "maxValue": 33.3,
-                "minStep": 0.1,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 0.1
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -402,19 +258,12 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "float",
                 "description": "Char",
                 "unit": "celsius",
                 "minValue": 7.2,
                 "maxValue": 26.1,
-                "minStep": 0.1,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 0.1
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -428,19 +277,12 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "float",
                 "description": "Char",
                 "unit": "percentage",
                 "minValue": 0.0,
                 "maxValue": 100.0,
-                "minStep": 1.0,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 1.0
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -455,19 +297,12 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "float",
                 "description": "Char",
                 "unit": "percentage",
                 "minValue": 20.0,
                 "maxValue": 50.0,
-                "minStep": 1.0,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 1.0
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -480,19 +315,8 @@
                     "pr"
                   ]
                 },
-                "ev": null,
                 "format": "string",
-                "description": "Char",
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "description": "Char"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -507,19 +331,11 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "uint8",
                 "description": "Char",
-                "unit": null,
                 "minValue": 0.0,
                 "maxValue": 1.0,
-                "minStep": 1.0,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 1.0
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -533,19 +349,11 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "uint8",
                 "description": "Char",
-                "unit": null,
                 "minValue": 0.0,
                 "maxValue": 2.0,
-                "minStep": 1.0,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 1.0
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -558,19 +366,11 @@
                     "pr"
                   ]
                 },
-                "ev": null,
                 "format": "uint8",
                 "description": "Char",
-                "unit": null,
                 "minValue": 0.0,
                 "maxValue": 3.0,
-                "minStep": 1.0,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 1.0
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -584,19 +384,12 @@
                     "pw"
                   ]
                 },
-                "ev": null,
                 "format": "float",
                 "description": "Char",
                 "unit": "celsius",
                 "minValue": 7.2,
                 "maxValue": 26.1,
-                "minStep": 0.1,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 0.1
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -610,19 +403,12 @@
                     "pw"
                   ]
                 },
-                "ev": null,
                 "format": "float",
                 "description": "Char",
                 "unit": "celsius",
                 "minValue": 18.3,
                 "maxValue": 33.3,
-                "minStep": 0.1,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 0.1
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -636,19 +422,12 @@
                     "pw"
                   ]
                 },
-                "ev": null,
                 "format": "float",
                 "description": "Char",
                 "unit": "celsius",
                 "minValue": 7.2,
                 "maxValue": 26.1,
-                "minStep": 0.1,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 0.1
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -662,19 +441,12 @@
                     "pw"
                   ]
                 },
-                "ev": null,
                 "format": "float",
                 "description": "Char",
                 "unit": "celsius",
                 "minValue": 18.3,
                 "maxValue": 33.3,
-                "minStep": 0.1,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 0.1
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -688,19 +460,12 @@
                     "pw"
                   ]
                 },
-                "ev": null,
                 "format": "float",
                 "description": "Char",
                 "unit": "celsius",
                 "minValue": 7.2,
                 "maxValue": 26.1,
-                "minStep": 0.1,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 0.1
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -714,44 +479,28 @@
                     "pw"
                   ]
                 },
-                "ev": null,
                 "format": "float",
                 "description": "Char",
                 "unit": "celsius",
                 "minValue": 18.3,
                 "maxValue": 33.3,
-                "minStep": 0.1,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 0.1
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
                 "iid": 30,
                 "type": "1b300bc2-cffc-47ff-89f9-bd6ccf5f2853",
-                "value": null,
                 "perms": {
                   "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
                   "$values": [
                     "pw"
                   ]
                 },
-                "ev": null,
                 "format": "uint8",
                 "description": "Char",
-                "unit": null,
                 "minValue": 0.0,
                 "maxValue": 3.0,
-                "minStep": 1.0,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 1.0
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -765,44 +514,21 @@
                     "pw"
                   ]
                 },
-                "ev": null,
                 "format": "string",
-                "description": "Char",
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "description": "Char"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
                 "iid": 32,
                 "type": "fa128de6-9d7d-49a4-b6d8-4e4e234dee38",
-                "value": null,
                 "perms": {
                   "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
                   "$values": [
                     "pw"
                   ]
                 },
-                "ev": null,
                 "format": "bool",
-                "description": "Char",
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "description": "Char"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -815,19 +541,11 @@
                     "pr"
                   ]
                 },
-                "ev": null,
                 "format": "uint8",
                 "description": "Char",
-                "unit": null,
                 "minValue": 0.0,
                 "maxValue": 4.0,
-                "minStep": 1.0,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 1.0
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -840,19 +558,11 @@
                     "pr"
                   ]
                 },
-                "ev": null,
                 "format": "uint8",
                 "description": "Char",
-                "unit": null,
                 "minValue": 0.0,
                 "maxValue": 3.0,
-                "minStep": 1.0,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 1.0
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -865,19 +575,8 @@
                     "pr"
                   ]
                 },
-                "ev": null,
                 "format": "bool",
-                "description": "Char",
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "description": "Char"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -891,19 +590,12 @@
                     "pw"
                   ]
                 },
-                "ev": null,
                 "format": "uint8",
                 "description": "Char",
                 "unit": "percentage",
                 "minValue": 0.0,
                 "maxValue": 100.0,
-                "minStep": 1.0,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 1.0
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -916,19 +608,12 @@
                     "pr"
                   ]
                 },
-                "ev": null,
                 "format": "uint8",
                 "description": "Char",
                 "unit": "percentage",
                 "minValue": 0.0,
                 "maxValue": 100.0,
-                "minStep": 1.0,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 1.0
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -941,19 +626,9 @@
                     "pr"
                   ]
                 },
-                "ev": null,
                 "format": "string",
                 "description": "Char",
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": 256,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "maxLen": 256
               }
             ]
           },
@@ -961,8 +636,6 @@
             "$type": "HomeKit.Model.Service, HSPI_HomeKitController",
             "iid": 39,
             "type": "00000085-0000-1000-8000-0026bb765291",
-            "primary": null,
-            "hidden": null,
             "characteristics": [
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -976,19 +649,7 @@
                     "ev"
                   ]
                 },
-                "ev": null,
-                "format": "bool",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "format": "bool"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -1001,19 +662,9 @@
                     "pr"
                   ]
                 },
-                "ev": null,
                 "format": "string",
                 "description": "Char1",
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": 200,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "maxLen": 200
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -1027,19 +678,8 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "bool",
-                "description": "Char1",
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "description": "Char1"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -1053,19 +693,11 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "uint8",
                 "description": "Char1",
-                "unit": null,
                 "minValue": 0.0,
                 "maxValue": 1.0,
-                "minStep": 1.0,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 1.0
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -1078,19 +710,12 @@
                     "pr"
                   ]
                 },
-                "ev": null,
                 "format": "int",
                 "description": "Char1",
                 "unit": "seconds",
                 "minValue": -1.0,
                 "maxValue": 86400.0,
-                "minStep": 1.0,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 1.0
               }
             ]
           },
@@ -1098,8 +723,6 @@
             "$type": "HomeKit.Model.Service, HSPI_HomeKitController",
             "iid": 45,
             "type": "00000086-0000-1000-8000-0026bb765291",
-            "primary": null,
-            "hidden": null,
             "characteristics": [
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -1113,25 +736,14 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "uint8",
-                "description": null,
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
                 "valid-values": {
                   "$type": "System.Collections.Immutable.ImmutableList`1[[System.Double, mscorlib]], System.Collections.Immutable",
                   "$values": [
                     0.0,
                     1.0
                   ]
-                },
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                }
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -1144,19 +756,8 @@
                     "pr"
                   ]
                 },
-                "ev": null,
                 "format": "string",
-                "description": "Char1",
-                "unit": null,
-                "minValue": null,
-                "maxValue": null,
-                "minStep": null,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "description": "Char1"
               },
               {
                 "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
@@ -1170,25 +771,17 @@
                     "ev"
                   ]
                 },
-                "ev": null,
                 "format": "int",
                 "description": "Char1",
                 "unit": "seconds",
                 "minValue": -1.0,
                 "maxValue": 86400.0,
-                "minStep": 1.0,
-                "maxLen": null,
-                "maxDataLen": null,
-                "valid-values": null,
-                "valid-values-range": null,
-                "TTL": null,
-                "pid": null
+                "minStep": 1.0
               }
             ]
           }
         ],
         "Name": "EcoBee",
-        "Version": null,
         "Model": "",
         "SerialNumber": "default",
         "FirmwareRevision": ""
