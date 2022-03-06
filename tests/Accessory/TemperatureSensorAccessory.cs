@@ -7,7 +7,6 @@
         {
         }
 
-        public override int ExpctedDeviceCreates => 3;
         public override int InitialUpdatesExpected => 5;
         private const string DirName = "temperatureSensor";
     }

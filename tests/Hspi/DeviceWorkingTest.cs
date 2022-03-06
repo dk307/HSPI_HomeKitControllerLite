@@ -120,15 +120,15 @@ namespace HSPI_HomeKitControllerTest
         }
 
         private static void SetupHsDataForSyncing(string hsData,
-                                                   out Mock<PlugIn> plugIn,
-                                                   out Mock<IHsController> mockHsController,
-                                                   out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
+                                                  out Mock<PlugIn> plugIn,
+                                                  out Mock<IHsController> mockHsController,
+                                                  out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
         {
             plugIn = TestHelper.CreatePlugInMock();
             mockHsController = TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
             deviceOrFeatureData = JsonConvert.DeserializeObject<
                 SortedDictionary<int, Dictionary<EProperty, object>>>(hsData,
-                TestHelper.CreateJsonSerializerForHsData());
+                TestHelper.CreateJsonSerializer());
 
             foreach (var changes in deviceOrFeatureData)
             {

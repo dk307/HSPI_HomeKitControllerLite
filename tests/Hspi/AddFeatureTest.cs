@@ -23,6 +23,13 @@ namespace HSPI_HomeKitControllerTest
             await FeatureAddedOnStart(hapAccessory).ConfigureAwait(false);
         }
 
+        [TestMethod]
+        public async Task FeatureAddedOnStartForEcobeeThermostat()
+        {
+            using var hapAccessory = await TestHelper.CreateEcobeeThermostatPairedAccessory(cancellationTokenSource.Token).ConfigureAwait(false);
+            await FeatureAddedOnStart(hapAccessory).ConfigureAwait(false);
+        }
+
         private async Task FeatureAddedOnStart(HapAccessory hapAccessory)
         {
             var plugIn = TestHelper.CreatePlugInMock();
@@ -62,12 +69,13 @@ namespace HSPI_HomeKitControllerTest
 
             await asyncManualResetEvent.WaitAsync(cancellationTokenSource.Token).ConfigureAwait(false);
 
-            Assert.AreEqual(hapAccessory.ExpctedDeviceCreates, deviceOrFeatureData.Count);
+            // -1 for root
+            Assert.AreEqual(hapAccessory.ExpectedDeviceCreates, deviceOrFeatureData.Count - 1);
 
             // remove as it is different on machines
             ((PlugExtraData)deviceOrFeatureData[device.Ref][EProperty.PlugExtraData]).RemoveNamed("fallback.address");
 
-            string jsonData = JsonConvert.SerializeObject(deviceOrFeatureData, TestHelper.CreateJsonSerializerForHsData());
+            string jsonData = JsonConvert.SerializeObject(deviceOrFeatureData, TestHelper.CreateJsonSerializer());
             Assert.AreEqual(hapAccessory.GetHsDeviceAndFeaturesString(), jsonData);
 
             plugIn.Object.ShutdownIO();

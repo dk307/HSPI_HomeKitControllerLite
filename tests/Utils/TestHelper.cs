@@ -16,7 +16,7 @@ namespace HSPI_HomeKitControllerTest
 {
     internal static class TestHelper
     {
-        public static JsonSerializerSettings CreateJsonSerializerForHsData()
+        public static JsonSerializerSettings CreateJsonSerializer()
         {
             return new JsonSerializerSettings
             {
@@ -35,7 +35,7 @@ namespace HSPI_HomeKitControllerTest
             };
         }
 
-        public static async Task<TemperatureSensorAccessory> 
+        public static async Task<TemperatureSensorAccessory>
             CreateTemperaturePairedAccessory(CancellationToken token)
         {
             var hapAccessory = new TemperatureSensorAccessory();
@@ -43,7 +43,15 @@ namespace HSPI_HomeKitControllerTest
             return hapAccessory;
         }
 
-        public static async Task<TemperatureSensorAccessory> 
+        public static async Task<EcobeeThermostatAccessory>
+            CreateEcobeeThermostatPairedAccessory(CancellationToken token)
+        {
+            var hapAccessory = new EcobeeThermostatAccessory();
+            await hapAccessory.StartPaired(token).ConfigureAwait(false);
+            return hapAccessory;
+        }
+
+        public static async Task<TemperatureSensorAccessory>
             CreateChangingTemperaturePairedAccessory(CancellationToken token)
         {
             var hapAccessory = new TemperatureSensorAccessory(true);
@@ -77,6 +85,14 @@ namespace HSPI_HomeKitControllerTest
                 .Returns((int devOrFeatRef, double value) =>
                 {
                     deviceOrFeatureData[devOrFeatRef][EProperty.Value] = value;
+                    updateValueCallback?.Invoke(devOrFeatRef, EProperty.Value, value);
+                    return true;
+                });
+
+            mockHsController.Setup(x => x.UpdateFeatureValueStringByRef(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns((int devOrFeatRef, string value) =>
+                {
+                    deviceOrFeatureData[devOrFeatRef][EProperty.StatusString] = value;
                     updateValueCallback?.Invoke(devOrFeatRef, EProperty.Value, value);
                     return true;
                 });

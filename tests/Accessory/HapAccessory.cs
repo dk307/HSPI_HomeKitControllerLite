@@ -21,7 +21,7 @@ namespace HSPI_HomeKitControllerTest
 {
     public abstract class HapAccessory : IDisposable
     {
-        protected HapAccessory(string dirName , string scriptFile = null)
+        protected HapAccessory(string dirName, string scriptFile = null)
         {
             string workingDirectory = GetWorkingDirectory();
             this.scriptFile = Path.Combine(workingDirectory, dirName, (scriptFile ?? dirName) + ".py");
@@ -38,8 +38,17 @@ namespace HSPI_HomeKitControllerTest
             Dispose(disposing: false);
         }
 
-        public abstract int ExpctedDeviceCreates { get; }
+        public int ExpectedDeviceCreates
+        {
+            get
+            {
+                var enabledCharacteristics = GetEnabledCharacteristics();
+                return enabledCharacteristics.Count + 1; // +1 for connected feature
+            }
+        }
+
         public abstract int InitialUpdatesExpected { get; }
+
         public PlugExtraData CreateDevicePlugExtraData()
         {
             var extraData = new PlugExtraData();
@@ -178,6 +187,7 @@ namespace HSPI_HomeKitControllerTest
             var hapAccessory = new PythonScriptWrapper(scriptName, args);
             return hapAccessory;
         }
+
         public const int StartDeviceRefId = 8475;
         public const int StartFeatureRefId = 9385;
         protected readonly string accessoryFile;

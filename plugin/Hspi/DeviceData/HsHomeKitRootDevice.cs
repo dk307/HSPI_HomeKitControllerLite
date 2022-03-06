@@ -39,10 +39,10 @@ namespace Hspi.DeviceData
             return GetPlugExtraData<ulong>(hsController, refId, AidPlugExtraTag);
         }
 
-        public static ImmutableArray<ulong> GetEnabledCharacteristic(PlugExtraData plugExtraData)
+        public static ImmutableSortedSet<ulong> GetEnabledCharacteristic(PlugExtraData plugExtraData)
         {
-            return GetPlugExtraData<ImmutableArray<ulong>>(plugExtraData,
-                                                           EnabledCharacteristicPlugExtraTag);
+            return GetPlugExtraData<ImmutableSortedSet<ulong>>(plugExtraData,
+                                                               EnabledCharacteristicPlugExtraTag);
         }
 
         public static IPEndPoint GetFallBackAddress(IHsController hsController, int refId)

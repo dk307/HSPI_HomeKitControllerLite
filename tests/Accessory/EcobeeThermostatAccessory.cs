@@ -2,13 +2,12 @@
 {
     internal sealed class EcobeeThermostatAccessory : HapAccessory
     {
-        public EcobeeThermostatAccessory() 
+        public EcobeeThermostatAccessory()
             : base(DirName)
         {
         }
 
-        public override int ExpctedDeviceCreates => 3;
-        public override int InitialUpdatesExpected => 5;
+        public override int InitialUpdatesExpected => 55;
 
         private const string DirName = "ecobeethermostat";
     }
