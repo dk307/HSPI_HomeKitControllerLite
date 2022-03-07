@@ -42,6 +42,34 @@ namespace Hspi.DeviceData
                                                          TimeSpan.FromSeconds(15));
         }
 
+        public Accessory GetAccessoryInfo(int refId)
+        {
+            var device = GetHsDevice(refId);
+            var deviceReportedInfo = manager.Connection.DeviceReportedInfo;
+
+            return deviceReportedInfo.Accessories.FirstOrDefault(x => x.Aid == device.Aid)
+                ?? throw new InvalidProgramException($"{device.Aid} not found in device");
+        }
+
+        public ImmutableSortedSet<ulong> GetEnabledCharacteristic(int refId)
+        {
+            var device = GetHsDevice(refId);
+            return device.GetEnabledCharacteristic();
+        }
+
+        public PairingDeviceInfo GetPairingInfo(int refId)
+        {
+            var device = GetHsDevice(refId);
+            return device.GetPairingInfo();
+        }
+
+        private HsHomeKitRootDevice GetHsDevice(int refId)
+        {
+            var device = hsDevices.Values.FirstOrDefault(x => x.RefId == refId) ??
+                                throw new InvalidOperationException($"{refId} not found"); ;
+            return device;
+        }
+
         public async Task<bool> CanProcessCommand(ControlEvent colSend,
                                                   CancellationToken token)
         {
@@ -260,7 +288,7 @@ namespace Hspi.DeviceData
 
         // aid to device dict
         private ImmutableDictionary<ulong, HsHomeKitRootDevice> hsDevices =
-            ImmutableDictionary<ulong, HsHomeKitRootDevice>.Empty;
+                             ImmutableDictionary<ulong, HsHomeKitRootDevice>.Empty;
 
         private ImmutableList<AidIidPair> pollingIids = ImmutableList<AidIidPair>.Empty;
     }

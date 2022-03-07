@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Hspi;
+using System;
+using System.Collections.Immutable;
 
 namespace HomeKit.Model
 {
@@ -11,6 +13,27 @@ namespace HomeKit.Model
         public ServiceType(Guid id) : base(id)
         {
         }
+
+        private static readonly ImmutableDictionary<Guid, string> defaultNames = CreateDefaultNames(Resource.ServiceTypeNames);
+
+        public string? DisplayName
+        {
+            get
+            {
+                if (defaultNames.TryGetValue(Id, out var name))
+                {
+                    return name;
+                }
+                return null;
+            }
+        }
+
+        public override string ToString()
+        {
+            return this.DisplayName ?? Id.ToString();
+        }
+
+
 
         public static readonly ServiceType AccessoryInformation = new("3E");
         public static readonly ServiceType ProtocolInformation = new("A2");

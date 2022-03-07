@@ -194,7 +194,7 @@
     <Compile Include="HomeKit\Utils\ServiceListConverter.cs" />
     <Compile Include="HomeKit\Utils\ServiceTypeJsonConverter.cs" />
     <Compile Include="HomeKit\Utils\UnitAttribute.cs" />
-    <Compile Include="Hspi\AddDeviceHandler.cs" />
+    <Compile Include="Hspi\Pages\AddDeviceHandler.cs" />
     <Compile Include="Hspi\DeviceData\HsFeatureTypeData.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\ButtonOption.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\HSMapping.cs" />
@@ -205,6 +205,7 @@
     <Compile Include="Hspi\DeviceData\HSMapping\HSMappings.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\RangeOptions.cs" />
     <Compile Include="Hspi\HSPI.cs" />
+    <Compile Include="Hspi\Pages\DeviceConfigPage.cs" />
     <Compile Include="Hspi\PlugIn.cs" />
     <Compile Include="Hspi\PlugInData.cs" />
     <Compile Include="Hspi\Program.cs" />
@@ -226,6 +227,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Hspi\DeviceData\HSMapping\ServiceTypeNames.json" />
     <None Include="Hspi\DeviceData\HSMapping\CharacteristicTypeNames.json" />
     <None Include="Hspi\DeviceData\HSMapping\HSMappings.json" />
     <None Include="Properties\app.manifest" />

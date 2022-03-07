@@ -65,8 +65,9 @@ namespace Hspi.DeviceData
                 accessory.Services.Values.FirstOrDefault(validServiceType)?.Characteristics?.Values ??
                 Array.Empty<Characteristic>();
 
-            //Ignore hidden
-            defaultCharacteristics = defaultCharacteristics.Where(x => !x.Permissions.Contains(CharacteristicPermissions.Hidden));
+            //Ignore hidden & unknown
+            defaultCharacteristics = defaultCharacteristics
+                .Where(x => !x.Permissions.Contains(CharacteristicPermissions.Hidden) && string.IsNullOrEmpty(x.Type.DisplayName));
 
             var extraData = CreateRootPlugInExtraData(pairingDeviceInfo,
                                                       fallbackAddress,

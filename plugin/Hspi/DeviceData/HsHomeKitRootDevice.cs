@@ -63,6 +63,11 @@ namespace Hspi.DeviceData
             return GetPlugExtraData<IPEndPoint>(FallbackAddressPlugExtraTag, new IPEndPointJsonConverter());
         }
 
+        public ImmutableSortedSet<ulong> GetEnabledCharacteristic()
+        {
+            return GetPlugExtraData<ImmutableSortedSet<ulong>>(EnabledCharacteristicPlugExtraTag);
+        }
+
         public PairingDeviceInfo GetPairingInfo()
         {
             return GetPlugExtraData<PairingDeviceInfo>(PairInfoPlugExtraTag);

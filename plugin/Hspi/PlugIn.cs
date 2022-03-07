@@ -1,6 +1,8 @@
-﻿using HomeSeer.PluginSdk;
+﻿using HomeSeer.Jui.Views;
+using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices.Controls;
 using Hspi.DeviceData;
+using Hspi.Pages;
 using Hspi.Utils;
 using Nito.AsyncEx;
 using Serilog;
@@ -20,7 +22,7 @@ namespace Hspi
         {
         }
 
-        public override bool SupportsConfigDeviceAll => true;
+        public override bool SupportsConfigDevice => true;
 
         public override string PostBackProc(string page, string data, string user, int userRights)
         {
@@ -111,6 +113,59 @@ namespace Hspi
             return deviceManager;
         }
 
+        public override string GetJuiDeviceConfigPage(int devOrFeatRef)
+        {
+            try
+            {
+                Log.Debug("Asking for page for {deviceOrFeatureRef}", devOrFeatRef);
+
+                var devices = GetDevices().ResultForSync();
+                Page? page = null;
+                if (devices.TryGetValue(devOrFeatRef, out var device))
+                {
+                    page = DeviceConfigPage.BuildConfigPage(devOrFeatRef, device);
+                }
+
+                var devicePage = page?.ToJsonString() ?? throw new InvalidOperationException("Page is unexpectedly null");
+                Log.Debug("Returning page for {deviceOrFeatureRef}", devOrFeatRef);
+                return devicePage;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to create page for {devOrFeatRef} with error:{error}", devOrFeatRef, ex.GetFullMessage());
+                var page = PageFactory.CreateDeviceConfigPage(PlugInData.PlugInId, "Z-Wave Information");
+                page = page.WithView(new LabelView("exception", string.Empty, ex.GetFullMessage())
+                {
+                    LabelType = HomeSeer.Jui.Types.ELabelType.Preformatted
+                });
+                return page.Page.ToJsonString();
+            }
+        }
+
+        //protected override bool OnDeviceConfigChange(Page deviceConfigPage, int deviceRef)
+        //{
+        //    var devices = GetDevices().ResultForSync();
+
+        //    if (devices.TryGetValue(deviceRef, out var device))
+        //    {
+        //        try
+        //        {
+        //            var changes = deviceConfigPage.ToValueMap();
+
+        //            return true;
+        //        }
+        //        catch (Exception ex) when (!ex.IsCancelException())
+        //        {
+        //            Log.Warning(Invariant($"Failed to update device with {ExceptionHelper.GetFullMessage(ex)} for RefId: {deviceRef}"));
+        //            throw;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
+
         private async Task MainTask()
         {
             using var sync = await dataLock.LockAsync(ShutdownCancellationToken).ConfigureAwait(false);
@@ -135,6 +190,7 @@ namespace Hspi
             this.LogDebug = debugLevel;
             Logger.ConfigureLogging(LogDebug, logToFile, HomeSeerSystem);
         }
+
         private readonly AsyncLock dataLock = new();
         private volatile HsHomeKitDeviceManager? deviceManager;
     }

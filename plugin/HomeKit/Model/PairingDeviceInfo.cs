@@ -12,7 +12,8 @@ namespace HomeKit.Model
                                 Guid ControllerPairingId,
                                 ImmutableArray<byte> ControllerDevicePrivateKey, // private key
                                 ImmutableArray<byte> ControllerDevicePublicKey, // public key
-                                bool EnableKeepAliveForConnection)
+                                bool EnableKeepAliveForConnection,
+                                TimeSpan? PollingTimeSpan)
     {
         public byte[] GetControllerPairingIdAsBytes() => EncodeGuid(ControllerPairingId);
 

@@ -27,7 +27,7 @@ namespace HomeKit
         }
 
         public async Task<SessionKeys> GetSessionKeys(PairingDeviceInfo pairingInfo,
-                                         CancellationToken cancellationToken)
+                                                      CancellationToken cancellationToken)
         {
             // Step #1 ios --> accessory (send verify start Request) (page 47)
 
@@ -157,7 +157,7 @@ namespace HomeKit
         }
 
         public async Task<PairingDeviceInfo> StartNewPairing(string pin,
-                                                      CancellationToken cancellationToken)
+                                                             CancellationToken cancellationToken)
         {
             const string Username = "Pair-Setup";
 
@@ -392,12 +392,13 @@ namespace HomeKit
             var iosDeviceLtskPrivateBytes = iosDeviceLtsk.Export(KeyBlobFormat.RawPrivateKey);
 
             return new PairingDeviceInfo(connection.DeviceInformation,
-                                   accessoryIdentifier.ToImmutableArray(),
-                                   accessoryPublicKey.ToImmutableArray(),
-                                   pairingId,
-                                   iosDeviceLtskPrivateBytes.ToImmutableArray(),
-                                   iosDevicePublicBytes.ToImmutableArray(),
-                                   true);
+                                         accessoryIdentifier.ToImmutableArray(),
+                                         accessoryPublicKey.ToImmutableArray(),
+                                         pairingId,
+                                         iosDeviceLtskPrivateBytes.ToImmutableArray(),
+                                         iosDevicePublicBytes.ToImmutableArray(),
+                                         true,
+                                         TimeSpan.FromSeconds(60));
         }
 
         private async Task<ILookup<TlvType, TlvValue>> PostTlv(IEnumerable<TlvValue> tlvData,
