@@ -53,6 +53,12 @@ namespace Hspi.DeviceData
             UpdatePlugExtraData(PairInfoPlugExtraTag, JsonConvert.SerializeObject(data));
         }
 
+        public void SetEnabledCharacteristics(ImmutableSortedSet<ulong> enabledCharacteristics)
+        {
+             UpdatePlugExtraData(EnabledCharacteristicPlugExtraTag, 
+                                 JsonConvert.SerializeObject(enabledCharacteristics));
+        }
+
         public void SetPollingInterval(TimeSpan? interval)
         {
             var data = PairingInfo with { PollingTimeSpan = interval };

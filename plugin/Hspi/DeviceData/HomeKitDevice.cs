@@ -2,7 +2,6 @@
 using HomeKit.Model;
 using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices.Controls;
-using Hspi.Utils;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -41,39 +40,6 @@ namespace Hspi.DeviceData
                                                          UpdateDeviceProperties,
                                                          cancellationToken,
                                                          TimeSpan.FromSeconds(15));
-        }
-
-        public Accessory GetAccessoryInfo(int refId)
-        {
-            var device = GetHsDevice(refId);
-            try
-            {
-                var deviceReportedInfo = manager.Connection.DeviceReportedInfo;
-                return deviceReportedInfo.Accessories.First(x => x.Aid == device.Aid);
-            }
-            catch (Exception ex) when (ex.IsCancelException())
-            {
-                return device.CachedAccessoryInfo;
-            }
-        }
-
-        public ImmutableSortedSet<ulong> GetEnabledCharacteristic(int refId)
-        {
-            var device = GetHsDevice(refId);
-            return device.EnabledCharacteristic;
-        }
-
-        public PairingDeviceInfo GetPairingInfo(int refId)
-        {
-            var device = GetHsDevice(refId);
-            return device.PairingInfo;
-        }
-
-        private HsHomeKitRootDevice GetHsDevice(int refId)
-        {
-            var device = hsDevices.Values.FirstOrDefault(x => x.RefId == refId) ??
-                                throw new InvalidOperationException($"{refId} not found"); ;
-            return device;
         }
 
         public async Task<bool> CanProcessCommand(ControlEvent colSend,
@@ -274,22 +240,6 @@ namespace Hspi.DeviceData
             var aidIidPairs = polling.ToImmutableList();
             Interlocked.Exchange(ref this.pollingIids, aidIidPairs);
             manager.SetPolling(aidIidPairs);
-        }
-
-        public void SetPollingInterval(TimeSpan? interval)
-        {
-            foreach (var pair in hsDevices)
-            {
-                pair.Value.SetPollingInterval(interval);
-            }
-        }
-
-        public void SetKeepAliveForConnection(bool enableKeepAliveForConnection)
-        {
-            foreach (var pair in hsDevices)
-            {
-                pair.Value.SetKeepAliveForConnection(enableKeepAliveForConnection);
-            }
         }
 
         private async Task UpdateDeviceProperties()

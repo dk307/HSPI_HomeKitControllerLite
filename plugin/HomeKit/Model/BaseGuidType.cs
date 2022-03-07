@@ -5,6 +5,8 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 
+#nullable enable
+
 namespace HomeKit.Model
 {
     public record BaseGuidType

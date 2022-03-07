@@ -12,6 +12,8 @@ namespace Hspi.Pages
 {
     internal static class DeviceConfigPage
     {
+        private const string PrefixIdCharacteristics = "id_char_";
+
         public static Page BuildConfigPage(IHsController hsController, int deviceOrFeatureRef)
         {
             var device = new HsHomeKitBaseRootDevice(hsController, deviceOrFeatureRef);
@@ -39,7 +41,7 @@ namespace Hspi.Pages
 
                 foreach (var characteristic in service.Value.Characteristics)
                 {
-                    ToggleView view = new("id_char_" + characteristic.Key.ToString(CultureInfo.InvariantCulture),
+                    ToggleView view = new(PrefixIdCharacteristics + characteristic.Key.ToString(CultureInfo.InvariantCulture),
                                           characteristic.Value.Type.DisplayName ?? "Unknown - " + characteristic.Value.Type.Id.ToString(),
                                           enabledCharacteristics.Contains(characteristic.Key));
                     selectCharacteristicsView.AddView(view);
@@ -73,6 +75,7 @@ namespace Hspi.Pages
 
             UpdatePollingInterval(device, deviceConfigPage);
             UpdateKeepAliveForConnection(device, deviceConfigPage);
+            UpdateEnabledCharacterestics(device, deviceConfigPage);
         }
 
         private static void UpdatePollingInterval(HsHomeKitBaseRootDevice device, Page deviceConfigPage)
@@ -100,6 +103,29 @@ namespace Hspi.Pages
 
                 device.SetPollingInterval(pollingTimeSpan);
             }
+        }
+
+        private static void UpdateEnabledCharacterestics(HsHomeKitBaseRootDevice device, Page deviceConfigPage)
+        {
+            var enabledOnes = device.EnabledCharacteristic.ToBuilder();
+            foreach (var changedView in deviceConfigPage.Views)
+            {
+                if (changedView.Id.StartsWith(PrefixIdCharacteristics) &&
+                    ulong.TryParse(changedView.Id.Substring(PrefixIdCharacteristics.Length), out var iid) &&
+                    changedView is ToggleView toggleView)
+                {
+                    if (toggleView.IsEnabled)
+                    {
+                        enabledOnes.Add(iid);
+                    }
+                    else
+                    {
+                        enabledOnes.Remove(iid);
+                    }
+                }
+            }
+
+            device.SetEnabledCharacteristics(enabledOnes.ToImmutable());
         }
 
         private static void UpdateKeepAliveForConnection(HsHomeKitBaseRootDevice device, Page deviceConfigPage)

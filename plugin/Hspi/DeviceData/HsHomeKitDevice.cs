@@ -28,7 +28,7 @@ namespace Hspi.DeviceData
         {
             try
             {
-                return (string)hsController.GetPropertyByRef(refId, EProperty.DisplayedStatus);
+                return (string)hsController.GetPropertyByRef(refId, EProperty.Name);
             }
             catch
             {

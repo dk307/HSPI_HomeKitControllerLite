@@ -78,10 +78,6 @@ namespace HSPI_HomeKitControllerTest
             mockHsController.Setup(x => x.GetPropertyByRef(It.IsAny<int>(), It.IsAny<EProperty>()))
                 .Returns((int devOrFeatRef, EProperty property) =>
                 {
-                    if (property == EProperty.DisplayedStatus)
-                    {
-                        property = EProperty.Name;
-                    }
                     return deviceOrFeatureData[devOrFeatRef][property];
                 });
 
