@@ -13,7 +13,7 @@ namespace HomeKit.Model
                                 ImmutableArray<byte> ControllerDevicePrivateKey, // private key
                                 ImmutableArray<byte> ControllerDevicePublicKey, // public key
                                 bool EnableKeepAliveForConnection,
-                                TimeSpan? PollingTimeSpan)
+                                TimeSpan? PollingTimeSpan) // The last time it updated.
     {
         public byte[] GetControllerPairingIdAsBytes() => EncodeGuid(ControllerPairingId);
 

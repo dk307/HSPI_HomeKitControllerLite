@@ -294,10 +294,11 @@ namespace Hspi.DeviceData
 
         private async Task UpdateDeviceProperties()
         {
-            //open first device
-            int refId = originalRefIds.First();
-            var pairingInfo = HsHomeKitRootDevice.GetPairingInfo(HS, refId);
-            var fallbackAddress = HsHomeKitRootDevice.GetFallBackAddress(HS, refId);
+            //open aid == 1 device or first
+            int refId = originalRefIds.Select(x => (int?)x).First(refId => HsHomeKitRootDevice.GetAid(HS, refId!.Value) == 1) ??
+                        originalRefIds.First();
+            var pairingInfo = HsHomeKitBaseRootDevice.GetPairingInfo(HS, refId);
+            var fallbackAddress = HsHomeKitBaseRootDevice.GetFallBackAddress(HS, refId);
 
             await manager.ConnectionAndListen(pairingInfo,
                                               fallbackAddress,

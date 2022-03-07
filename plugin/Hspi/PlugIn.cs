@@ -119,12 +119,7 @@ namespace Hspi
             {
                 Log.Debug("Asking for page for {deviceOrFeatureRef}", devOrFeatRef);
 
-                var devices = GetDevices().ResultForSync();
-                Page? page = null;
-                if (devices.TryGetValue(devOrFeatRef, out var device))
-                {
-                    page = DeviceConfigPage.BuildConfigPage(devOrFeatRef, device);
-                }
+                var page = DeviceConfigPage.BuildConfigPage(HomeSeerSystem, devOrFeatRef);
 
                 var devicePage = page?.ToJsonString() ?? throw new InvalidOperationException("Page is unexpectedly null");
                 Log.Debug("Returning page for {deviceOrFeatureRef}", devOrFeatRef);
@@ -144,26 +139,9 @@ namespace Hspi
 
         protected override bool OnDeviceConfigChange(Page deviceConfigPage, int deviceRef)
         {
-            var devices = GetDevices().ResultForSync();
-
-            if (devices.TryGetValue(deviceRef, out var device))
-            {
-                try
-                {
-                    DeviceConfigPage.OnDeviceConfigChange(deviceRef, device, deviceConfigPage);
-                    RestartProcessing();
-                    return true;
-                }
-                catch (Exception ex) when (!ex.IsCancelException())
-                {
-                    Log.Warning("Failed to update device with {ex} for RefId: {deviceRef}", ex.GetFullMessage(), deviceRef);
-                    throw;
-                }
-            }
-            else
-            {
-                return false;
-            }
+            DeviceConfigPage.OnDeviceConfigChange(HomeSeerSystem, deviceRef, deviceConfigPage);
+            RestartProcessing();
+            return true;
         }
 
         private async Task MainTask()
