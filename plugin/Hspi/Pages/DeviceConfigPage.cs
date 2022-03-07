@@ -2,6 +2,7 @@
 using HomeSeer.Jui.Types;
 using HomeSeer.Jui.Views;
 using Hspi.DeviceData;
+using System;
 using System.Globalization;
 
 #nullable enable
@@ -27,7 +28,7 @@ namespace Hspi.Pages
 
                 foreach (var characteristic in service.Value.Characteristics)
                 {
-                    ToggleView view = new("id_service_" + characteristic.Key.ToString(CultureInfo.InvariantCulture),
+                    ToggleView view = new("id_char_" + characteristic.Key.ToString(CultureInfo.InvariantCulture),
                                           characteristic.Value.Type.DisplayName ?? "Unknown - " + characteristic.Value.Type.Id.ToString(),
                                           enabledCharacteristics.Contains(characteristic.Key));
                     selectCharacteristicsView.AddView(view);
@@ -43,16 +44,58 @@ namespace Hspi.Pages
         {
             var settingView = new GridView("id_setting", "Setting");
 
-            settingView.AddView(new InputView(nameof(pairingInfo.PollingTimeSpan),
+            settingView.AddView(new InputView(nameof(PairingDeviceInfo.PollingTimeSpan),
                                               "Polling interval for Non-Event Devices(seconds)",
                                               pairingInfo?.PollingTimeSpan?.TotalSeconds.ToString(CultureInfo.InvariantCulture) ?? string.Empty,
                                               EInputType.Number));
-            settingView.AddView(new ToggleView(nameof(pairingInfo.EnableKeepAliveForConnection),
+            settingView.AddView(new ToggleView(nameof(PairingDeviceInfo.EnableKeepAliveForConnection),
                                                "Keep peristent connection to device",
                                                pairingInfo.EnableKeepAliveForConnection));
 
             pageFactory = pageFactory.WithView(settingView);
             return pageFactory;
+        }
+
+        internal static void OnDeviceConfigChange(int deviceRef, HomeKitDevice device, Page deviceConfigPage)
+        {
+            UpdatePollingInterval(device, deviceConfigPage);
+            UpdateKeepAliveForConnection(device, deviceConfigPage);
+        }
+
+        private static void UpdatePollingInterval(HomeKitDevice device, Page deviceConfigPage)
+        {
+            if (deviceConfigPage.ContainsViewWithId(nameof(PairingDeviceInfo.PollingTimeSpan)))
+            {
+                TimeSpan? pollingTimeSpan;
+                var pollingView = deviceConfigPage.GetViewById<InputView>(nameof(PairingDeviceInfo.PollingTimeSpan));
+
+                if (!string.IsNullOrWhiteSpace(pollingView.Value))
+                {
+                    if (double.TryParse(pollingView.Value, out var polling))
+                    {
+                        pollingTimeSpan = TimeSpan.FromSeconds(polling);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Polling interval not valid");
+                    }
+                }
+                else
+                {
+                    pollingTimeSpan = null;
+                }
+
+                device.SetPollingInterval(pollingTimeSpan);
+            }
+        }
+
+        private static void UpdateKeepAliveForConnection(HomeKitDevice device, Page deviceConfigPage)
+        {
+            if (deviceConfigPage.ContainsViewWithId(nameof(PairingDeviceInfo.EnableKeepAliveForConnection)))
+            {
+                var view = deviceConfigPage.GetViewById<ToggleView>(nameof(PairingDeviceInfo.EnableKeepAliveForConnection));
+                device.SetKeepAliveForConnection(view.IsEnabled);
+            }
         }
     }
 }

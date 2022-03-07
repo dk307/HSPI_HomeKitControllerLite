@@ -3,6 +3,7 @@ using HomeSeer.PluginSdk.Devices;
 using Hspi.Exceptions;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using static System.FormattableString;
 
 #nullable enable
@@ -110,8 +111,29 @@ namespace Hspi.DeviceData
             HS.UpdatePropertyByRef(RefId, EProperty.InvalidValue, false);
         }
 
+        protected void UpdatePlugExtraData(string key, string value)
+        {
+            UpdatePlugExtraData(new KeyValuePair<string, string>(key, value));
+        }
+
+        protected void UpdatePlugExtraData(params KeyValuePair<string, string>[] values)
+        {
+            if (HS.GetPropertyByRef(RefId, EProperty.PlugExtraData) is not PlugExtraData plugInExtra)
+            {
+                plugInExtra = new PlugExtraData();
+            }
+
+            foreach (var pair in values)
+            {
+                plugInExtra[pair.Key] = pair.Value;
+            }
+            HS.UpdatePropertyByRef(RefId, EProperty.PlugExtraData, plugInExtra);
+        }
+
         //Extra data Tags
         public const string AidPlugExtraTag = "accessory.aid";
+
+        public const string CachedAccessoryInfoTag = "cached.accessory.info";
         public const string CToFNeededPlugExtraTag = "c2f.needed";
         public const string DeviceTypePlugExtraTag = "device.type";
         public const string EnabledCharacteristicPlugExtraTag = "enabled.characteristic";

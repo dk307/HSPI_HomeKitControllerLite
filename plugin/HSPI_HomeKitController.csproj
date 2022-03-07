@@ -121,6 +121,7 @@
     <Compile Include="HomeKit\Exceptions\AccessoryDisconnectedException.cs" />
     <Compile Include="HomeKit\Exceptions\AccessoryException.cs" />
     <Compile Include="HomeKit\Exceptions\DecryptionFailedException.cs" />
+    <Compile Include="Hspi\DeviceData\HsHomeKitBaseRootDevice.cs" />
     <Compile Include="Hspi\DeviceData\HsHomeKitDeviceManager.cs" />
     <Compile Include="Hspi\DeviceData\HsHomeKitCharacteristicFeatureDevice.cs" />
     <Compile Include="Hspi\DeviceData\HsHomeKitConnectedFeatureDevice.cs" />
@@ -171,7 +172,7 @@
     <Compile Include="HomeKit\Model\CharacteristicType.cs" />
     <Compile Include="HomeKit\Model\CharacteristicsValuesList.cs" />
     <Compile Include="HomeKit\Model\CharacteristicUnit.cs" />
-    <Compile Include="HomeKit\Model\Device.cs" />
+    <Compile Include="HomeKit\Model\DeviceId.cs" />
     <Compile Include="HomeKit\Model\DeviceCategory.cs" />
     <Compile Include="HomeKit\Model\DeviceFeature.cs" />
     <Compile Include="HomeKit\Model\DeviceReportedInfo.cs" />

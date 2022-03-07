@@ -396,7 +396,7 @@ namespace Hspi.DeviceData
             return plugExtra;
         }
 
-        private static (EDeviceType, int) DetermineRootDeviceType(Device device)
+        private static (EDeviceType, int) DetermineRootDeviceType(DeviceId device)
         {
             return device.CategoryIdentifier switch
             {

@@ -142,29 +142,29 @@ namespace Hspi
             }
         }
 
-        //protected override bool OnDeviceConfigChange(Page deviceConfigPage, int deviceRef)
-        //{
-        //    var devices = GetDevices().ResultForSync();
+        protected override bool OnDeviceConfigChange(Page deviceConfigPage, int deviceRef)
+        {
+            var devices = GetDevices().ResultForSync();
 
-        //    if (devices.TryGetValue(deviceRef, out var device))
-        //    {
-        //        try
-        //        {
-        //            var changes = deviceConfigPage.ToValueMap();
-
-        //            return true;
-        //        }
-        //        catch (Exception ex) when (!ex.IsCancelException())
-        //        {
-        //            Log.Warning(Invariant($"Failed to update device with {ExceptionHelper.GetFullMessage(ex)} for RefId: {deviceRef}"));
-        //            throw;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
+            if (devices.TryGetValue(deviceRef, out var device))
+            {
+                try
+                {
+                    DeviceConfigPage.OnDeviceConfigChange(deviceRef, device, deviceConfigPage);
+                    RestartProcessing();
+                    return true;
+                }
+                catch (Exception ex) when (!ex.IsCancelException())
+                {
+                    Log.Warning("Failed to update device with {ex} for RefId: {deviceRef}", ex.GetFullMessage(), deviceRef);
+                    throw;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         private async Task MainTask()
         {

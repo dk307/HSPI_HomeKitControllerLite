@@ -2,6 +2,7 @@
 using HomeKit.Model;
 using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices.Controls;
+using Hspi.Utils;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -45,22 +46,27 @@ namespace Hspi.DeviceData
         public Accessory GetAccessoryInfo(int refId)
         {
             var device = GetHsDevice(refId);
-            var deviceReportedInfo = manager.Connection.DeviceReportedInfo;
-
-            return deviceReportedInfo.Accessories.FirstOrDefault(x => x.Aid == device.Aid)
-                ?? throw new InvalidProgramException($"{device.Aid} not found in device");
+            try
+            {
+                var deviceReportedInfo = manager.Connection.DeviceReportedInfo;
+                return deviceReportedInfo.Accessories.First(x => x.Aid == device.Aid);
+            }
+            catch (Exception ex) when (ex.IsCancelException())
+            {
+                return device.CachedAccessoryInfo;
+            }
         }
 
         public ImmutableSortedSet<ulong> GetEnabledCharacteristic(int refId)
         {
             var device = GetHsDevice(refId);
-            return device.GetEnabledCharacteristic();
+            return device.EnabledCharacteristic;
         }
 
         public PairingDeviceInfo GetPairingInfo(int refId)
         {
             var device = GetHsDevice(refId);
-            return device.GetPairingInfo();
+            return device.PairingInfo;
         }
 
         private HsHomeKitRootDevice GetHsDevice(int refId)
@@ -231,9 +237,11 @@ namespace Hspi.DeviceData
                 }
 
                 // update last connected address
-                foreach (var rootDevice in this.hsDevices)
+                foreach (var pair in this.hsDevices)
                 {
-                    rootDevice.Value.SetFallBackAddress(manager.Connection.Address);
+                    var connection = manager.Connection;
+                    pair.Value.SetTransientValues(connection.Address,
+                                                  connection.DeviceReportedInfo.Accessories.First(x => x.Aid == pair.Value.Aid));
                 }
             }
             else
@@ -266,6 +274,22 @@ namespace Hspi.DeviceData
             var aidIidPairs = polling.ToImmutableList();
             Interlocked.Exchange(ref this.pollingIids, aidIidPairs);
             manager.SetPolling(aidIidPairs);
+        }
+
+        public void SetPollingInterval(TimeSpan? interval)
+        {
+            foreach (var pair in hsDevices)
+            {
+                pair.Value.SetPollingInterval(interval);
+            }
+        }
+
+        public void SetKeepAliveForConnection(bool enableKeepAliveForConnection)
+        {
+            foreach (var pair in hsDevices)
+            {
+                pair.Value.SetKeepAliveForConnection(enableKeepAliveForConnection);
+            }
         }
 
         private async Task UpdateDeviceProperties()

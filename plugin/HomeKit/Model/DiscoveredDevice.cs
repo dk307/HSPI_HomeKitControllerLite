@@ -11,7 +11,7 @@ using Zeroconf;
 
 namespace HomeKit.Model
 {
-    internal sealed record DiscoveredDevice : Device
+    internal sealed record DiscoveredDevice : DeviceId
     {
         public DiscoveredDevice(string id,
                                 string displayName,
