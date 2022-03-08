@@ -67,11 +67,11 @@ namespace Hspi.DeviceData
 
             //Ignore hidden & unknown
             defaultCharacteristics = defaultCharacteristics
-                .Where(x => !x.Permissions.Contains(CharacteristicPermissions.Hidden) && string.IsNullOrEmpty(x.Type.DisplayName));
+                .Where(x => !x.Permissions.Contains(CharacteristicPermissions.Hidden) && !string.IsNullOrEmpty(x.Type.DisplayName));
 
             var extraData = CreateRootPlugInExtraData(pairingDeviceInfo,
                                                       fallbackAddress,
-                                                      accessory.Aid,
+                                                      accessory,
                                                       defaultCharacteristics.Select(x => x.Iid));
 
             string friendlyName = accessory.Name ??
@@ -386,14 +386,15 @@ namespace Hspi.DeviceData
 
         private static PlugExtraData CreateRootPlugInExtraData(PairingDeviceInfo pairingDeviceInfo,
                                                                IPEndPoint fallbackAddress,
-                                                               ulong aid,
+                                                               Accessory accessory,
                                                                IEnumerable<ulong> enabledCharacteristics)
         {
             var plugExtra = new PlugExtraData();
             plugExtra.AddNamed(PairInfoPlugExtraTag, JsonConvert.SerializeObject(pairingDeviceInfo, Formatting.Indented));
             plugExtra.AddNamed(FallbackAddressPlugExtraTag, JsonConvert.SerializeObject(fallbackAddress, Formatting.Indented, new IPEndPointJsonConverter()));
-            plugExtra.AddNamed(AidPlugExtraTag, JsonConvert.SerializeObject(aid));
+            plugExtra.AddNamed(AidPlugExtraTag, JsonConvert.SerializeObject(accessory.Aid));
             plugExtra.AddNamed(EnabledCharacteristicPlugExtraTag, JsonConvert.SerializeObject(enabledCharacteristics));
+            plugExtra.AddNamed(CachedAccessoryInfoTag, JsonConvert.SerializeObject(accessory));
             return plugExtra;
         }
 
@@ -423,6 +424,7 @@ namespace Hspi.DeviceData
                    (isBooleanFormatType ? (value == 0D ? "Off" : "On") : null) ??
                    value.ToString(CultureInfo.InvariantCulture);
         }
+
         private static HsFeatureTypeData? GetDeviceTypeFromPlugInData(PlugExtraData? plugInExtra)
         {
             if (plugInExtra != null && plugInExtra.NamedKeys.Contains(DeviceTypePlugExtraTag))
@@ -477,11 +479,11 @@ namespace Hspi.DeviceData
                                               FeatureFactory featureFactory,
                                               HSMapping.HSMapping? mapping)
         {
-            featureFactory = featureFactory.WithName(mapping?.Name ??
-                                                     characteristic.Description ??
-                                                     characteristic.Type.DisplayName ??
-                                                     characteristic.Type.Id.ToString("D"));
-            return featureFactory;
+            string name = mapping?.Name ??
+                          characteristic.Type.DisplayName ??
+                          characteristic.Description ??
+                          characteristic.Type.Id.ToString("D");
+            return featureFactory.WithName(name);
         }
 
         private const string DefaultIcon = "default";
@@ -489,9 +491,9 @@ namespace Hspi.DeviceData
         private const string OnIcon = "on";
 
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
-                                                                                                              {
-                                                                                                                  string json = Encoding.UTF8.GetString(Resource.HSMappings);
-                                                                                                                  return JsonHelper.DeserializeObject<HSMappings>(json);
-                                                                                                              }, true);
+                                                                                                                    {
+                                                                                                                        string json = Encoding.UTF8.GetString(Resource.HSMappings);
+                                                                                                                        return JsonHelper.DeserializeObject<HSMappings>(json);
+                                                                                                                    }, true);
     }
 }

@@ -47,5 +47,6 @@ namespace HomeKit.Model
         public static readonly CharacteristicType FirmwareRevision = new("52");
         public static readonly CharacteristicType HardwareRevision = new("53");
         public static readonly CharacteristicType ProductData = new("220");
+        public static readonly CharacteristicType TemperatureSensor = new("11");
     }
 }
