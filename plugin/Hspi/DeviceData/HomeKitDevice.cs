@@ -172,8 +172,8 @@ namespace Hspi.DeviceData
                 var found = rootDevices.Values.Any(x => x.Aid == accessory.Aid);
                 if (!found)
                 {
-                    Log.Warning("Found a new accessory from the homekit device {name}. Creating new device in Homeseer.",
-                                manager.DisplayNameForLog);
+                    Log.Information("Found a new accessory from the homekit device {name}. Creating new device in Homeseer.",
+                                     manager.DisplayNameForLog);
 
                     int refId = HsHomeKitDeviceFactory.CreateDevice(HS,
                                                 manager.Connection.PairingInfo,
@@ -189,8 +189,8 @@ namespace Hspi.DeviceData
             Log.Information("Devices ready and listening for {name}", manager.DisplayNameForLog);
         }
 
-        private void DeviceConnectionChangedEvent(object sender,
-                                                  DeviceConnectionChangedArgs e)
+        private async void DeviceConnectionChangedEvent(object sender,
+                                                        DeviceConnectionChangedArgs e)
         {
             if (e.Connected)
             {
@@ -199,6 +199,10 @@ namespace Hspi.DeviceData
                 {
                     CreateFeaturesAndDevices();
 
+                    // get all values initially to refresh even the vent ones.
+                    await manager.Connection.RefreshValues(null, cancellationToken).ConfigureAwait(false);
+
+                    // update the devices that need to polled
                     SetupPollingForNonEventCharacteristics();
                 }
 
@@ -206,16 +210,16 @@ namespace Hspi.DeviceData
                 foreach (var pair in this.hsDevices)
                 {
                     var connection = manager.Connection;
-                    pair.Value.SetTransientValues(connection.Address,
+                    pair.Value.SetTransientAccesssoryValues(connection.Address,
                                                   connection.DeviceReportedInfo.Accessories.First(x => x.Aid == pair.Value.Aid));
                 }
             }
             else
             {
-                Log.Information("Disconnected from {name}", manager.DisplayNameForLog);
+                Log.Debug("Disconnected from {name}", manager.DisplayNameForLog);
             }
 
-            // update connected state
+            // update connected state after everything is done
             foreach (var rootDevice in this.hsDevices)
             {
                 rootDevice.Value.SetConnectedState(e.Connected);

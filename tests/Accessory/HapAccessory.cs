@@ -47,7 +47,7 @@ namespace HSPI_HomeKitControllerTest
             }
         }
 
-        public abstract int InitialUpdatesExpected { get; }
+        public abstract int InitialUpdatesExpectedForDefaultEnabledCharacteristics { get; }
 
         public PlugExtraData CreateDevicePlugExtraData()
         {

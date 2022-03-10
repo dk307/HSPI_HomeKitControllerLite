@@ -23,10 +23,15 @@ namespace HomeKit.Model
         [JsonConverter(typeof(ServiceListConverter))]
         public IImmutableDictionary<ulong, Service> Services { get; init; }
 
+        [JsonIgnore]
         public string? Name => FindCharacteristic(ServiceType.AccessoryInformation, CharacteristicType.Name)?.Value?.ToString();
+        [JsonIgnore]
         public string? Version => FindCharacteristic(ServiceType.AccessoryInformation, CharacteristicType.Version)?.Value?.ToString();
+        [JsonIgnore]
         public string? Model => FindCharacteristic(ServiceType.AccessoryInformation, CharacteristicType.Model)?.Value?.ToString();
+        [JsonIgnore]
         public string? SerialNumber => FindCharacteristic(ServiceType.AccessoryInformation, CharacteristicType.SerialNumber)?.Value?.ToString();
+        [JsonIgnore]
         public string? FirmwareRevision => FindCharacteristic(ServiceType.AccessoryInformation, CharacteristicType.FirmwareRevision)?.Value?.ToString();
 
         public Characteristic? FindCharacteristic(ServiceType serviceType, CharacteristicType characteristicType)

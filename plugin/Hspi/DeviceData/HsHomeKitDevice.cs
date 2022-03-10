@@ -2,6 +2,8 @@
 using HomeSeer.PluginSdk.Devices;
 using Hspi.Exceptions;
 using Newtonsoft.Json;
+using Serilog;
+using Serilog.Events;
 using System;
 using System.Collections.Generic;
 using static System.FormattableString;
@@ -28,7 +30,7 @@ namespace Hspi.DeviceData
         {
             try
             {
-                return (string)hsController.GetPropertyByRef(refId, EProperty.Name);
+                return hsController.GetNameByRef(refId);
             }
             catch
             {
@@ -86,6 +88,14 @@ namespace Hspi.DeviceData
 
         protected void UpdateDeviceValue(in double? data)
         {
+            if (Log.IsEnabled(LogEventLevel.Information))
+            {
+                var existingValue = Convert.ToDouble(HS.GetPropertyByRef(RefId, EProperty.Value));
+
+                Log.Write(existingValue != data ? LogEventLevel.Information : LogEventLevel.Debug,
+                          "Updated value {value} for the {name}", data, NameForLog);
+            }
+
             if (data.HasValue)
             {
                 HS.UpdatePropertyByRef(RefId, EProperty.InvalidValue, false);
@@ -104,6 +114,14 @@ namespace Hspi.DeviceData
 
         protected void UpdateDeviceValue(string? data)
         {
+            if (Log.IsEnabled(LogEventLevel.Information))
+            {
+                var existingValue = Convert.ToString(HS.GetPropertyByRef(RefId, EProperty.StatusString));
+
+                Log.Write(existingValue != data ? LogEventLevel.Information : LogEventLevel.Debug,
+                          "Updated value {value} for the {name}", data, NameForLog);
+            }
+
             if (!HS.UpdateFeatureValueStringByRef(RefId, data ?? string.Empty))
             {
                 throw new InvalidOperationException($"Failed to update device {NameForLog}");

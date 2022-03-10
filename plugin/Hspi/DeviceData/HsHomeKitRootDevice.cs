@@ -61,7 +61,7 @@ namespace Hspi.DeviceData
 
         public void SetConnectedState(bool connected) => ConnectedFeature.SetConnectedState(connected);
 
-        public void SetTransientValues(IPEndPoint address, Accessory accessory)
+        public void SetTransientAccesssoryValues(IPEndPoint address, Accessory accessory)
         {
             UpdatePlugExtraData(new KeyValuePair<string, string>(FallbackAddressPlugExtraTag,
                                                                  JsonConvert.SerializeObject(address, new IPEndPointJsonConverter())),

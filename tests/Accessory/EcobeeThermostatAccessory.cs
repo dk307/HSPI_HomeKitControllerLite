@@ -7,7 +7,7 @@
         {
         }
 
-        public override int InitialUpdatesExpected => 55;
+        public override int InitialUpdatesExpectedForDefaultEnabledCharacteristics => 55;
 
         private const string DirName = "ecobeethermostat";
     }
