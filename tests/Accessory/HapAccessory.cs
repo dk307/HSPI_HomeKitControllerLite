@@ -27,7 +27,7 @@ namespace HSPI_HomeKitControllerTest
             this.scriptFile = Path.Combine(workingDirectory, dirName, (scriptFile ?? dirName) + ".py");
             this.accessoryFile = Path.Combine(workingDirectory, dirName, "accessory.json");
             this.controllerFile = Path.Combine(workingDirectory, dirName, "controller.json");
-            this.defaultEnabledCharacteristics = Path.Combine(workingDirectory, dirName, "enabledCharacteristics.json");
+            this.defaultEnabledCharacteristics = Path.Combine(workingDirectory, dirName, "enabledcharacteristics.json");
             this.hsDeviceAndFeatures = Path.Combine(workingDirectory, dirName, "hsdeviceandfeatures.json");
             this.accessoryDeviceData = Path.Combine(workingDirectory, dirName, "accessorydevicedata.json");
         }
@@ -178,7 +178,7 @@ namespace HSPI_HomeKitControllerTest
         }
 
         private static PythonScriptWrapper CreateUnPairedAccessory(string scriptName,
-                                                                           string pin,
+                                                                   string pin,
                                                                    string persistFile)
         {
             string fileName = persistFile ?? Guid.NewGuid().ToString("N") + ".obj";

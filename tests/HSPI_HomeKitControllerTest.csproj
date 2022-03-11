@@ -106,7 +106,13 @@
     <None Include="scripts\ecobeethermostat\ecobee.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="scripts\ecobeethermostat\enabledCharacteristics.json">
+    <None Include="scripts\ecobeethermostat\enabledcharacteristics.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="scripts\ecobeethermostat\hsdeviceandfeaturesnone.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="scripts\ecobeethermostat\hsdeviceandfeaturesall.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="scripts\ecobeethermostat\hsdeviceandfeatures.json">
@@ -121,7 +127,7 @@
     <None Include="scripts\temperaturesensor\controller.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="scripts\temperaturesensor\enabledCharacteristics.json">
+    <None Include="scripts\temperaturesensor\enabledcharacteristics.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="scripts\temperaturesensor\hsdeviceandfeatures.json">

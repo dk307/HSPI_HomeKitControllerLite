@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
 using Nito.AsyncEx;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -24,58 +25,6 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
-        public async Task FeatureAddedThroughDevicePage()
-
-        {
-            using var hapAccessory = await TestHelper.CreateEcobeeThermostatPairedAccessory(CancellationToken.None).ConfigureAwait(false);
-            AsyncProducerConsumerQueue<bool> connectionStatus = new();
-            var (plugIn, deviceOrFeatureData) = await StartPluginWithHapAccessory(hapAccessory, connectionStatus);
-
-            var refIds = deviceOrFeatureData.Keys.ToArray();
-
-            string devicePage = plugIn.Object.GetJuiDeviceConfigPage(refIds[0]);
-
-            Assert.IsNotNull(devicePage);
-
-            var page = Page.FromJsonString(devicePage);
-
-            Assert.IsNotNull(page);
-
-            var accessory = JsonConvert.DeserializeObject<DeviceReportedInfo>(hapAccessory.GetAccessoryDeviceDataString()).Accessories.First(x => x.Aid == 1);
-
-
-            var changes = PageFactory.CreateDeviceConfigPage(page.Id, page.Name);
-            //verify all charactertistics are present and toggle off ones
-            foreach (var i in accessory.Services.SelectMany(x => x.Value.Characteristics).Select(x => x.Key))
-            {
-                string viewId = "id_char_" + i.ToString(CultureInfo.InvariantCulture);
-                Assert.IsTrue(page.ContainsViewWithId(viewId), $"{viewId} not found");
-
-                ToggleView toggleView = page.GetViewById<ToggleView>(viewId);
-                if (!toggleView.IsEnabled)
-                {
-                    toggleView.IsEnabled = true;
-                    changes = changes.WithView(toggleView);
-                }
-            }
-
-            Assert.IsTrue(page.ContainsViewWithId("PollingTimeSpan"));
-            Assert.IsTrue(page.ContainsViewWithId("EnableKeepAliveForConnection"));
-
-            plugIn.Object.SaveJuiDeviceConfigPage(changes.Page.ToJsonString(), refIds[0]);
-
-            // Assert restart of device
-            Assert.IsFalse(await connectionStatus.DequeueAsync(cancellationTokenSource.Token).ConfigureAwait(false));
-            Assert.IsTrue(await connectionStatus.DequeueAsync(cancellationTokenSource.Token).ConfigureAwait(false));
-
-
-
-
-
-            plugIn.Object.ShutdownIO();
-        }
-
-        [TestMethod]
         public async Task FeatureAddedOnStartForEcobeeThermostat()
         {
             using var hapAccessory = await TestHelper.CreateEcobeeThermostatPairedAccessory(cancellationTokenSource.Token).ConfigureAwait(false);
@@ -87,6 +36,77 @@ namespace HSPI_HomeKitControllerTest
         {
             using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(cancellationTokenSource.Token).ConfigureAwait(false);
             await FeatureAddedOnStart(hapAccessory).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task FeatureAddedThroughDevicePage()
+        {
+            using var hapAccessory = await TestHelper.CreateEcobeeThermostatPairedAccessory(CancellationToken.None).ConfigureAwait(false);
+
+            string expectedHsAndDeviceData = hapAccessory.GetHsDeviceAndFeaturesAllString();
+
+            await TestEnabledFeatureChanged(hapAccessory, expectedHsAndDeviceData, CreateDevicePage).ConfigureAwait(false);
+
+            static PageFactory CreateDevicePage(Page page, Accessory accessory)
+            {
+                var changes = PageFactory.CreateDeviceConfigPage(page.Id, page.Name);
+
+                //verify all charactertistics are present and toggle off ones
+                foreach (var i in accessory.Services.SelectMany(x => x.Value.Characteristics).Select(x => x.Key))
+                {
+                    string viewId = "id_char_" + i.ToString(CultureInfo.InvariantCulture);
+                    Assert.IsTrue(page.ContainsViewWithId(viewId), $"{viewId} not found");
+
+                    ToggleView toggleView = page.GetViewById<ToggleView>(viewId);
+                    if (!toggleView.IsEnabled)
+                    {
+                        toggleView.IsEnabled = true;
+                        changes = changes.WithView(toggleView);
+                    }
+                }
+
+                return changes;
+            }
+        }
+
+        [TestMethod]
+        public async Task FeatureDeletedThroughDevicePage()
+        {
+            using var hapAccessory = await TestHelper.CreateEcobeeThermostatPairedAccessory(CancellationToken.None).ConfigureAwait(false);
+            string expectedHsAndDeviceData = hapAccessory.GetHsDeviceAndFeaturesNoneString();
+
+            await TestEnabledFeatureChanged(hapAccessory, expectedHsAndDeviceData, CreateDevicePage).ConfigureAwait(false);
+
+            static PageFactory CreateDevicePage(Page page, Accessory accessory)
+            {
+                var changes = PageFactory.CreateDeviceConfigPage(page.Id, page.Name);
+
+                //verify all charactertistics are present and toggle off ones
+                foreach (var i in accessory.Services.SelectMany(x => x.Value.Characteristics).Select(x => x.Key))
+                {
+                    string viewId = "id_char_" + i.ToString(CultureInfo.InvariantCulture);
+                    Assert.IsTrue(page.ContainsViewWithId(viewId), $"{viewId} not found");
+
+                    ToggleView toggleView = page.GetViewById<ToggleView>(viewId);
+                    if (toggleView.IsEnabled)
+                    {
+                        toggleView.IsEnabled = false;
+                        changes = changes.WithView(toggleView);
+                    }
+                }
+
+                return changes;
+            }
+        }
+
+        private static string GetHsDeviceAndFeatureData(int refId,
+                                                   SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
+        {
+            // remove as it is different on machines
+            ((PlugExtraData)deviceOrFeatureData[refId][EProperty.PlugExtraData]).RemoveNamed("fallback.address");
+
+            string jsonData = JsonConvert.SerializeObject(deviceOrFeatureData, TestHelper.CreateJsonSerializer());
+            return jsonData;
         }
 
         private async Task FeatureAddedOnStart(HapAccessory hapAccessory)
@@ -131,10 +151,7 @@ namespace HSPI_HomeKitControllerTest
             // -1 for root
             Assert.AreEqual(hapAccessory.ExpectedDeviceCreates, deviceOrFeatureData.Count - 1);
 
-            // remove as it is different on machines
-            ((PlugExtraData)deviceOrFeatureData[device.Ref][EProperty.PlugExtraData]).RemoveNamed("fallback.address");
-
-            string jsonData = JsonConvert.SerializeObject(deviceOrFeatureData, TestHelper.CreateJsonSerializer());
+            string jsonData = GetHsDeviceAndFeatureData(device.Ref, deviceOrFeatureData);
             Assert.AreEqual(hapAccessory.GetHsDeviceAndFeaturesString(), jsonData);
 
             plugIn.Object.ShutdownIO();
@@ -178,14 +195,52 @@ namespace HSPI_HomeKitControllerTest
                             });
 
             mockHsController.Setup(x => x.DeleteFeature(It.IsAny<int>()))
-                            .Callback((int featureRefId) =>
+                            .Returns((int featureRefId) =>
                             {
                                 deviceOrFeatureData.Remove(featureRefId);
+                                return true;
                             });
 
             return (plugIn, deviceOrFeatureData);
         }
 
+        private async Task TestEnabledFeatureChanged(HapAccessory hapAccessory,
+                                                     string expectedHsAndDeviceData,
+                                                     Func<Page, Accessory, PageFactory> generateChanges)
+
+        {
+            AsyncProducerConsumerQueue<bool> connectionStatus = new();
+            var (plugIn, deviceOrFeatureData) = await StartPluginWithHapAccessory(hapAccessory, connectionStatus);
+
+            var refIds = deviceOrFeatureData.Keys.ToArray();
+
+            string devicePage = plugIn.Object.GetJuiDeviceConfigPage(refIds[0]);
+
+            Assert.IsNotNull(devicePage);
+
+            var page = Page.FromJsonString(devicePage);
+
+            Assert.IsNotNull(page);
+
+            var accessory = JsonConvert.DeserializeObject<DeviceReportedInfo>(hapAccessory.GetAccessoryDeviceDataString()).Accessories.First(x => x.Aid == 1);
+
+            PageFactory changes = generateChanges(page, accessory);
+
+            Assert.IsTrue(page.ContainsViewWithId("PollingTimeSpan"));
+            Assert.IsTrue(page.ContainsViewWithId("EnableKeepAliveForConnection"));
+
+            plugIn.Object.SaveJuiDeviceConfigPage(changes.Page.ToJsonString(), refIds[0]);
+
+            // Assert restart of device
+            Assert.IsFalse(await connectionStatus.DequeueAsync(cancellationTokenSource.Token).ConfigureAwait(false));
+            Assert.IsTrue(await connectionStatus.DequeueAsync(cancellationTokenSource.Token).ConfigureAwait(false));
+
+            string jsonData = GetHsDeviceAndFeatureData(refIds[0], deviceOrFeatureData);
+
+            Assert.AreEqual(expectedHsAndDeviceData, jsonData);
+
+            plugIn.Object.ShutdownIO();
+        }
         private readonly CancellationTokenSource cancellationTokenSource = new();
     }
 }

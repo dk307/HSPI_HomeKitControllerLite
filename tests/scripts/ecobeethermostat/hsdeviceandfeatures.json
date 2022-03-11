@@ -1228,7 +1228,7 @@
         8475
       ]
     },
-    "Status": "",
+    "StatusString": "",
     "InvalidValue": false
   },
   "9397": {
@@ -2443,7 +2443,7 @@
         8475
       ]
     },
-    "Status": "",
+    "StatusString": "",
     "InvalidValue": false
   },
   "9408": {
@@ -2924,7 +2924,7 @@
         8475
       ]
     },
-    "Status": "",
+    "StatusString": "",
     "InvalidValue": false
   }
 }
