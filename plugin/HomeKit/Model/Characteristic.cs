@@ -117,5 +117,26 @@ namespace HomeKit.Model
 
         [JsonIgnore]
         public bool SupportsNotifications => Permissions.Contains(CharacteristicPermissions.Events);
+
+        [JsonIgnore]
+        public bool IsBooleanFormatType
+        {
+            get
+            {
+                if (Format == CharacteristicFormat.Bool)
+                {
+                    return true;
+                }
+
+                if ((Format == CharacteristicFormat.UnsignedInt8) &&
+                    (MinimumValue == 0) &&
+                    (MaximumValue == 1))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
     }
 }

@@ -127,8 +127,9 @@ namespace Hspi.DeviceData
                 {
                     doubleValue = C2FConvert(doubleValue, this.decimalPlacesForValue);
                 }
+
                 UpdateDeviceValue(doubleValue);
-                Log.Debug("Updated value {doubleValue} for the {name}", doubleValue, NameForLog);
+
             }
             catch (Exception)
             {

@@ -79,5 +79,15 @@ namespace Hspi {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] ServiceTypeNames {
+            get {
+                object obj = ResourceManager.GetObject("ServiceTypeNames", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

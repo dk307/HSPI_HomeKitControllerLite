@@ -1,7 +1,6 @@
 ﻿using HomeKit.Model;
 using HomeKit.Utils;
 using HomeSeer.PluginSdk;
-using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Devices.Controls;
 using Newtonsoft.Json;
 using Serilog;
@@ -14,7 +13,7 @@ using System.Net;
 
 namespace Hspi.DeviceData
 {
-    internal sealed class HsHomeKitRootDevice : HsHomeKitDevice
+    internal sealed class HsHomeKitRootDevice : HsHomeKitBaseRootDevice
     {
         public HsHomeKitRootDevice(IHsController controller,
                                    int refId,
@@ -24,10 +23,7 @@ namespace Hspi.DeviceData
         {
             CharacteristicFeatures = characteristicFeatures.ToImmutableDictionary(x => x.Iid);
             ConnectedFeature = connectedFeature;
-            this.Aid = GetAid();
         }
-
-        public ulong Aid { get; }
 
         // Iid to device dict
         public ImmutableDictionary<ulong, HsHomeKitCharacteristicFeatureDevice> CharacteristicFeatures { get; }
@@ -37,65 +33,6 @@ namespace Hspi.DeviceData
         public static ulong GetAid(IHsController hsController, int refId)
         {
             return GetPlugExtraData<ulong>(hsController, refId, AidPlugExtraTag);
-        }
-
-        public static ImmutableSortedSet<ulong> GetEnabledCharacteristic(PlugExtraData plugExtraData)
-        {
-            return GetPlugExtraData<ImmutableSortedSet<ulong>>(plugExtraData,
-                                                               EnabledCharacteristicPlugExtraTag);
-        }
-
-        public static IPEndPoint GetFallBackAddress(IHsController hsController, int refId)
-        {
-            return GetPlugExtraData<IPEndPoint>(hsController,
-                                                refId,
-                                                FallbackAddressPlugExtraTag,
-                                                new IPEndPointJsonConverter());
-        }
-
-        public static PairingDeviceInfo GetPairingInfo(IHsController hsController, int refId)
-        {
-            return GetPlugExtraData<PairingDeviceInfo>(hsController, refId, PairInfoPlugExtraTag);
-        }
-
-        public IPEndPoint GetFallBackAddress()
-        {
-            return GetPlugExtraData<IPEndPoint>(FallbackAddressPlugExtraTag, new IPEndPointJsonConverter());
-        }
-
-        public PairingDeviceInfo GetPairingInfo()
-        {
-            return GetPlugExtraData<PairingDeviceInfo>(PairInfoPlugExtraTag);
-        }
-
-        public void SetConnectedState(bool connected) => ConnectedFeature.SetConnectedState(connected);
-
-        public void SetFallBackAddress(IPEndPoint endPoint)
-        {
-            if (HS.GetPropertyByRef(RefId, EProperty.PlugExtraData) is not PlugExtraData plugInExtra)
-            {
-                plugInExtra = new PlugExtraData();
-            }
-
-            plugInExtra[FallbackAddressPlugExtraTag] = JsonConvert.SerializeObject(endPoint, new IPEndPointJsonConverter());
-            HS.UpdatePropertyByRef(RefId, EProperty.PlugExtraData, plugInExtra);
-        }
-
-        public void SetValue(ulong iid, object? value)
-        {
-            if (CharacteristicFeatures.TryGetValue(iid, out var feature))
-            {
-                feature.SetValue(value);
-            }
-            else
-            {
-                Log.Debug("Unknown iid {iid} received for {aid} from {name}", iid, Aid, NameForLog);
-            }
-        }
-
-        private ulong GetAid()
-        {
-            return GetPlugExtraData<ulong>(AidPlugExtraTag);
         }
 
         public (bool, AidIidValue?) GetValueToSend(ControlEvent colSend)
@@ -120,6 +57,27 @@ namespace Hspi.DeviceData
             }
 
             return (false, null);
+        }
+
+        public void SetConnectedState(bool connected) => ConnectedFeature.SetConnectedState(connected);
+
+        public void SetTransientAccesssoryValues(IPEndPoint address, Accessory accessory)
+        {
+            UpdatePlugExtraData(new KeyValuePair<string, string>(FallbackAddressPlugExtraTag,
+                                                                 JsonConvert.SerializeObject(address, new IPEndPointJsonConverter())),
+                                new KeyValuePair<string, string>(CachedAccessoryInfoTag, JsonConvert.SerializeObject(accessory)));
+        }
+
+        public void SetValue(ulong iid, object? value)
+        {
+            if (CharacteristicFeatures.TryGetValue(iid, out var feature))
+            {
+                feature.SetValue(value);
+            }
+            else
+            {
+                Log.Debug("Unknown iid {iid} received for {aid} from {name}", iid, Aid, NameForLog);
+            }
         }
     }
 }

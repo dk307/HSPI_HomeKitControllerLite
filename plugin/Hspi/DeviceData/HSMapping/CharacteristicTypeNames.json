@@ -717,7 +717,7 @@
       "id": "00000077-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Status Lo Batt",
+      "name": "Status Low Batt",
       "id": "00000079-0000-1000-8000-0026BB765291"
     },
     {
@@ -1144,6 +1144,14 @@
     {
       "name": "Aqara E1 Pairing Mode",
       "id": "B1C09E4C-E202-4827-B863-B0F32F727CFF"
+    },
+    {
+      "name": "ADK Version",
+      "id": "34AB8811-AC7F-4340-BAC3-FD6A85F9943B"
+    },
+    {
+      "name": "Ecobee Notifications",
+      "id": "1B1515F2-CC45-409F-991F-C480987F92C3"
     }
   ]
 }

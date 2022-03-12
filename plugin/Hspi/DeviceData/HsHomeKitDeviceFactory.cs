@@ -65,12 +65,13 @@ namespace Hspi.DeviceData
                 accessory.Services.Values.FirstOrDefault(validServiceType)?.Characteristics?.Values ??
                 Array.Empty<Characteristic>();
 
-            //Ignore hidden
-            defaultCharacteristics = defaultCharacteristics.Where(x => !x.Permissions.Contains(CharacteristicPermissions.Hidden));
+            //Ignore hidden & unknown
+            defaultCharacteristics = defaultCharacteristics
+                .Where(x => !x.Permissions.Contains(CharacteristicPermissions.Hidden) && !string.IsNullOrEmpty(x.Type.DisplayName));
 
             var extraData = CreateRootPlugInExtraData(pairingDeviceInfo,
                                                       fallbackAddress,
-                                                      accessory.Aid,
+                                                      accessory,
                                                       defaultCharacteristics.Select(x => x.Iid));
 
             string friendlyName = accessory.Name ??
@@ -148,6 +149,7 @@ namespace Hspi.DeviceData
 
             return hsController.CreateFeatureForDevice(newData);
         }
+
         private static void AddPlugExtraValue(NewFeatureData data,
                                               string key,
                                               string value)
@@ -287,9 +289,10 @@ namespace Hspi.DeviceData
                                                             bool readable,
                                                             HSMapping.HSMapping? mapping)
         {
+            bool isBooleanFormatType = characteristic.IsBooleanFormatType;
             var list = characteristic.ValidValues ??
                        mapping?.ButtonOptions?.Select(x => x.Value) ??
-                       (characteristic.Format == CharacteristicFormat.Bool ? new double[] { 0, 1 } : null);
+                       (isBooleanFormatType ? new double[] { 0, 1 } : null);
 
             if (list == null)
             {
@@ -302,9 +305,9 @@ namespace Hspi.DeviceData
 
                 if (readable)
                 {
-                    StatusGraphic statusGraphic = new(GetImagePath(GetIcon(buttonMapping, characteristic, value)),
+                    StatusGraphic statusGraphic = new(GetImagePath(GetIcon(buttonMapping, isBooleanFormatType, value)),
                                                       value,
-                                                      buttonMapping?.Name ?? value.ToString(CultureInfo.InvariantCulture));
+                                                      GetButtonTest(buttonMapping, isBooleanFormatType, value));
                     AddStatusGraphic(newData, statusGraphic);
                 }
 
@@ -312,8 +315,7 @@ namespace Hspi.DeviceData
                 {
                     var controlUse = buttonMapping?.EControlUses?.FirstOrDefault(x => x.ServiceIId == serviceType.Id)?.Value;
 
-                    if ((characteristic.Format == CharacteristicFormat.Bool) &&
-                        (buttonMapping == null))
+                    if (isBooleanFormatType && (buttonMapping == null))
                     {
                         controlUse = (int)((value == 0) ? EControlUse.Off : EControlUse.On);
                     }
@@ -322,7 +324,7 @@ namespace Hspi.DeviceData
                     StatusControl statusControl = new(EControlType.Button)
                     {
                         ControlUse = (EControlUse)controlUse,
-                        Label = buttonMapping?.Name ?? value.ToString(CultureInfo.InvariantCulture),
+                        Label = GetButtonTest(buttonMapping, isBooleanFormatType, value),
                         TargetValue = value,
                     };
                     AddStatusControl(newData, statusControl);
@@ -384,18 +386,19 @@ namespace Hspi.DeviceData
 
         private static PlugExtraData CreateRootPlugInExtraData(PairingDeviceInfo pairingDeviceInfo,
                                                                IPEndPoint fallbackAddress,
-                                                               ulong aid,
+                                                               Accessory accessory,
                                                                IEnumerable<ulong> enabledCharacteristics)
         {
             var plugExtra = new PlugExtraData();
             plugExtra.AddNamed(PairInfoPlugExtraTag, JsonConvert.SerializeObject(pairingDeviceInfo, Formatting.Indented));
             plugExtra.AddNamed(FallbackAddressPlugExtraTag, JsonConvert.SerializeObject(fallbackAddress, Formatting.Indented, new IPEndPointJsonConverter()));
-            plugExtra.AddNamed(AidPlugExtraTag, JsonConvert.SerializeObject(aid));
+            plugExtra.AddNamed(AidPlugExtraTag, JsonConvert.SerializeObject(accessory.Aid));
             plugExtra.AddNamed(EnabledCharacteristicPlugExtraTag, JsonConvert.SerializeObject(enabledCharacteristics));
+            plugExtra.AddNamed(CachedAccessoryInfoTag, JsonConvert.SerializeObject(accessory));
             return plugExtra;
         }
 
-        private static (EDeviceType, int) DetermineRootDeviceType(Device device)
+        private static (EDeviceType, int) DetermineRootDeviceType(DeviceId device)
         {
             return device.CategoryIdentifier switch
             {
@@ -415,6 +418,13 @@ namespace Hspi.DeviceData
             };
         }
 
+        private static string GetButtonTest(ButtonOption? buttonMapping, bool isBooleanFormatType, double value)
+        {
+            return buttonMapping?.Name ??
+                   (isBooleanFormatType ? (value == 0D ? "Off" : "On") : null) ??
+                   value.ToString(CultureInfo.InvariantCulture);
+        }
+
         private static HsFeatureTypeData? GetDeviceTypeFromPlugInData(PlugExtraData? plugInExtra)
         {
             if (plugInExtra != null && plugInExtra.NamedKeys.Contains(DeviceTypePlugExtraTag))
@@ -426,14 +436,14 @@ namespace Hspi.DeviceData
             return null;
         }
 
-        private static string GetIcon(ButtonOption? buttonMapping, Characteristic characteristic, double value)
+        private static string GetIcon(ButtonOption? buttonMapping, bool isBooleanFormatType, double value)
         {
             if (buttonMapping != null)
             {
                 return buttonMapping?.Icon ?? DefaultIcon;
             }
 
-            if (characteristic.Format == CharacteristicFormat.Bool)
+            if (isBooleanFormatType)
             {
                 if (value == 0)
                 {
@@ -443,10 +453,12 @@ namespace Hspi.DeviceData
             }
             return DefaultIcon;
         }
+
         private static string GetImagePath(string iconFileName)
         {
             return Path.ChangeExtension(Path.Combine(PlugInData.PlugInId, "images", iconFileName), "png");
         }
+
         private static bool IsTemperatureScaleF(IHsController hsController)
         {
             return Convert.ToBoolean(hsController.GetINISetting("Settings", "gGlobalTempScaleF", "True").Trim());
@@ -467,11 +479,11 @@ namespace Hspi.DeviceData
                                               FeatureFactory featureFactory,
                                               HSMapping.HSMapping? mapping)
         {
-            featureFactory = featureFactory.WithName(mapping?.Name ??
-                                                     characteristic.Description ??
-                                                     characteristic.Type.DisplayName ??
-                                                     characteristic.Type.Id.ToString("D"));
-            return featureFactory;
+            string name = mapping?.Name ??
+                          characteristic.Type.DisplayName ??
+                          characteristic.Description ??
+                          characteristic.Type.Id.ToString("D");
+            return featureFactory.WithName(name);
         }
 
         private const string DefaultIcon = "default";
@@ -479,9 +491,9 @@ namespace Hspi.DeviceData
         private const string OnIcon = "on";
 
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
-                                                                                                     {
-                                                                                                         string json = Encoding.UTF8.GetString(Resource.HSMappings);
-                                                                                                         return JsonHelper.DeserializeObject<HSMappings>(json);
-                                                                                                     }, true);
+                                                                                                                    {
+                                                                                                                        string json = Encoding.UTF8.GetString(Resource.HSMappings);
+                                                                                                                        return JsonHelper.DeserializeObject<HSMappings>(json);
+                                                                                                                    }, true);
     }
 }

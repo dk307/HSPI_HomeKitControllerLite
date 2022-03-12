@@ -4,15 +4,15 @@ using System;
 
 namespace HomeKit.Model
 {
-    public record Device
+    public record DeviceId
     {
-        public Device(string id,
-                      string displayName,
-                      string model,
-                      DeviceCategory categoryIdentifier,
-                      ushort configurationNumber,
-                      DeviceFeature feature,
-                      Version protocol)
+        public DeviceId(string id,
+                        string displayName,
+                        string model,
+                        DeviceCategory categoryIdentifier,
+                        ushort configurationNumber,
+                        DeviceFeature feature,
+                        Version protocol)
         {
             Id = id;
             DisplayName = displayName;

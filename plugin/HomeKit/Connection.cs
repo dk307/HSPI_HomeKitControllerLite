@@ -22,7 +22,7 @@ namespace HomeKit
 {
     internal abstract class Connection : IDisposable
     {
-        protected Connection(Device deviceInformation, bool enableDevicePolling)
+        protected Connection(DeviceId deviceInformation, bool enableDevicePolling)
         {
             this.homeKitDeviceInformation = deviceInformation;
             this.enableDevicePolling = enableDevicePolling;
@@ -59,7 +59,7 @@ namespace HomeKit
         }
 
         public DeviceFeature DeviceFeature => homeKitDeviceInformation.Feature;
-        public Device DeviceInformation => homeKitDeviceInformation;
+        public DeviceId DeviceInformation => homeKitDeviceInformation;
         public string DisplayName => homeKitDeviceInformation.DisplayName;
 
         protected AsyncProducerConsumerQueue<HttpResponseMessage> EventQueue => eventQueue;
@@ -316,7 +316,7 @@ namespace HomeKit
         private const string TlvContentType = "application/pairing+tlv8";
         private readonly bool enableDevicePolling;
         private readonly AsyncProducerConsumerQueue<HttpResponseMessage> eventQueue = new();
-        private readonly Device homeKitDeviceInformation;
+        private readonly DeviceId homeKitDeviceInformation;
         private readonly AsyncLock streamLock = new();
         private IPEndPoint? address;
         private TcpClient? client;

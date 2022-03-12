@@ -5,6 +5,7 @@ using Hspi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,22 @@ namespace HSPI_HomeKitControllerTest
 {
     internal static class TestHelper
     {
+        public static async Task<TemperatureSensorAccessory>
+            CreateChangingTemperaturePairedAccessory(CancellationToken token)
+        {
+            var hapAccessory = new TemperatureSensorAccessory(true);
+            await hapAccessory.StartPaired(token).ConfigureAwait(false);
+            return hapAccessory;
+        }
+
+        public static async Task<EcobeeThermostatAccessory>
+            CreateEcobeeThermostatPairedAccessory(CancellationToken token)
+        {
+            var hapAccessory = new EcobeeThermostatAccessory();
+            await hapAccessory.StartPaired(token).ConfigureAwait(false);
+            return hapAccessory;
+        }
+
         public static JsonSerializerSettings CreateJsonSerializer()
         {
             return new JsonSerializerSettings
@@ -47,22 +64,6 @@ namespace HSPI_HomeKitControllerTest
             return hapAccessory;
         }
 
-        public static async Task<EcobeeThermostatAccessory>
-            CreateEcobeeThermostatPairedAccessory(CancellationToken token)
-        {
-            var hapAccessory = new EcobeeThermostatAccessory();
-            await hapAccessory.StartPaired(token).ConfigureAwait(false);
-            return hapAccessory;
-        }
-
-        public static async Task<TemperatureSensorAccessory>
-            CreateChangingTemperaturePairedAccessory(CancellationToken token)
-        {
-            var hapAccessory = new TemperatureSensorAccessory(true);
-            await hapAccessory.StartPaired(token).ConfigureAwait(false);
-            return hapAccessory;
-        }
-
         public static async Task<TemperatureSensorAccessory> CreateTemperatureUnPairedAccessory(string pin,
                                                                                   CancellationToken token)
         {
@@ -78,11 +79,8 @@ namespace HSPI_HomeKitControllerTest
             mockHsController.Setup(x => x.GetPropertyByRef(It.IsAny<int>(), It.IsAny<EProperty>()))
                 .Returns((int devOrFeatRef, EProperty property) =>
                 {
-                    if (property == EProperty.DisplayedStatus)
-                    {
-                        property = EProperty.Name;
-                    }
-                    return deviceOrFeatureData[devOrFeatRef][property];
+                    deviceOrFeatureData[devOrFeatRef].TryGetValue(property, out object data);
+                    return data;
                 });
 
             mockHsController.Setup(x => x.UpdateFeatureValueByRef(It.IsAny<int>(), It.IsAny<double>()))
@@ -97,7 +95,7 @@ namespace HSPI_HomeKitControllerTest
                 .Returns((int devOrFeatRef, string value) =>
                 {
                     deviceOrFeatureData[devOrFeatRef][EProperty.StatusString] = value;
-                    updateValueCallback?.Invoke(devOrFeatRef, EProperty.Value, value);
+                    updateValueCallback?.Invoke(devOrFeatRef, EProperty.StatusString, value);
                     return true;
                 });
 
@@ -127,6 +125,69 @@ namespace HSPI_HomeKitControllerTest
             mockHsController.Setup(x => x.GetRefsByInterface(PlugInData.PlugInId, true)).Returns(new List<int>());
             mockHsController.Setup(x => x.GetNameByRef(It.IsAny<int>())).Returns("Test");
             return mockHsController;
+        }
+
+        public static void SetupHsDataForSyncing(string hsData,
+                                          Action<int, EProperty, object> updateValueCallback,
+                                          out Mock<PlugIn> plugIn,
+                                          out Mock<IHsController> mockHsController,
+                                          out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
+        {
+            plugIn = TestHelper.CreatePlugInMock();
+            mockHsController = TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
+            deviceOrFeatureData = JsonConvert.DeserializeObject<
+                SortedDictionary<int, Dictionary<EProperty, object>>>(hsData, TestHelper.CreateJsonSerializer());
+
+            foreach (var changes in deviceOrFeatureData)
+            {
+                JArray jArray = (JArray)changes.Value[EProperty.PlugExtraData];
+
+                PlugExtraData extraData = new();
+                foreach (var token in jArray)
+                {
+                    JObject jObject = (JObject)token;
+                    extraData.AddNamed((string)jObject["key"], (string)jObject["value"]);
+                }
+                changes.Value[EProperty.PlugExtraData] = extraData;
+            }
+
+            var deviceRefId = deviceOrFeatureData.Keys.First();
+
+            ((PlugExtraData)deviceOrFeatureData[deviceRefId][EProperty.PlugExtraData])
+                .AddNamed("fallback.address", "{\"Address\": \"0.0.0.0\",\"Port\": \"8473\"}");
+
+            HsDevice device = new(deviceRefId);
+
+            foreach (var pair in deviceOrFeatureData)
+            {
+                if (pair.Key == deviceRefId)
+                {
+                    foreach (var x in pair.Value)
+                    {
+                        device.Changes.Add(x.Key, x.Value);
+                    }
+                }
+                else
+                {
+                    HsFeature feature = new(pair.Key);
+                    foreach (var x in pair.Value)
+                    {
+                        feature.Changes.Add(x.Key, x.Value);
+                    }
+                    device.Features.Add(feature);
+                }
+            }
+
+            mockHsController.Setup(x => x.GetDeviceWithFeaturesByRef(deviceRefId))
+                            .Returns(device);
+
+            TestHelper.SetupEPropertyGetOrSet(mockHsController, deviceOrFeatureData, updateValueCallback);
+
+            mockHsController.Setup(x => x.GetRefsByInterface(PlugInData.PlugInId, true))
+                            .Returns(new List<int>() { deviceRefId });
+
+            mockHsController.Setup(x => x.GetDeviceWithFeaturesByRef(deviceRefId))
+                            .Returns(device);
         }
 
         public static void VeryHtmlValid(string html)

@@ -7,7 +7,7 @@
         {
         }
 
-        public override int InitialUpdatesExpected => 5;
+        public override int InitialUpdatesExpectedForDefaultEnabledCharacteristics => 5;
         private const string DirName = "temperatureSensor";
     }
 }

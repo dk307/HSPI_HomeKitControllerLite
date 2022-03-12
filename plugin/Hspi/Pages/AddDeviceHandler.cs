@@ -14,7 +14,7 @@ using static System.FormattableString;
 
 #nullable enable
 
-namespace Hspi
+namespace Hspi.Pages
 {
     internal static class AddDeviceHandler
     {

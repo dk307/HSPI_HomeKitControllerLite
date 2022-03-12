@@ -6,13 +6,14 @@ using System.Text;
 
 namespace HomeKit.Model
 {
-    public sealed record PairingDeviceInfo(Device DeviceInformation,
+    public sealed record PairingDeviceInfo(DeviceId DeviceInformation,
                                 ImmutableArray<byte> AccessoryPairingId,
                                 ImmutableArray<byte> AccessoryPublicKey,  // Public Key
                                 Guid ControllerPairingId,
                                 ImmutableArray<byte> ControllerDevicePrivateKey, // private key
                                 ImmutableArray<byte> ControllerDevicePublicKey, // public key
-                                bool EnableKeepAliveForConnection)
+                                bool EnableKeepAliveForConnection,
+                                TimeSpan? PollingTimeSpan) // The last time it updated.
     {
         public byte[] GetControllerPairingIdAsBytes() => EncodeGuid(ControllerPairingId);
 

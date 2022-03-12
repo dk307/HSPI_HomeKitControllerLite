@@ -137,11 +137,7 @@
               }
             ]
           }
-        ],
-        "Name": "Sensor1",
-        "Model": "",
-        "SerialNumber": "default",
-        "FirmwareRevision": ""
+        ]
       }
     ]
   }

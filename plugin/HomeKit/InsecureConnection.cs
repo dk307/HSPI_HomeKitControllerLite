@@ -9,7 +9,7 @@ namespace HomeKit
 {
     internal sealed class InsecureConnection : Connection
     {
-        private InsecureConnection(Device deviceInformation)
+        private InsecureConnection(DeviceId deviceInformation)
             : base(deviceInformation, false)
         {
         }

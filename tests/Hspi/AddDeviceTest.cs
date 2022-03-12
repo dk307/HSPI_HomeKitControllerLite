@@ -72,10 +72,12 @@ namespace HSPI_HomeKitControllerTest
             Assert.AreEqual(2, ((TypeInfo)newDataForDevice.Device[EProperty.DeviceType]).SubType);
 
             var extraData = (PlugExtraData)newDataForDevice.Device[EProperty.PlugExtraData];
+            Accessory accessory = JsonConvert.DeserializeObject<Accessory>(extraData["cached.accessory.info"]);
+            Assert.IsNotNull(accessory);
             Assert.IsNotNull(JsonConvert.DeserializeObject<PairingDeviceInfo>(extraData["pairing.info"]));
             Assert.AreEqual(1UL, JsonConvert.DeserializeObject<ulong>(extraData["accessory.aid"]));
             Assert.IsNotNull(JsonConvert.DeserializeObject<IPEndPoint>(extraData["fallback.address"], new IPEndPointJsonConverter()));
-            CollectionAssert.AreEqual(new ulong[] { 11 },
+            CollectionAssert.AreEqual(new ulong[] { accessory.FindCharacteristic(ServiceType.TemperatureSensor, CharacteristicType.TemperatureSensor).Iid },
                                       JsonConvert.DeserializeObject<ulong[]>(extraData["enabled.characteristic"]));
             plugIn.Object.ShutdownIO();
         }

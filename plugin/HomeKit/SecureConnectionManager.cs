@@ -60,9 +60,6 @@ namespace HomeKit
 
                 EnqueueConnectionEvent(true);
 
-                // get all values initially to refresh even the vent ones.
-                await secureHomeKitConnection.RefreshValues(null, token).ConfigureAwait(false);
-
                 //listen and process events
                 while (!token.IsCancellationRequested)
                 {

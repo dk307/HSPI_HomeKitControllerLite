@@ -312,6 +312,62 @@
       ]
     },
     {
+      "iid": "00000071-0000-1000-8000-0026BB765291",
+      "name": "Occupancy Detected",
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Not Detected",
+          "icon": "occupancynotdetected"
+        },
+        {
+          "value": 1,
+          "name": "Detected",
+          "icon": "occupancydetected"
+        }
+      ]
+    },
+    {
+      "iid": "00000079-0000-1000-8000-0026BB765291",
+      "name": "Status Low battery",
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Normal",
+          "icon": "batterynormal"
+        },
+        {
+          "value": 1,
+          "name": "Detected",
+          "icon": "batterylow"
+        }
+      ]
+    },
+    {
+      "iid": "0000008F-0000-1000-8000-0026BB765291",
+      "name": "Charging State",
+
+      "buttonOptions": [
+        {
+          "value": 0,
+          "name": "Not Charging",
+          "icon": "batterynotcharging"
+        },
+        {
+          "value": 1,
+          "name": "Charging",
+          "icon": "batterycharging"
+        },
+        {
+          "value": 2,
+          "name": "Not Chargeable",
+          "icon": "batterynotchargeable"
+        }
+      ]
+    },
+    {
       "iid": "00000036-0000-1000-8000-0026bb765291",
       "name": "Temperature Display Units",
 
@@ -412,10 +468,6 @@
       "rangeOptions": {
         "icon": "fanspeed"
       }
-    },
-    {
-      "iid": "1b1515f2-cc45-409f-991f-c480987f92c3",
-      "name": "Notifications"
     }
   ]
 }
