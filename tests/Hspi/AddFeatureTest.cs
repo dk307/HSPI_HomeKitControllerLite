@@ -6,6 +6,7 @@ using Hspi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Nito.AsyncEx;
 using System;
 using System.Collections.Generic;
@@ -45,9 +46,10 @@ namespace HSPI_HomeKitControllerTest
 
             string expectedHsAndDeviceData = hapAccessory.GetHsDeviceAndFeaturesAllString();
 
-            await TestEnabledFeatureChanged(hapAccessory, expectedHsAndDeviceData, CreateDevicePage).ConfigureAwait(false);
+            var jsonData = await TestEnabledFeatureChanged(hapAccessory, AddFeatures).ConfigureAwait(false);
+            Assert.AreEqual(expectedHsAndDeviceData, jsonData);
 
-            static PageFactory CreateDevicePage(Page page, Accessory accessory)
+            static PageFactory AddFeatures(Page page, Accessory accessory)
             {
                 var changes = PageFactory.CreateDeviceConfigPage(page.Id, page.Name);
 
@@ -69,15 +71,53 @@ namespace HSPI_HomeKitControllerTest
             }
         }
 
+        [DataTestMethod]
+        [DataRow("999", true)]
+        [DataRow("", false)]
+        public async Task ChangeOptionsThroughDevicePage(string pollingTimeSpan,
+                                                         bool enableKeepAliveForConnection)
+        {
+            using var hapAccessory = await TestHelper.CreateChangingTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
+
+            var jsonData = await TestEnabledFeatureChanged(hapAccessory, ChangeOptions).ConfigureAwait(false);
+
+            var data = JsonConvert.DeserializeObject<SortedDictionary<int, Dictionary<EProperty, object>>>(jsonData,
+                                                                                                           TestHelper.CreateJsonSerializer());
+
+            var plugExtraData = (JArray)data[HapAccessory.StartDeviceRefId][EProperty.PlugExtraData];
+
+            var pairingDeviceInfo = JsonConvert.DeserializeObject<PairingDeviceInfo>((string)plugExtraData.First(x => (string)x["key"] == "pairing.info")["value"]);
+
+            Assert.AreEqual(enableKeepAliveForConnection, pairingDeviceInfo.EnableKeepAliveForConnection);
+            Assert.AreEqual(string.IsNullOrWhiteSpace(pollingTimeSpan) ? null : TimeSpan.FromSeconds(int.Parse(pollingTimeSpan)), 
+                            pairingDeviceInfo.PollingTimeSpan);
+
+            PageFactory ChangeOptions(Page page, Accessory accessory)
+            {
+                var changes = PageFactory.CreateDeviceConfigPage(page.Id, page.Name);
+
+                var pollingTimeSpanView = page.GetViewById<InputView>("PollingTimeSpan");
+                var enableKeepAliveForConnectionView = page.GetViewById<ToggleView>("EnableKeepAliveForConnection");
+                pollingTimeSpanView.UpdateValue(pollingTimeSpan);
+                enableKeepAliveForConnectionView.IsEnabled = enableKeepAliveForConnection;
+
+                changes = changes.WithView(pollingTimeSpanView);
+                changes = changes.WithView(enableKeepAliveForConnectionView);
+
+                return changes;
+            }
+        }
+
         [TestMethod]
         public async Task FeatureDeletedThroughDevicePage()
         {
             using var hapAccessory = await TestHelper.CreateEcobeeThermostatPairedAccessory(CancellationToken.None).ConfigureAwait(false);
             string expectedHsAndDeviceData = hapAccessory.GetHsDeviceAndFeaturesNoneString();
 
-            await TestEnabledFeatureChanged(hapAccessory, expectedHsAndDeviceData, CreateDevicePage).ConfigureAwait(false);
+            var jsonData = await TestEnabledFeatureChanged(hapAccessory, RemoveFeatures).ConfigureAwait(false);
+            Assert.AreEqual(expectedHsAndDeviceData, jsonData);
 
-            static PageFactory CreateDevicePage(Page page, Accessory accessory)
+            static PageFactory RemoveFeatures(Page page, Accessory accessory)
             {
                 var changes = PageFactory.CreateDeviceConfigPage(page.Id, page.Name);
 
@@ -160,7 +200,6 @@ namespace HSPI_HomeKitControllerTest
         private async Task<(Mock<PlugIn>, SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)>
             StartPluginWithHapAccessory(HapAccessory hapAccessory, AsyncProducerConsumerQueue<bool> connectionQueue)
         {
-            Mock<PlugIn> plugIn;
             string hsData = hapAccessory.GetHsDeviceAndFeaturesString();
 
             int[] refIds = null;
@@ -175,7 +214,7 @@ namespace HSPI_HomeKitControllerTest
 
             TestHelper.SetupHsDataForSyncing(hsData,
                                              updateValueCallback,
-                                             out plugIn,
+                                             out Mock<PlugIn> plugIn,
                                              out Mock<IHsController> mockHsController,
                                              out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData);
 
@@ -204,10 +243,8 @@ namespace HSPI_HomeKitControllerTest
             return (plugIn, deviceOrFeatureData);
         }
 
-        private async Task TestEnabledFeatureChanged(HapAccessory hapAccessory,
-                                                     string expectedHsAndDeviceData,
-                                                     Func<Page, Accessory, PageFactory> generateChanges)
-
+        private async Task<string> TestEnabledFeatureChanged(HapAccessory hapAccessory,
+                                                             Func<Page, Accessory, PageFactory> generateChanges)
         {
             AsyncProducerConsumerQueue<bool> connectionStatus = new();
             var (plugIn, deviceOrFeatureData) = await StartPluginWithHapAccessory(hapAccessory, connectionStatus);
@@ -237,10 +274,10 @@ namespace HSPI_HomeKitControllerTest
 
             string jsonData = GetHsDeviceAndFeatureData(refIds[0], deviceOrFeatureData);
 
-            Assert.AreEqual(expectedHsAndDeviceData, jsonData);
-
             plugIn.Object.ShutdownIO();
+            return jsonData;
         }
+
         private readonly CancellationTokenSource cancellationTokenSource = new();
     }
 }
