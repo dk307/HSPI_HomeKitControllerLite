@@ -2,12 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Diagnostics;
 
 namespace System.Net.Http.Headers
 {
-    // Don't derive from BaseHeaderParser since parsing is delegated to Uri.TryCreate() 
+    // Don't derive from BaseHeaderParser since parsing is delegated to Uri.TryCreate()
     // which will remove leading and trailing whitespace.
     internal class UriHeaderParser : HttpHeaderParser
     {
@@ -59,15 +58,13 @@ namespace System.Net.Http.Headers
                 try
                 {
                     // We don't want '?' replacement characters, just fail.
-#if uap
-                    System.Text.Encoding decoder = new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: true, throwOnInvalidBytes: true);
-#else
+
                     System.Text.Encoding decoder = System.Text.Encoding.GetEncoding("utf-8", System.Text.EncoderFallback.ExceptionFallback,
                         System.Text.DecoderFallback.ExceptionFallback);
-#endif
+
                     return decoder.GetString(rawBytes, 0, rawBytes.Length);
                 }
-                catch (ArgumentException) 
+                catch (ArgumentException)
                 {
                     // Not actually Utf-8
                 }

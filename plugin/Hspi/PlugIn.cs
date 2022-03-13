@@ -8,7 +8,7 @@ using Nito.AsyncEx;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 #nullable enable
@@ -23,6 +23,30 @@ namespace Hspi
         }
 
         public override bool SupportsConfigDevice => true;
+
+        public override string GetJuiDeviceConfigPage(int devOrFeatRef)
+        {
+            try
+            {
+                Log.Debug("Asking for page for {deviceOrFeatureRef}", devOrFeatRef);
+
+                var page = DeviceConfigPage.BuildConfigPage(HomeSeerSystem, devOrFeatRef);
+
+                var devicePage = page?.ToJsonString() ?? throw new InvalidOperationException("Page is unexpectedly null");
+                Log.Debug("Returning page for {deviceOrFeatureRef}", devOrFeatRef);
+                return devicePage;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to create page for {devOrFeatRef} with error:{error}", devOrFeatRef, ex.GetFullMessage());
+                var page = PageFactory.CreateDeviceConfigPage(PlugInData.PlugInId, "Z-Wave Information");
+                page = page.WithView(new LabelView("exception", string.Empty, ex.GetFullMessage())
+                {
+                    LabelType = HomeSeer.Jui.Types.ELabelType.Preformatted
+                });
+                return page.Page.ToJsonString();
+            }
+        }
 
         public override string PostBackProc(string page, string data, string user, int userRights)
         {
@@ -79,6 +103,10 @@ namespace Hspi
             {
                 UpdateDebugLevel();
                 Log.Information("Plugin Starting");
+                Settings.Add(SettingsPages.CreateDefault());
+                LoadSettingsFromIni();
+                settingsPages = new SettingsPages(Settings);
+                UpdateDebugLevel();
 
                 // Device Add Page
                 HomeSeerSystem.RegisterDeviceIncPage(PlugInData.PlugInId, "AddDevice.html", "Pair HomeKit Device");
@@ -94,54 +122,46 @@ namespace Hspi
             }
         }
 
+        protected override bool OnDeviceConfigChange(Page deviceConfigPage, int deviceRef)
+        {
+            DeviceConfigPage.OnDeviceConfigChange(HomeSeerSystem, deviceRef, deviceConfigPage);
+            RestartProcessing();
+            return true;
+        }
+
+        protected override bool OnSettingChange(string pageId, AbstractView currentView, AbstractView changedView)
+        {
+            Log.Information("Page:{pageId} has changed value of id:{id} to {value}", pageId, changedView.Id, changedView.GetStringValue());
+
+            CheckNotNull(settingsPages);
+
+            if (settingsPages.OnSettingChange(changedView))
+            {
+                UpdateDebugLevel();
+                return true;
+            }
+
+            return base.OnSettingChange(pageId, currentView, changedView);
+        }
+
         protected override void OnShutdown()
         {
             Log.Information("Shutting down");
             base.OnShutdown();
         }
 
-        private async Task<ImmutableDictionary<int, HomeKitDevice>> GetDevices()
+        private static void CheckNotNull([NotNull] object? obj)
         {
-            using var _ = await dataLock.LockAsync(ShutdownCancellationToken);
-            return deviceManager?.Devices ??
-                    ImmutableDictionary<int, HomeKitDevice>.Empty;
+            if (obj is null)
+            {
+                throw new InvalidOperationException("Plugin Not Initialized");
+            }
         }
 
         private async ValueTask<HsHomeKitDeviceManager?> GetHomeKitDeviceManager()
         {
             using var _ = await dataLock.LockAsync(ShutdownCancellationToken);
             return deviceManager;
-        }
-
-        public override string GetJuiDeviceConfigPage(int devOrFeatRef)
-        {
-            try
-            {
-                Log.Debug("Asking for page for {deviceOrFeatureRef}", devOrFeatRef);
-
-                var page = DeviceConfigPage.BuildConfigPage(HomeSeerSystem, devOrFeatRef);
-
-                var devicePage = page?.ToJsonString() ?? throw new InvalidOperationException("Page is unexpectedly null");
-                Log.Debug("Returning page for {deviceOrFeatureRef}", devOrFeatRef);
-                return devicePage;
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Failed to create page for {devOrFeatRef} with error:{error}", devOrFeatRef, ex.GetFullMessage());
-                var page = PageFactory.CreateDeviceConfigPage(PlugInData.PlugInId, "Z-Wave Information");
-                page = page.WithView(new LabelView("exception", string.Empty, ex.GetFullMessage())
-                {
-                    LabelType = HomeSeer.Jui.Types.ELabelType.Preformatted
-                });
-                return page.Page.ToJsonString();
-            }
-        }
-
-        protected override bool OnDeviceConfigChange(Page deviceConfigPage, int deviceRef)
-        {
-            DeviceConfigPage.OnDeviceConfigChange(HomeSeerSystem, deviceRef, deviceConfigPage);
-            RestartProcessing();
-            return true;
         }
 
         private async Task MainTask()
@@ -171,5 +191,6 @@ namespace Hspi
 
         private readonly AsyncLock dataLock = new();
         private volatile HsHomeKitDeviceManager? deviceManager;
+        private SettingsPages? settingsPages;
     }
 }

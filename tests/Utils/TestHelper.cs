@@ -48,6 +48,21 @@ namespace HSPI_HomeKitControllerTest
             };
         }
 
+        public static (Mock<PlugIn> mockPlugin, Mock<IHsController> mockHsController)
+         CreateMockPluginAndHsController(Dictionary<string, string> settingsFromIni)
+        {
+            var mockPlugin = new Mock<PlugIn>(MockBehavior.Loose)
+            {
+                CallBase = true,
+            };
+
+            var mockHsController = SetupHsControllerAndSettings(mockPlugin, settingsFromIni);
+
+            mockPlugin.Object.InitIO();
+
+            return (mockPlugin, mockHsController);
+        }
+
         public static Mock<PlugIn> CreatePlugInMock()
         {
             return new Mock<PlugIn>(MockBehavior.Loose)
@@ -190,7 +205,7 @@ namespace HSPI_HomeKitControllerTest
                             .Returns(device);
         }
 
-        public static void VeryHtmlValid(string html)
+        public static void VerifyHtmlValid(string html)
         {
             HtmlAgilityPack.HtmlDocument htmlDocument = new();
             htmlDocument.LoadHtml(html);

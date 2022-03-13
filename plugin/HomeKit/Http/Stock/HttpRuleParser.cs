@@ -91,20 +91,6 @@ namespace System.Net.Http
         }
 
         [Pure]
-        internal static bool IsToken(string input)
-        {
-            for (int i = 0; i < input.Length; i++)
-            {
-                if (!IsTokenChar(input[i]))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        [Pure]
         internal static bool IsToken(ReadOnlySpan<byte> input)
         {
             for (int i = 0; i < input.Length; i++)
