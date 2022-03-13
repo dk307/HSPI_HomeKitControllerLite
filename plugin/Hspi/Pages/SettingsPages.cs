@@ -22,6 +22,7 @@ namespace Hspi
             var settings = PageFactory.CreateSettingsPage(SettingPageId, "Settings");
             settings = settings.WithToggle(LoggingDebugId, "Enable debug logging", enableDebugLoggingDefault);
             settings = settings.WithToggle(LogToFileId, "Log to file", logToFileDefault);
+            settings = settings.WithLabel("icon_id", "<a href='https://icons8.com'>Icons from Icons8</a>");
             return settings.Page;
         }
 
