@@ -46,17 +46,17 @@ namespace Hspi.DeviceData
             return Math.Round(doubleValue, decimalPlaces);
         }
 
-        public object? GetValuetoSend(ControlEvent colSend)
+        public object? GetValuetoSend(double value)
         {
             return Format switch
             {
-                CharacteristicFormat.Bool => colSend.ControlValue != 0 ? 1 : 0,// use 1/0 instead of true/false
-                CharacteristicFormat.UnsignedInt8 => TranslateValue<byte>(colSend.ControlValue),
-                CharacteristicFormat.UnsignedInt16 => TranslateValue<UInt16>(colSend.ControlValue),
-                CharacteristicFormat.UnsignedInt32 => TranslateValue<UInt32>(colSend.ControlValue),
-                CharacteristicFormat.UnsignedInt64 => TranslateValue<UInt64>(colSend.ControlValue),
-                CharacteristicFormat.Integer => TranslateValue<int>(colSend.ControlValue),
-                CharacteristicFormat.Float => TranslateValue<double>(colSend.ControlValue),
+                CharacteristicFormat.Bool => value!= 0 ? 1 : 0,// use 1/0 instead of true/false
+                CharacteristicFormat.UnsignedInt8 => TranslateValue<byte>(value),
+                CharacteristicFormat.UnsignedInt16 => TranslateValue<UInt16>(value),
+                CharacteristicFormat.UnsignedInt32 => TranslateValue<UInt32>(value),
+                CharacteristicFormat.UnsignedInt64 => TranslateValue<UInt64>(value),
+                CharacteristicFormat.Integer => TranslateValue<int>(value),
+                CharacteristicFormat.Float => TranslateValue<double>(value),
                 CharacteristicFormat.String => throw new NotImplementedException(),
                 CharacteristicFormat.Tlv8 or CharacteristicFormat.DataBlob => throw new NotImplementedException(),
                 _ => throw new NotImplementedException(),
