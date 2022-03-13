@@ -162,7 +162,7 @@ namespace Hspi
         private async ValueTask<HsHomeKitDeviceManager> GetHomeKitDeviceManager()
         {
             using var _ = await dataLock.LockAsync(ShutdownCancellationToken);
-            return deviceManager;
+            return deviceManager ?? throw new InvalidOperationException("No Devices Found. Initialize in progress");
         }
 
         private async Task MainTask()
