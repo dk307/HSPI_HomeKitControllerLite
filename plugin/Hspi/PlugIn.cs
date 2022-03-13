@@ -1,5 +1,6 @@
 ﻿using HomeSeer.Jui.Views;
 using HomeSeer.PluginSdk;
+using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Devices.Controls;
 using Hspi.DeviceData;
 using Hspi.Pages;
@@ -79,7 +80,7 @@ namespace Hspi
             async Task SetIOMultiAsync()
             {
                 var deviceManagerCopy = await GetHomeKitDeviceManager().ConfigureAwait(false);
-                deviceManagerCopy?.HandleCommand(colSend);
+                await deviceManagerCopy.HandleCommand(colSend).ConfigureAwait(false);
             }
         }
 
@@ -158,10 +159,10 @@ namespace Hspi
             }
         }
 
-        private async ValueTask<HsHomeKitDeviceManager?> GetHomeKitDeviceManager()
+        private async ValueTask<HsHomeKitDeviceManager> GetHomeKitDeviceManager()
         {
             using var _ = await dataLock.LockAsync(ShutdownCancellationToken);
-            return deviceManager;
+            return deviceManager ?? throw new InvalidOperationException("No Devices Found. Initialize in progress");
         }
 
         private async Task MainTask()
@@ -187,6 +188,28 @@ namespace Hspi
             bool logToFile = false;
             this.LogDebug = debugLevel;
             Logger.ConfigureLogging(LogDebug, logToFile, HomeSeerSystem);
+        }
+
+        public override EPollResponse UpdateStatusNow(int devOrFeatRef)
+        {
+            Log.Information("Polling for {devOrFeatRef}", devOrFeatRef);
+
+            try
+            {
+                bool processed = UpdateStatusNowAsync().ResultForSync();
+                return processed ? EPollResponse.Ok : EPollResponse.NotFound;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to poll {devOrFeatRef} with {ex}", devOrFeatRef, ex.GetFullMessage());
+                return EPollResponse.UnknownError;
+            }
+
+            async Task<bool> UpdateStatusNowAsync()
+            {
+                var deviceManagerCopy = await GetHomeKitDeviceManager().ConfigureAwait(false);
+                return await deviceManagerCopy.Refresh(devOrFeatRef).ConfigureAwait(false);
+            }
         }
 
         private readonly AsyncLock dataLock = new();

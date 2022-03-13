@@ -5,9 +5,6 @@ using Hspi;
 using Hspi.DeviceData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -68,6 +65,57 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
+        public async Task PollAccessory()
+
+        {
+            using var hapAccessory = await TestHelper.CreateEcobeeThermostatPairedAccessory(CancellationToken.None).ConfigureAwait(false);
+            string hsData = hapAccessory.GetHsDeviceAndFeaturesString();
+
+            Nito.AsyncEx.AsyncManualResetEvent onlineEvent = new(false);
+            Nito.AsyncEx.AsyncManualResetEvent targetTemperatureSetOnUpdate = new(false);
+
+            int[] refIds = null;
+            const int TargetTemperatureRefId = 9390;
+
+            void updateValueCallback(int devOrFeatRef, EProperty property, object value)
+            {
+                if (refIds[1] == devOrFeatRef &&
+                    property == EProperty.Value &&
+                    (double)value == 1 &&
+                    !onlineEvent.IsSet)
+                {
+                    onlineEvent.Set();
+                }
+                else if (TargetTemperatureRefId == devOrFeatRef &&
+                         property == EProperty.Value &&
+                         !targetTemperatureSetOnUpdate.IsSet &&
+                         !onlineEvent.IsSet)
+                {
+                    targetTemperatureSetOnUpdate.Set();
+                }
+            }
+
+            TestHelper.SetupHsDataForSyncing(hsData,
+                                             updateValueCallback,
+                                             out Mock<PlugIn> plugIn,
+                                             out Mock<IHsController> mockHsController,
+                                             out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData);
+
+            refIds = deviceOrFeatureData.Keys.ToArray();
+
+            Assert.IsTrue(plugIn.Object.InitIO());
+            await onlineEvent.WaitAsync(cancellationTokenSource.Token).ConfigureAwait(false);
+
+            //online now
+
+            plugIn.Object.UpdateStatusNow(TargetTemperatureRefId);
+
+            await targetTemperatureSetOnUpdate.WaitAsync(cancellationTokenSource.Token).ConfigureAwait(false);
+
+            plugIn.Object.ShutdownIO();
+        }
+
+        [TestMethod]
         public async Task ChangeValueInAccessory()
 
         {
@@ -91,7 +139,7 @@ namespace HSPI_HomeKitControllerTest
                 }
                 else if (TargetTemperatureRefId == devOrFeatRef &&
                          property == EProperty.Value &&
-                         (double)value == 86D && 
+                         (double)value == 86D &&
                          !targetTemperatureSetOnUpdate.IsSet)
                 {
                     targetTemperatureSetOnUpdate.Set();
@@ -185,7 +233,6 @@ namespace HSPI_HomeKitControllerTest
 
             plugIn.Object.ShutdownIO();
         }
-
 
         private readonly CancellationTokenSource cancellationTokenSource = new();
     }

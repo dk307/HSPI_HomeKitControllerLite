@@ -1,7 +1,6 @@
 ﻿using HomeKit.Model;
 using HomeKit.Utils;
 using HomeSeer.PluginSdk;
-using HomeSeer.PluginSdk.Devices.Controls;
 using Newtonsoft.Json;
 using Serilog;
 using System.Collections.Generic;
@@ -35,24 +34,32 @@ namespace Hspi.DeviceData
             return GetPlugExtraData<ulong>(hsController, refId, AidPlugExtraTag);
         }
 
-        public (bool, AidIidValue?) GetValueToSend(ControlEvent colSend)
+        public AidIidPair? GetCharacteristicAidIidValue(int refId)
         {
-            int refId = colSend.TargetRef;
+            if (CharacteristicFeatures.Values.FirstOrDefault(x => x.RefId == refId)
+                        is HsHomeKitCharacteristicFeatureDevice hsHomeKitCharacteristicFeatureDevice)
+            {
+                return new AidIidPair(Aid, hsHomeKitCharacteristicFeatureDevice.Iid);
+            }
+            return null;
+        }
 
+        public (bool, AidIidValue?) GetValueToSend(int refId, double value)
+        {
             if (refId == this.RefId)
             {
-                Log.Warning("Unknown command {command} for {RefId} ", colSend.ControlValue, RefId);
+                Log.Warning("Unknown command {command} for {RefId} ", value, RefId);
                 return (true, null);
             }
             else if (CharacteristicFeatures.Values.FirstOrDefault(x => x.RefId == refId)
                         is HsHomeKitCharacteristicFeatureDevice hsHomeKitCharacteristicFeatureDevice)
             {
-                var valueToSend = hsHomeKitCharacteristicFeatureDevice.GetValuetoSend(colSend);
+                var valueToSend = hsHomeKitCharacteristicFeatureDevice.GetValuetoSend(value);
                 return (true, new AidIidValue(Aid, hsHomeKitCharacteristicFeatureDevice.Iid, valueToSend));
             }
             else if (ConnectedFeature.RefId == refId)
             {
-                Log.Warning("Unknown command {command} for Connected Device {RefId} ", colSend.ControlValue, RefId);
+                Log.Warning("Unknown command {command} for Connected Device {RefId} ", value, RefId);
                 return (true, null);
             }
 

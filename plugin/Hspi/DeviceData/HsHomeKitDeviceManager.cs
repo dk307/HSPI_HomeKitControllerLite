@@ -36,6 +36,46 @@ namespace Hspi.DeviceData
             }
         }
 
+        public async Task HandleCommand(IEnumerable<ControlEvent> colSends)
+        {
+            foreach (var colSend in colSends)
+            {
+                try
+                {
+                    Log.Debug("Command {command} for {RefId}",
+                        colSend.ControlString ?? colSend.Label ?? colSend.ControlValue.ToString(CultureInfo.InvariantCulture),
+                        colSend.TargetRef);
+                    foreach (var device in homeKitDevices)
+                    {
+                        bool done = await device.Value.CanProcessCommand(colSend, combinedToken.Token).ConfigureAwait(false);
+
+                        if (done)
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Failed to process {command} with {ex}", colSend.ControlValue, ex.GetFullMessage());
+                }
+            }
+        }
+
+        public async Task<bool> Refresh(int devOrFeatRef)
+        {
+            foreach (var device in homeKitDevices)
+            {
+                bool done = await device.Value.CanRefesh(devOrFeatRef, combinedToken.Token).ConfigureAwait(false);
+
+                if (done)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private Dictionary<int, HomeKitDevice> GetCurrentDevices()
         {
             var interfaceRefIds = HS.GetRefsByInterface(PlugInData.PlugInId, true);
@@ -77,35 +117,9 @@ namespace Hspi.DeviceData
             return devices;
         }
 
-        public async Task HandleCommand(IEnumerable<ControlEvent> colSends)
-        {
-            foreach (var colSend in colSends)
-            {
-                try
-                {
-                    Log.Debug("Command {command} for {RefId}",
-                        colSend.ControlString ?? colSend.Label ?? colSend.ControlValue.ToString(CultureInfo.InvariantCulture),
-                        colSend.TargetRef);
-                    foreach (var device in homeKitDevices)
-                    {
-                        bool done = await device.Value.CanProcessCommand(colSend, combinedToken.Token).ConfigureAwait(false);
-
-                        if (done)
-                        {
-                            break;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("Failed to process {command} with {ex}", colSend.ControlValue, ex.GetFullMessage());
-                }
-            }
-        }
-
         private readonly CancellationTokenSource combinedToken;
-        private readonly IHsController HS;
         private readonly ImmutableDictionary<int, HomeKitDevice> homeKitDevices;
+        private readonly IHsController HS;
         private bool disposedValue;
-    };
+    }
 }

@@ -49,7 +49,7 @@ namespace Hspi.DeviceData
 
             foreach (var pair in devices)
             {
-                var (canProcess, valueToSend) = pair.Value.GetValueToSend(colSend);
+                var (canProcess, valueToSend) = pair.Value.GetValueToSend(colSend.TargetRef, colSend.ControlValue);
 
                 if (canProcess)
                 {
@@ -60,6 +60,23 @@ namespace Hspi.DeviceData
 
                         await manager.Connection.RefreshValues(pollingIids.Add(valueToSend), token).ConfigureAwait(false);
                     }
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal async Task<bool> CanRefesh(int devOrFeatRef, CancellationToken token)
+        {
+            var devices = hsDevices;
+            foreach (var pair in devices)
+            {
+                var aidIidPair = pair.Value.GetCharacteristicAidIidValue(devOrFeatRef);
+
+                if (aidIidPair is not null)
+                {
+                    await manager.Connection.RefreshValues(new List<AidIidPair> { aidIidPair }, token).ConfigureAwait(false);
                     return true;
                 }
             }
