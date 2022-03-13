@@ -86,8 +86,6 @@ namespace Hspi.DeviceData
 
                 case CharacteristicFormat.Tlv8:
                 case CharacteristicFormat.DataBlob:
-
-                    throw new NotImplementedException();
                 default:
                     break;
             }

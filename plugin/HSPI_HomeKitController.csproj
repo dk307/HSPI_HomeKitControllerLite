@@ -206,6 +206,7 @@
     <Compile Include="Hspi\DeviceData\HSMapping\HSMappings.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\RangeOptions.cs" />
     <Compile Include="Hspi\HSPI.cs" />
+    <Compile Include="Hspi\Pages\SettingsPages.cs" />
     <Compile Include="Hspi\Pages\DeviceConfigPage.cs" />
     <Compile Include="Hspi\PlugIn.cs" />
     <Compile Include="Hspi\PlugInData.cs" />

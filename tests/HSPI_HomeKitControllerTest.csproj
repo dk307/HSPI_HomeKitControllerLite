@@ -72,6 +72,7 @@
     <Compile Include="Accessory\HapAccessorySetup.cs" />
     <Compile Include="Accessory\EcobeeThermostatAccessory.cs" />
     <Compile Include="Accessory\TemperatureSensorAccessory.cs" />
+    <Compile Include="Hspi\SettingsPagesTest.cs" />
     <Compile Include="Hspi\DeviceWorkingTest.cs" />
     <Compile Include="Utils\PlugExtraDataConverter.cs" />
     <Compile Include="Utils\PythonScriptWrapper.cs" />
