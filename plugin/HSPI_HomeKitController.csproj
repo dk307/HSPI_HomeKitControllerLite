@@ -319,6 +319,7 @@
     <Content Include="Hspi\html\images\cooling.png" />
     <Content Include="Hspi\html\images\default.png" />
     <Content Include="Hspi\html\images\fahrenheit.png" />
+    <Content Include="Hspi\html\images\fanspeed.png" />
     <Content Include="Hspi\html\images\heatcoolauto.png" />
     <Content Include="Hspi\html\images\heatcooloff.png" />
     <Content Include="Hspi\html\images\heating.png" />
@@ -331,6 +332,8 @@
     <Content Include="Hspi\html\images\motiondetected.png" />
     <Content Include="Hspi\html\images\motionnotdetected.png" />
     <Content Include="Hspi\html\images\name.png" />
+    <Content Include="Hspi\html\images\occupancydetected.png" />
+    <Content Include="Hspi\html\images\occupancynotdetected.png" />
     <Content Include="Hspi\html\images\off.png" />
     <Content Include="Hspi\html\images\offline.png" />
     <Content Include="Hspi\html\images\on.png" />
