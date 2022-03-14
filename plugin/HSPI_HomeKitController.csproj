@@ -307,6 +307,42 @@
     <AdditionalFiles Include="install.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AdditionalFiles>
+    <Content Include="Hspi\html\AddDevice.html" />
+    <Content Include="Hspi\html\images\autofan.png" />
+    <Content Include="Hspi\html\images\away.png" />
+    <Content Include="Hspi\html\images\batterylow.png" />
+    <Content Include="Hspi\html\images\batterynormal.png" />
+    <Content Include="Hspi\html\images\batterynotchargeable.png" />
+    <Content Include="Hspi\html\images\batterynotcharging.png" />
+    <Content Include="Hspi\html\images\blowingairfan.png" />
+    <Content Include="Hspi\html\images\celsius.png" />
+    <Content Include="Hspi\html\images\cooling.png" />
+    <Content Include="Hspi\html\images\default.png" />
+    <Content Include="Hspi\html\images\fahrenheit.png" />
+    <Content Include="Hspi\html\images\fanspeed.png" />
+    <Content Include="Hspi\html\images\heatcoolauto.png" />
+    <Content Include="Hspi\html\images\heatcooloff.png" />
+    <Content Include="Hspi\html\images\heating.png" />
+    <Content Include="Hspi\html\images\home.png" />
+    <Content Include="Hspi\html\images\humidity.png" />
+    <Content Include="Hspi\html\images\icons.txt" />
+    <Content Include="Hspi\html\images\idlefan.png" />
+    <Content Include="Hspi\html\images\inactivefan.png" />
+    <Content Include="Hspi\html\images\manualonfan.png" />
+    <Content Include="Hspi\html\images\motiondetected.png" />
+    <Content Include="Hspi\html\images\motionnotdetected.png" />
+    <Content Include="Hspi\html\images\name.png" />
+    <Content Include="Hspi\html\images\occupancydetected.png" />
+    <Content Include="Hspi\html\images\occupancynotdetected.png" />
+    <Content Include="Hspi\html\images\off.png" />
+    <Content Include="Hspi\html\images\offline.png" />
+    <Content Include="Hspi\html\images\on.png" />
+    <Content Include="Hspi\html\images\online.png" />
+    <Content Include="Hspi\html\images\paused.png" />
+    <Content Include="Hspi\html\images\sleep.png" />
+    <Content Include="Hspi\html\images\temperature.png" />
+    <Content Include="Hspi\html\images\temperaturechange.png" />
+    <Content Include="Hspi\html\images\temperaturechange2.png" />
     <Content Include="updater_override.tt" />
   </ItemGroup>
   <ItemGroup>
@@ -338,7 +374,10 @@
     <Copy SourceFiles="@(DllFilePaths)" DestinationFolder="$(ShippedDllsDirectory)" />
     <ZipDirectory SourceDirectory="$(ShippedDllsDirectory)" DestinationFile="$(OutputPath)\dlls.zip" Overwrite="true" />
   </Target>
-  <Target Name="ZipFinalFiles" DependsOnTargets="Build;" AfterTargets="Build;ZipDllFiles" Condition="'$(Configuration)' == 'Release'">
+  <Target Name="ZipHtmlFiles" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <ZipDirectory SourceDirectory="$(MSBuildProjectDirectory)\Hspi\html" DestinationFile="$(OutputPath)\html.zip" Overwrite="true" />
+  </Target>
+  <Target Name="ZipFinalFiles" DependsOnTargets="Build;" AfterTargets="Build;ZipDllFiles;ZipHtmlFiles" Condition="'$(Configuration)' == 'Release'">
     <RemoveDir Directories="$(ArtifactsDirectory)" />
     <MakeDir Directories="$(ArtifactsDirectory)" />
     <GetAssemblyIdentity AssemblyFiles="$(OutputPath)\HSPI_HomeKitController.exe">
@@ -353,6 +392,7 @@
       <ReleaseFiles Include="$(OutputPath)\HSPI_HomeKitController.exe" />
       <ReleaseFiles Include="$(OutputPath)\HSPI_HomeKitController.exe.config" />
       <ReleaseFiles Include="$(OutputPath)\install.txt" />
+      <ReleaseFiles Include="$(OutputPath)\html.zip" />
       <ReleaseFiles Include="$(OutputPath)\dlls.zip" />
     </ItemGroup>
     <Copy SourceFiles="@(ReleaseFiles)" DestinationFolder="$(ArtifactsDirectory)" />

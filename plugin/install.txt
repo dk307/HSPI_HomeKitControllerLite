@@ -4,3 +4,5 @@ HSPI_HomeKitController.exe.config,.,0
 db.zip,[UNZIPOVER],.\Data\HomeKitController\db
 .,[DELALL],.\bin\HomeKitController
 dlls.zip,[UNZIPOVER],.\bin\HomeKitController
+.,[DELALL],.\html\HomeKitController
+html.zip,[UNZIP],.\html\HomeKitController
