@@ -69,7 +69,6 @@
       <Link>shared\ExceptionHelperTest.cs</Link>
     </Compile>
     <Compile Include="Accessory\HapAccessory.cs" />
-    <Compile Include="Accessory\HapAccessorySetup.cs" />
     <Compile Include="Accessory\EcobeeThermostatAccessory.cs" />
     <Compile Include="Accessory\TemperatureSensorAccessory.cs" />
     <Compile Include="Hspi\SettingsPagesTest.cs" />

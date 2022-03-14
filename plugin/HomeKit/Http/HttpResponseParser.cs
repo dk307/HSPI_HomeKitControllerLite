@@ -16,8 +16,7 @@ using System.Threading.Tasks;
 
 namespace HomeKit.Http
 {
-
-    interface INetworkReadStream
+    internal interface INetworkReadStream
     {
         Task<int> ReadAsync(byte[] buffer, int index, int v, CancellationToken cancellationToken);
     }
@@ -265,8 +264,8 @@ namespace HomeKit.Http
         }
 
         private async ValueTask CopyFromBufferAsync(Stream destination,
-                                                           int count,
-                                                   CancellationToken cancellationToken)
+                                                    int count,
+                                                    CancellationToken cancellationToken)
         {
             await destination.WriteAsync(readBuffer.AsMemory().Slice(readOffset, count),
                                          cancellationToken).ConfigureAwait(false);
@@ -274,8 +273,8 @@ namespace HomeKit.Http
         }
 
         private async ValueTask CopyToExactLengthAsync(Stream destination,
-                                                  ulong length,
-                                                  CancellationToken cancellationToken)
+                                                       ulong length,
+                                                       CancellationToken cancellationToken)
         {
             int remaining = ReadLength - readOffset;
             if (remaining > 0)
@@ -328,7 +327,7 @@ namespace HomeKit.Http
         }
 
         private async ValueTask GetResponseContent(HttpResponseMessage response,
-                                              CancellationToken cancellationToken)
+                                                   CancellationToken cancellationToken)
         {
             // we move the response content to memory as we expect it to be small
             MemoryStream responseStream = new();

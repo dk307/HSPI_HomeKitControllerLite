@@ -2,6 +2,9 @@
 using System;
 using System.Runtime.Serialization;
 
+#nullable enable
+
+
 namespace HomeKit.Exceptions
 {
     [Serializable]

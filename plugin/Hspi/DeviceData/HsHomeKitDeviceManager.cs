@@ -117,6 +117,7 @@ namespace Hspi.DeviceData
             return devices;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Not disposing tokens")]
         private readonly CancellationTokenSource combinedToken;
         private readonly ImmutableDictionary<int, HomeKitDevice> homeKitDevices;
         private readonly IHsController HS;

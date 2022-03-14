@@ -94,7 +94,7 @@ namespace HomeKit
             {
                 var keepAliveTime = TimeSpan.FromSeconds(30);
                 var keepAliveInterval = TimeSpan.FromSeconds(30);
-                SetSocketKeepAlive(keepAliveTime, keepAliveInterval);
+                SetSocketKeepAlive(client.Client, keepAliveTime, keepAliveInterval);
             }
 
             Log.Information("Connected to {EndPoint}", Address);
@@ -249,6 +249,19 @@ namespace HomeKit
             this.httpOperationOnStream.UpdateTransforms(readTransform, writeTransform);
         }
 
+        private static void SetSocketKeepAlive(Socket socket,
+                                               TimeSpan keepAliveTime,
+                                               TimeSpan keepAliveInterval)
+        {
+            int size = Marshal.SizeOf((uint)0);
+            byte[] keepAlive = new byte[size * 3];
+
+            Buffer.BlockCopy(BitConverter.GetBytes((uint)1), 0, keepAlive, 0, size);
+            Buffer.BlockCopy(BitConverter.GetBytes((uint)keepAliveTime.TotalMilliseconds), 0, keepAlive, size, size);
+            Buffer.BlockCopy(BitConverter.GetBytes((uint)keepAliveInterval.TotalMilliseconds), 0, keepAlive, size * 2, size);
+            socket.IOControl(IOControlCode.KeepAliveValues, keepAlive, null);
+        }
+
         [MemberNotNull(nameof(client))]
         [MemberNotNull(nameof(httpOperationOnStream))]
         private void CheckConnectionValid()
@@ -276,18 +289,6 @@ namespace HomeKit
                             request.RequestUri, response.StatusCode, error);
             }
             return response;
-        }
-
-        private void SetSocketKeepAlive(TimeSpan keepAliveTime,
-                                        TimeSpan keepAliveInterval)
-        {
-            int size = Marshal.SizeOf((uint)0);
-            byte[] keepAlive = new byte[size * 3];
-
-            Buffer.BlockCopy(BitConverter.GetBytes((uint)1), 0, keepAlive, 0, size);
-            Buffer.BlockCopy(BitConverter.GetBytes((uint)keepAliveTime.TotalMilliseconds), 0, keepAlive, size, size);
-            Buffer.BlockCopy(BitConverter.GetBytes((uint)keepAliveInterval.TotalMilliseconds), 0, keepAlive, size * 2, size);
-            client.Client.IOControl(IOControlCode.KeepAliveValues, keepAlive, null);
         }
         private async ValueTask TryParseHapStatus(string target, HttpResponseMessage response)
         {

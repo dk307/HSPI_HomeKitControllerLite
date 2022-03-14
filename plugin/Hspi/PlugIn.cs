@@ -123,9 +123,9 @@ namespace Hspi
             }
         }
 
-        protected override bool OnDeviceConfigChange(Page deviceConfigPage, int deviceRef)
+        protected override bool OnDeviceConfigChange(Page deviceConfigPage, int devOrFeatRef)
         {
-            DeviceConfigPage.OnDeviceConfigChange(HomeSeerSystem, deviceRef, deviceConfigPage);
+            DeviceConfigPage.OnDeviceConfigChange(HomeSeerSystem, devOrFeatRef, deviceConfigPage);
             RestartProcessing();
             return true;
         }
