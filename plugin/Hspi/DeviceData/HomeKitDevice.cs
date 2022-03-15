@@ -224,11 +224,11 @@ namespace Hspi.DeviceData
                 }
 
                 // update last connected address
-                foreach (var pair in this.hsDevices)
+                foreach (var hsDevice in this.hsDevices.Values)
                 {
                     var connection = manager.Connection;
-                    pair.Value.SetTransientAccesssoryValues(connection.Address,
-                                                  connection.DeviceReportedInfo.Accessories.First(x => x.Aid == pair.Value.Aid));
+                    hsDevice.SetTransientAccesssoryValues(connection.Address,
+                                                  connection.DeviceReportedInfo.Accessories.First(x => x.Aid == hsDevice.Aid));
                 }
             }
             else

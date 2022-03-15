@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Diagnostics;
+#nullable enable
 
 namespace System.Net.Http.Headers
 {
@@ -12,10 +12,13 @@ namespace System.Net.Http.Headers
 
         internal static readonly TransferCodingHeaderParser SingleValueParser =
             new(false, CreateTransferCoding);
+
         internal static readonly TransferCodingHeaderParser MultipleValueParser =
             new(true, CreateTransferCoding);
+
         internal static readonly TransferCodingHeaderParser SingleValueWithQualityParser =
             new(false, CreateTransferCodingWithQuality);
+
         internal static readonly TransferCodingHeaderParser MultipleValueWithQualityParser =
             new(true, CreateTransferCodingWithQuality);
 
@@ -23,8 +26,6 @@ namespace System.Net.Http.Headers
             Func<string, TransferCodingHeaderValue> transferCodingCreator)
             : base(supportsMultipleValues)
         {
-            Debug.Assert(transferCodingCreator != null);
-
             _transferCodingCreator = transferCodingCreator;
         }
 

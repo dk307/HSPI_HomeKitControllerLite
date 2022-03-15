@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Diagnostics;
+#nullable enable
 
 namespace System.Net.Http.Headers
 {
@@ -12,16 +12,16 @@ namespace System.Net.Http.Headers
 
         internal static readonly MediaTypeHeaderParser SingleValueParser = new(false,
             CreateMediaType);
+
         internal static readonly MediaTypeHeaderParser SingleValueWithQualityParser = new(false,
             CreateMediaTypeWithQuality);
+
         internal static readonly MediaTypeHeaderParser MultipleValuesParser = new(true,
             CreateMediaTypeWithQuality);
 
         private MediaTypeHeaderParser(bool supportsMultipleValues, Func<string, MediaTypeHeaderValue> mediaTypeCreator)
             : base(supportsMultipleValues)
         {
-            Debug.Assert(mediaTypeCreator != null);
-
             _supportsMultipleValues = supportsMultipleValues;
             _mediaTypeCreator = mediaTypeCreator;
         }

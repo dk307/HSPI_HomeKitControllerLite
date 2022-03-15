@@ -42,11 +42,11 @@ namespace HomeKit.Model
 
         public (Service?, Characteristic?) FindCharacteristic(ulong iid)
         {
-            foreach (var service in Services)
+            foreach (var service in Services.Values)
             {
-                if (service.Value.Characteristics.TryGetValue(iid, out var value))
+                if (service.Characteristics.TryGetValue(iid, out var value))
                 {
-                    return (service.Value, value);
+                    return (service, value);
                 }
             }
 

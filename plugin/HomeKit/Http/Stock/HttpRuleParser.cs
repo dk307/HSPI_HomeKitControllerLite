@@ -7,6 +7,8 @@ using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text;
 
+#nullable enable
+
 namespace System.Net.Http
 {
     internal static class HttpRuleParser
@@ -69,9 +71,6 @@ namespace System.Net.Http
         [Pure]
         internal static int GetTokenLength(string input, int startIndex)
         {
-            Debug.Assert(input != null);
-            Contract.Ensures((Contract.Result<int>() >= 0) && (Contract.Result<int>() <= (input.Length - startIndex)));
-
             if (startIndex >= input.Length)
             {
                 return 0;
