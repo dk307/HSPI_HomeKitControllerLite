@@ -193,6 +193,11 @@ namespace HomeKit
                                         s => s.Characteristics.Values.Where(c => c.SupportsNotifications))
                                         .Select(x => new AidIidPair(accessory.Aid, x.Iid));
 
+                if (!neededSubscriptions.Any())
+                {
+                    continue;
+                }
+
                 var changedSubscriptions = await ChangeSubscription(neededSubscriptions, true, token).ConfigureAwait(false);
 
                 foreach (var AidIidPair in changedSubscriptions)

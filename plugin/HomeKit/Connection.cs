@@ -206,11 +206,11 @@ namespace HomeKit
         }
 
         protected async Task<HttpResponseMessage> Request(HttpMethod httpMethod,
-                                  string target,
-                                  string query,
-                                  byte[]? content = null,
-                                  string? contentType = null,
-                                  CancellationToken token = default)
+                                                          string target,
+                                                          string query,
+                                                          byte[]? content = null,
+                                                          string? contentType = null,
+                                                          CancellationToken token = default)
         {
             var builder = new UriBuilder
             {
