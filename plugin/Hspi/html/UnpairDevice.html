@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--This maintains the scale of the page based on the scale of the screen-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--This liquid tag loads all of the necessary css files for HomeSeer-->
+    {{includefile '/bootstrap/css/page_common.css'}}
+    <link href="../bootstrap/css/addons-pro/steppers.min.css" rel="stylesheet">
+    <title>Unpair a HomeKit Accessory</title>
+</head>
+<body class="body homeseer-skin">
+    <!--These liquid tags add the HomeSeer header and navbar to the top of the page when appropriate-->
+    {{includefile 'header.html'}}
+    {{includefile 'navbar.html'}}
+	
+    <div class="container">
+        <!--Intro-->
+        <div class="row mt-3 mx-1">
+            <h3>Unpair HomeKit Accessory</h3>
+        </div>
+        <div id="stepper-content">
+            <div class="row mx-1">
+                <p>Follow the steps below to unpair the device</p>
+            </div>
+            <div class="w-responsive">
+                <ul id="process-stepper" class="stepper parallel formless">
+                    <!--Select device-->
+                    <li class="step locked active" id="step1">
+                        <div data-step-label="Select a HomeKit Device" class="step-title waves-effect waves-dark">Device</div>
+                        <div class="step-new-content">
+                            {{ devicelist=plugin_function 'HomeKitController' 'GetDeviceList' [] }}
+                            <select class='mdb-select md-form' id='accessory-select' searchable="Search for a device here..." required>
+                                <option value='-1' disabled selected>Select Device</option>
+                                {{ for device in devicelist }}
+                                <option value='{{device.key}}'>{{device.value}}</option>
+                                {{ end }}
+                            </select>
+                            <div class="pt-4">
+                                <button id="step1-continue-btn" class="waves-effect waves-dark btn btn-sm btn-default custom-step" onclick="step1FeedbackFunction()">UNPAIR</button>
+                            </div>
+                        </div>
+                    </li>
+					
+                    <!--All done-->
+                    <li class="step locked" id="step2">
+                        <div data-step-label="Review the results" class="step-title waves-effect waves-dark">Done</div>
+                        <div class="step-new-content">
+							<div id="unpairing-error-message-div" class="text-danger"></div>
+                            <div id="step2-summary-txt">Unpair finished successfully</div>
+                            <div class="step-actions pt-4">
+								<button class="waves-effect waves-dark btn btn-sm btn-secondary previous-step">BACK</button>
+                                <button class="waves-effect waves-dark btn btn-sm btn-default custom-step" onclick="finish()">FINISH</button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+	
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    {{includefile 'bootstrap/js/page_common.js'}}
+    <script type="text/javascript" src="../bootstrap/js/addons-pro/steppers.min.js"></script>
+    <script type="text/JavaScript">
+		var discoveredAccessories = null;
+        $(document).ready(function () {
+            $('.stepper').mdbStepper();
+        })
+
+        function step1FeedbackFunction() {
+			var formObject = {
+			   action: "unpair",
+			   data: $('#accessory-select').val()
+		    };
+            var data = JSON.stringify(formObject);
+            $.ajax({
+                type: "POST",
+                async: "true",
+                url: '/HomeKitController/UnpairDevice.html',
+                cache: false,
+                data: data,
+                success: function (response) {
+                    var result = JSON.parse(response);
+                    var errorMessage = result.ErrorMessage;
+
+					$('#process-stepper').destroyFeedback();
+					if (errorMessage != null) {					
+						$('#unpairing-error-message-div').html(errorMessage);
+						$('#step2-summary-txt').hide();
+					} else {
+						$('#unpairing-error-message-div').hide();
+						$('#step2-summary-txt').show();
+						$('#process-stepper').nextStep();
+					}
+                },
+                error: function () {
+                    $('#process-stepper').destroyFeedback();
+                    alert("Error");
+                }
+            });
+        }
+
+        function finish() {
+            var devicesPage = window.location.origin + "/devices.html";
+            window.location.assign(devicesPage);
+        }
+    </script>
+</body>
+</html>
