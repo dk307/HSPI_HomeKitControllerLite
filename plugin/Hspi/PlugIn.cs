@@ -54,7 +54,13 @@ namespace Hspi
             Log.Debug("PostBackProc for {page} with {data}", page, data);
             var (result, restart) = page switch
             {
-                AddDeviceHandler.PageName => AddDeviceHandler.PostBackProc(data, HomeSeerSystem, ShutdownCancellationToken),
+                AddDeviceHandler.PageName => AddDeviceHandler.PostBackProc(data,
+                                                                           HomeSeerSystem,
+                                                                           ShutdownCancellationToken),
+                UnpairDeviceHandler.PageName => UnpairDeviceHandler.PostBackProc(data,
+                                                                                 HomeSeerSystem,
+                                                                                 GetHomeKitDeviceManager(),
+                                                                                 ShutdownCancellationToken),
                 _ => (base.PostBackProc(page, data, user, userRights), false),
             };
 
@@ -112,6 +118,9 @@ namespace Hspi
                 // Device Add Page
                 HomeSeerSystem.RegisterDeviceIncPage(PlugInData.PlugInId, "AddDevice.html", "Pair HomeKit Device");
 
+                // Other Pages
+                HomeSeerSystem.RegisterFeaturePage(PlugInData.PlugInId, "UnpairDevice.html", "Unpair HomeKit Device");
+
                 RestartProcessing();
 
                 Log.Information("Plugin Started");
@@ -159,7 +168,7 @@ namespace Hspi
             }
         }
 
-        private async ValueTask<HsHomeKitDeviceManager> GetHomeKitDeviceManager()
+        private async Task<HsHomeKitDeviceManager> GetHomeKitDeviceManager()
         {
             using var _ = await dataLock.LockAsync(ShutdownCancellationToken);
             return deviceManager ?? throw new InvalidOperationException("No Devices Found. Initialize in progress");
@@ -210,6 +219,21 @@ namespace Hspi
                 var deviceManagerCopy = await GetHomeKitDeviceManager().ConfigureAwait(false);
                 return await deviceManagerCopy.Refresh(devOrFeatRef).ConfigureAwait(false);
             }
+        }
+
+        // used by scrbian
+        public IDictionary<int, string> GetDeviceList()
+        {
+            var result = new Dictionary<int, string>();
+            foreach (var refId in HomeSeerSystem.GetRefsByInterface(PlugInData.PlugInId, true))
+            {
+                var rootDevice = new HsHomeKitBaseRootDevice(HomeSeerSystem, refId);
+                if (rootDevice.Aid == 1)
+                {
+                    result.Add(refId, HsHomeKitDevice.GetNameForLog(HomeSeerSystem, refId));
+                }
+            }
+            return result;
         }
 
         private readonly AsyncLock dataLock = new();

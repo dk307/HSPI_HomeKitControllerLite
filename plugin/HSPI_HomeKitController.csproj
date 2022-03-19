@@ -195,6 +195,7 @@
     <Compile Include="HomeKit\Utils\ServiceListConverter.cs" />
     <Compile Include="HomeKit\Utils\ServiceTypeJsonConverter.cs" />
     <Compile Include="HomeKit\Utils\UnitAttribute.cs" />
+    <Compile Include="Hspi\Pages\UnpairDeviceHandler.cs" />
     <Compile Include="Hspi\Pages\AddDeviceHandler.cs" />
     <Compile Include="Hspi\DeviceData\HsFeatureTypeData.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\ButtonOption.cs" />
