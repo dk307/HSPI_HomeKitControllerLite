@@ -119,9 +119,11 @@ namespace HomeKit
             characteristicsRequest.Add(requestData);
             request["characteristics"] = characteristicsRequest;
 
-            var result = await HandleJsonRequest<JObject, JObject>(HttpMethod.Put, request,
-                                                     "/characteristics", string.Empty,
-                                                     cancellationToken: token).ConfigureAwait(false);
+            var result = await HandleJsonRequest<JObject, JObject>(HttpMethod.Put,
+                                                                   request,
+                                                                   "/characteristics",
+                                                                   string.Empty,
+                                                                   cancellationToken: token).ConfigureAwait(false);
 
             if (result != null && result["characteristics"] is JArray characteristics)
             {
@@ -155,10 +157,10 @@ namespace HomeKit
                 var data = string.Join(",", readableCharacterestics.Select(x => Invariant($"{accessory.Aid}.{x}")));
 
                 var result = await this.HandleJsonRequest<JObject, CharacteristicsValuesList>(HttpMethod.Get,
-                                                                                 null,
-                                                                                 CharacteristicsTarget,
-                                                                                 "id=" + data,
-                                                                                 cancellationToken: token);
+                                                                                              null,
+                                                                                              CharacteristicsTarget,
+                                                                                              "id=" + data,
+                                                                                              cancellationToken: token);
                 if (result != null)
                 {
                     EnqueueResults(result);
@@ -253,8 +255,8 @@ namespace HomeKit
         }
 
         private async ValueTask<HashSet<AidIidPair>> ChangeSubscription(IEnumerable<AidIidPair> subscriptions,
-                                                                          bool subscribe,
-                                                                          CancellationToken token)
+                                                                        bool subscribe,
+                                                                        CancellationToken token)
         {
             var doneSubscriptions = new HashSet<AidIidPair>();
             JObject request = new();
@@ -274,9 +276,11 @@ namespace HomeKit
 
             request["characteristics"] = characteristicsRequest;
 
-            var result = await HandleJsonRequest<JObject, JObject>(HttpMethod.Put, request,
-                                                     "/characteristics", string.Empty,
-                                                     cancellationToken: token).ConfigureAwait(false);
+            var result = await HandleJsonRequest<JObject, JObject>(HttpMethod.Put,
+                                                                   request,
+                                                                   "/characteristics",
+                                                                   string.Empty,
+                                                                   cancellationToken: token).ConfigureAwait(false);
 
             if (result != null && result["characteristics"] is JArray characteristics)
             {
@@ -316,9 +320,11 @@ namespace HomeKit
 
         private async ValueTask<DeviceReportedInfo> GetAccessories(CancellationToken token)
         {
-            var info = await HandleJsonRequest<JObject, DeviceReportedInfo>(HttpMethod.Get, null,
-                                                             "/accessories", string.Empty,
-                                                             cancellationToken: token).ConfigureAwait(false);
+            var info = await HandleJsonRequest<JObject, DeviceReportedInfo>(HttpMethod.Get,
+                                                                            null,
+                                                                            "/accessories",
+                                                                            string.Empty,
+                                                                            cancellationToken: token).ConfigureAwait(false);
             if (info == null)
             {
                 throw new InvalidOperationException("Device Send empty device info");

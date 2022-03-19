@@ -79,7 +79,7 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
-        public async Task GetJuiDeviceConfigPageForInvalidDevice()
+        public void GetJuiDeviceConfigPageForInvalidDevice()
         {
             var plugin = TestHelper.CreatePlugInMock();
             var mockHsController = TestHelper.SetupHsControllerAndSettings(plugin, new Dictionary<string, string>());

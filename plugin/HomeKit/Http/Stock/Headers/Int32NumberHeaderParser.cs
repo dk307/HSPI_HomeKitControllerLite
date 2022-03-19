@@ -15,7 +15,7 @@ namespace System.Net.Http.Headers
         // Value types are never used in collections (in fact HttpHeaderValueCollection expects T to be a reference
         // type).
 
-        internal static readonly Int32NumberHeaderParser Parser = new Int32NumberHeaderParser();
+        internal static readonly Int32NumberHeaderParser Parser = new ();
 
         private Int32NumberHeaderParser()
             : base(false)

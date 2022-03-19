@@ -94,7 +94,7 @@ namespace Hspi.DeviceData
         }
 
         public static int CreateFeature(IHsController hsController,
-                                                int refId,
+                                        int refId,
                                         ServiceType serviceType,
                                         Characteristic characteristic)
         {
@@ -128,7 +128,8 @@ namespace Hspi.DeviceData
 
             if (characteristic.Format != CharacteristicFormat.String)
             {
-                bool didAdd = AddValidValuesGraphicsAndStatus(newData,
+                bool didAdd = AddValidValuesGraphicsAndStatus(hsController,
+                                                              newData,
                                                               serviceType,
                                                               characteristic,
                                                               writable,
@@ -136,7 +137,8 @@ namespace Hspi.DeviceData
                                                               mapping);
                 if (!didAdd)
                 {
-                    AddRangedGraphicsAndStatus(newData,
+                    AddRangedGraphicsAndStatus(hsController,
+                                               newData,
                                                serviceType,
                                                characteristic,
                                                writable,
@@ -162,7 +164,8 @@ namespace Hspi.DeviceData
             data.Feature[EProperty.PlugExtraData] = plugExtraData;
         }
 
-        private static void AddRangedGraphicsAndStatus(NewFeatureData newData,
+        private static void AddRangedGraphicsAndStatus(IHsController hsController,
+                                                       NewFeatureData newData,
                                                        ServiceType serviceType,
                                                        Characteristic characteristic,
                                                        bool writable,
@@ -183,7 +186,7 @@ namespace Hspi.DeviceData
             if (readable)
             {
                 var rangeIcon = rangeOptions?.Icon;
-                StatusGraphic statusGraphic = new(GetImagePath(rangeIcon ?? DefaultIcon),
+                StatusGraphic statusGraphic = new(GetImagePath(rangeIcon ?? GetDefaultIcon(hsController, characteristic)),
                                                   minValue,
                                                   maxValue);
                 statusGraphic.TargetRange.DecimalPlaces = decimalPlaces;
@@ -282,17 +285,17 @@ namespace Hspi.DeviceData
             }
         }
 
-        private static bool AddValidValuesGraphicsAndStatus(NewFeatureData newData,
+        private static bool AddValidValuesGraphicsAndStatus(IHsController hsController,
+                                                            NewFeatureData newData,
                                                             ServiceType serviceType,
                                                             Characteristic characteristic,
                                                             bool writable,
                                                             bool readable,
                                                             HSMapping.HSMapping? mapping)
         {
-            bool isBooleanFormatType = characteristic.IsBooleanFormatType;
             var list = characteristic.ValidValues ??
-                       mapping?.ButtonOptions?.Select(x => x.Value) ??
-                       (isBooleanFormatType ? new double[] { 0, 1 } : null);
+                      mapping?.ButtonOptions?.Select(x => x.Value) ??
+                      (characteristic.IsBooleanFormatType ? new double[] { 0, 1 } : null);
 
             if (list == null)
             {
@@ -305,9 +308,10 @@ namespace Hspi.DeviceData
 
                 if (readable)
                 {
-                    StatusGraphic statusGraphic = new(GetImagePath(GetIcon(buttonMapping, isBooleanFormatType, value)),
+                    string iconFileName = GetIcon(hsController, buttonMapping, characteristic, value);
+                    StatusGraphic statusGraphic = new(GetImagePath(iconFileName),
                                                       value,
-                                                      GetButtonTest(buttonMapping, isBooleanFormatType, value));
+                                                      GetButtonText(buttonMapping, characteristic, value));
                     AddStatusGraphic(newData, statusGraphic);
                 }
 
@@ -315,7 +319,7 @@ namespace Hspi.DeviceData
                 {
                     var controlUse = buttonMapping?.EControlUses?.FirstOrDefault(x => x.ServiceIId == serviceType.Id)?.Value;
 
-                    if (isBooleanFormatType && (buttonMapping == null))
+                    if (characteristic.IsBooleanFormatType && (buttonMapping == null))
                     {
                         controlUse = (int)((value == 0) ? EControlUse.Off : EControlUse.On);
                     }
@@ -324,7 +328,7 @@ namespace Hspi.DeviceData
                     StatusControl statusControl = new(EControlType.Button)
                     {
                         ControlUse = (EControlUse)controlUse,
-                        Label = GetButtonTest(buttonMapping, isBooleanFormatType, value),
+                        Label = GetButtonText(buttonMapping, characteristic, value),
                         TargetValue = value,
                     };
                     AddStatusControl(newData, statusControl);
@@ -418,11 +422,33 @@ namespace Hspi.DeviceData
             };
         }
 
-        private static string GetButtonTest(ButtonOption? buttonMapping, bool isBooleanFormatType, double value)
+        private static string GetButtonText(ButtonOption? buttonMapping, Characteristic characteristic, double value)
         {
             return buttonMapping?.Name ??
-                   (isBooleanFormatType ? (value == 0D ? "Off" : "On") : null) ??
+                   (characteristic.IsBooleanFormatType ? GetOnOffText(value) : null) ??
                    value.ToString(CultureInfo.InvariantCulture);
+
+            static string GetOnOffText(double value)
+            {
+                return (value == 0D ? "Off" : "On");
+            }
+        }
+
+        private static string GetDefaultIcon(IHsController hsController, Characteristic characteristic)
+        {
+            var defaultIconName = characteristic.Type.DisplayName?.ToLower().Replace(" ", "");
+
+            if (defaultIconName != null)
+            {
+                var iconPath = Path.Combine(hsController.GetAppPath(), GetImagePath(defaultIconName));
+
+                if (File.Exists(iconPath))
+                {
+                    return defaultIconName;
+                }
+            }
+
+            return DefaultIcon;
         }
 
         private static HsFeatureTypeData? GetDeviceTypeFromPlugInData(PlugExtraData? plugInExtra)
@@ -436,14 +462,17 @@ namespace Hspi.DeviceData
             return null;
         }
 
-        private static string GetIcon(ButtonOption? buttonMapping, bool isBooleanFormatType, double value)
+        private static string GetIcon(IHsController hsController,
+                                      ButtonOption? buttonMapping,
+                                      Characteristic characteristic,
+                                      double value)
         {
             if (buttonMapping != null)
             {
-                return buttonMapping?.Icon ?? DefaultIcon;
+                return buttonMapping?.Icon ?? GetDefaultIcon(hsController, characteristic);
             }
 
-            if (isBooleanFormatType)
+            if (characteristic.IsBooleanFormatType)
             {
                 if (value == 0)
                 {
@@ -451,7 +480,7 @@ namespace Hspi.DeviceData
                 }
                 return OnIcon;
             }
-            return DefaultIcon;
+            return GetDefaultIcon(hsController, characteristic);
         }
 
         private static string GetImagePath(string iconFileName)
@@ -479,8 +508,7 @@ namespace Hspi.DeviceData
                                               FeatureFactory featureFactory,
                                               HSMapping.HSMapping? mapping)
         {
-            string name = mapping?.Name ??
-                          characteristic.Type.DisplayName ??
+            string name = characteristic.Type.DisplayName ??
                           characteristic.Description ??
                           characteristic.Type.Id.ToString("D");
             return featureFactory.WithName(name);
@@ -491,9 +519,9 @@ namespace Hspi.DeviceData
         private const string OnIcon = "on";
 
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
-                                                                                                                    {
-                                                                                                                        string json = Encoding.UTF8.GetString(Resource.HSMappings);
-                                                                                                                        return JsonHelper.DeserializeObject<HSMappings>(json);
-                                                                                                                    }, true);
+                                                                       {
+                                                                           string json = Encoding.UTF8.GetString(Resource.HSMappings);
+                                                                           return JsonHelper.DeserializeObject<HSMappings>(json);
+                                                                       }, true);
     }
 }

@@ -10,7 +10,7 @@ namespace System.Net.Http.Headers
     // which will remove leading, trailing, and whitespace in the middle of the string.
     internal class ByteArrayHeaderParser : HttpHeaderParser
     {
-        internal static readonly ByteArrayHeaderParser Parser = new ByteArrayHeaderParser();
+        internal static readonly ByteArrayHeaderParser Parser = new ();
 
         private ByteArrayHeaderParser()
             : base(false)
