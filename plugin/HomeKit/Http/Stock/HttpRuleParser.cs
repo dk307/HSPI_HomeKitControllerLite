@@ -68,7 +68,6 @@ namespace System.Net.Http
             return s_tokenChars[character];
         }
 
-        [Pure]
         internal static int GetTokenLength(string input, int startIndex)
         {
             if (startIndex >= input.Length)
