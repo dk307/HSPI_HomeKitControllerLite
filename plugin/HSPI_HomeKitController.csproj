@@ -227,6 +227,9 @@
     <Compile Include="Shared\Hspi\Utils\TaskHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>

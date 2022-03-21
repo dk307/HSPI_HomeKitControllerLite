@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Diagnostics;
+using System.Text;
 
 namespace System.Net.Http.Headers
 {
@@ -10,15 +11,12 @@ namespace System.Net.Http.Headers
     // which will remove leading and trailing whitespace.
     internal class UriHeaderParser : HttpHeaderParser
     {
-        private readonly UriKind _uriKind;
-
         internal static readonly UriHeaderParser RelativeOrAbsoluteUriParser =
             new(UriKind.RelativeOrAbsolute);
 
         private UriHeaderParser(UriKind uriKind)
             : base(false)
         {
-            _uriKind = uriKind;
         }
 
         // The normal client header parser just casts bytes to chars (see GetString).
@@ -59,8 +57,8 @@ namespace System.Net.Http.Headers
                 {
                     // We don't want '?' replacement characters, just fail.
 
-                    System.Text.Encoding decoder = System.Text.Encoding.GetEncoding("utf-8", System.Text.EncoderFallback.ExceptionFallback,
-                        System.Text.DecoderFallback.ExceptionFallback);
+                    var decoder = Encoding.GetEncoding("utf-8", EncoderFallback.ExceptionFallback,
+                        DecoderFallback.ExceptionFallback);
 
                     return decoder.GetString(rawBytes, 0, rawBytes.Length);
                 }

@@ -55,7 +55,7 @@
       "name": "Home - Heating Threshold Temperature",
 
       "rangeOptions": {
-        "icon": "temperaturechange2",
+        "icon": "temperaturechange2"
       }
     },
     {
@@ -409,7 +409,7 @@
           "value": 3,
           "name": "On Hold",
           "icon": "paused"
-        },
+        }
       ]
     },
     {
