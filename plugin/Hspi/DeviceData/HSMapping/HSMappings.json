@@ -2,11 +2,11 @@
   "mappings": [
     {
       "iid": "1621f556-1367-443c-af19-82af018e99de",
-      "comment": "Timestamp"
+      "name": "Timestamp"
     },
     {
       "iid": "00000011-0000-1000-8000-0026BB765291",
-      "comment": "Current Temperature",
+      "name": "Current Temperature",
 
       "rangeOptions": {
         "icon": "temperature"
@@ -22,7 +22,7 @@
     },
     {
       "iid": "00000035-0000-1000-8000-0026BB765291",
-      "comment": "Target Temperature",
+      "name": "Target Temperature",
 
       "rangeOptions": {
         "icon": "temperature"
@@ -30,7 +30,7 @@
     },
     {
       "iid": "00000012-0000-1000-8000-0026BB765291",
-      "comment": "Heating Threshold Temperature",
+      "name": "Heating Threshold Temperature",
 
       "deviceType": [
         {
@@ -52,15 +52,15 @@
     },
     {
       "iid": "e4489bbc-5227-4569-93e5-b345e3e5508f",
-      "comment": "Home - Heating Threshold Temperature",
+      "name": "Home - Heating Threshold Temperature",
 
       "rangeOptions": {
-        "icon": "temperaturechange2"
+        "icon": "temperaturechange2",
       }
     },
     {
       "iid": "05b97374-6dc0-439b-a0fa-ca33f612d425",
-      "comment": "Away - Heating Threshold Temperature",
+      "name": "Away - Heating Threshold Temperature",
 
       "rangeOptions": {
         "icon": "temperaturechange2"
@@ -68,7 +68,7 @@
     },
     {
       "iid": "73aab542-892a-4439-879a-d2a883724b69",
-      "comment": "Sleep - Heating Threshold Temperature",
+      "name": "Sleep - Heating Threshold Temperature",
 
       "rangeOptions": {
         "icon": "temperaturechange2"
@@ -76,7 +76,7 @@
     },
     {
       "iid": "0000000D-0000-1000-8000-0026BB765291",
-      "comment": "Cooling Threshold Temperature",
+      "name": "Cooling Threshold Temperature",
 
       "deviceType": [
         {
@@ -98,7 +98,7 @@
     },
     {
       "iid": "7d381baa-20f9-40e5-9be9-aeb92d4becef",
-      "comment": "Home - Cooling Threshold Temperature",
+      "name": "Home - Cooling Threshold Temperature",
 
       "rangeOptions": {
         "icon": "temperaturechange2"
@@ -106,7 +106,7 @@
     },
     {
       "iid": "5da985f0-898a-4850-b987-b76c6c78d670",
-      "comment": "Sleep - Cooling Threshold Temperature",
+      "name": "Sleep - Cooling Threshold Temperature",
 
       "rangeOptions": {
         "icon": "temperaturechange2"
@@ -114,7 +114,7 @@
     },
     {
       "iid": "a251f6e7-ac46-4190-9c5d-3d06277bdf9f",
-      "comment": "Away - Cooling Threshold Temperature",
+      "name": "Away - Cooling Threshold Temperature",
 
       "rangeOptions": {
         "icon": "temperaturechange2"
@@ -122,7 +122,7 @@
     },
     {
       "iid": "00000034-0000-1000-8000-0026BB765291",
-      "comment": "Target Relative Humidity",
+      "name": "Target Relative Humidity",
 
       "rangeOptions": {
         "icon": "humidity"
@@ -130,7 +130,7 @@
     },
     {
       "iid": "00000010-0000-1000-8000-0026bb765291",
-      "comment": "Current Relative Humidity",
+      "name": "Current Relative Humidity",
 
       "rangeOptions": {
         "icon": "humidity"
@@ -138,7 +138,7 @@
     },
     {
       "iid": "0000000F-0000-1000-8000-0026BB765291",
-      "comment": "Current Heating Cooling State",
+      "name": "Current Heating Cooling State",
 
       "deviceType": [
         {
@@ -151,24 +151,24 @@
       "buttonOptions": [
         {
           "value": 0,
-          "comment": "Off",
+          "name": "Off",
           "icon": "heatcooloff"
         },
         {
           "value": 1,
-          "comment": "Heating",
+          "name": "Heating",
           "icon": "heating"
         },
         {
           "value": 2,
-          "comment": "Cooling",
+          "name": "Cooling",
           "icon": "cooling"
         }
       ]
     },
     {
       "iid": "00000033-0000-1000-8000-0026BB765291",
-      "comment": "Target Heating Cooling State",
+      "name": "Target Heating Cooling State",
 
       "deviceType": [
         {
@@ -181,7 +181,7 @@
       "buttonOptions": [
         {
           "value": 0,
-          "comment": "Off",
+          "name": "Off",
           "icon": "heatcooloff",
           "eControlUse": [
             {
@@ -192,7 +192,7 @@
         },
         {
           "value": 1,
-          "comment": "Heating",
+          "name": "Heating",
           "icon": "heating",
           "eControlUse": [
             {
@@ -203,7 +203,7 @@
         },
         {
           "value": 2,
-          "comment": "Cooling",
+          "name": "Cooling",
           "icon": "cooling",
           "eControlUse": [
             {
@@ -214,7 +214,7 @@
         },
         {
           "value": 3,
-          "comment": "Auto",
+          "name": "Auto",
           "icon": "heatcoolauto",
           "eControlUse": [
             {
@@ -227,7 +227,7 @@
     },
     {
       "iid": "000000AF-0000-1000-8000-0026BB765291",
-      "comment": "Current Fan State",
+      "name": "Current Fan State",
       "forceButtonOptions": true,
 
       "deviceType": [
@@ -241,24 +241,24 @@
       "buttonOptions": [
         {
           "value": 0,
-          "comment": "Inactive",
+          "name": "Inactive",
           "icon": "inactivefan"
         },
         {
           "value": 1,
-          "comment": "Idle",
+          "name": "Idle",
           "icon": "idlefan"
         },
         {
           "value": 2,
-          "comment": "Blowing Air",
+          "name": "Blowing Air",
           "icon": "blowingairfan"
         }
       ]
     },
     {
       "iid": "000000BF-0000-1000-8000-0026BB765291",
-      "comment": "Target Fan State",
+      "name": "Target Fan State",
       "forceButtonOptions": true,
 
       "deviceType": [
@@ -272,7 +272,7 @@
       "buttonOptions": [
         {
           "value": 0,
-          "comment": "Manual On",
+          "name": "Manual On",
           "icon": "manualonfan",
           "eControlUse": [
             {
@@ -283,7 +283,7 @@
         },
         {
           "value": 1,
-          "comment": "Auto",
+          "name": "Auto",
           "icon": "autofan",
           "eControlUse": [
             {
@@ -296,154 +296,154 @@
     },
     {
       "iid": "00000022-0000-1000-8000-0026BB765291",
-      "comment": "Motion Detected",
+      "name": "Motion Detected",
 
       "buttonOptions": [
         {
           "value": 0,
-          "comment": "Not Detected",
+          "name": "Not Detected",
           "icon": "motionnotdetected"
         },
         {
           "value": 1,
-          "comment": "Detected",
+          "name": "Detected",
           "icon": "motiondetected"
         }
       ]
     },
     {
       "iid": "00000071-0000-1000-8000-0026BB765291",
-      "comment": "Occupancy Detected",
+      "name": "Occupancy Detected",
 
       "buttonOptions": [
         {
           "value": 0,
-          "comment": "Not Detected",
+          "name": "Not Detected",
           "icon": "occupancynotdetected"
         },
         {
           "value": 1,
-          "comment": "Detected",
+          "name": "Detected",
           "icon": "occupancydetected"
         }
       ]
     },
     {
       "iid": "00000079-0000-1000-8000-0026BB765291",
-      "comment": "Status Low battery",
+      "name": "Status Low battery",
 
       "buttonOptions": [
         {
           "value": 0,
-          "comment": "Normal",
+          "name": "Normal",
           "icon": "batterynormal"
         },
         {
           "value": 1,
-          "comment": "Detected",
+          "name": "Detected",
           "icon": "batterylow"
         }
       ]
     },
     {
       "iid": "0000008F-0000-1000-8000-0026BB765291",
-      "comment": "Charging State",
+      "name": "Charging State",
 
       "buttonOptions": [
         {
           "value": 0,
-          "comment": "Not Charging",
+          "name": "Not Charging",
           "icon": "batterynotcharging"
         },
         {
           "value": 1,
-          "comment": "Charging",
+          "name": "Charging",
           "icon": "batterycharging"
         },
         {
           "value": 2,
-          "comment": "Not Chargeable",
+          "name": "Not Chargeable",
           "icon": "batterynotchargeable"
         }
       ]
     },
     {
       "iid": "00000036-0000-1000-8000-0026bb765291",
-      "comment": "Temperature Display Units",
+      "name": "Temperature Display Units",
 
       "buttonOptions": [
         {
           "value": 0,
-          "comment": "Celsius",
+          "name": "Celsius",
           "icon": "celsius"
         },
         {
           "value": 1,
-          "comment": "Fahrenheit",
+          "name": "Fahrenheit",
           "icon": "fahrenheit"
         }
       ]
     },
     {
       "iid": "b7ddb9a3-54bb-4572-91d2-f1f5b0510f8c",
-      "comment": "Current Program",
+      "name": "Current Program",
       "forceButtonOptions": true,
 
       "buttonOptions": [
         {
           "value": 0,
-          "comment": "Home",
+          "name": "Home",
           "icon": "home"
         },
         {
           "value": 1,
-          "comment": "Sleep",
+          "name": "Sleep",
           "icon": "sleep"
         },
         {
           "value": 2,
-          "comment": "Away",
+          "name": "Away",
           "icon": "away"
         },
         {
           "value": 3,
-          "comment": "On Hold",
+          "name": "On Hold",
           "icon": "paused"
-        }
+        },
       ]
     },
     {
       "iid": "1b300bc2-cffc-47ff-89f9-bd6ccf5f2853",
-      "comment": "Set Program",
+      "name": "Set Program",
       "forceButtonOptions": true,
 
       "buttonOptions": [
         {
           "value": 0,
-          "comment": "Home",
+          "name": "Home",
           "icon": "home"
         },
         {
           "value": 1,
-          "comment": "Sleep",
+          "name": "Sleep",
           "icon": "sleep"
         },
         {
           "value": 2,
-          "comment": "Away",
+          "name": "Away",
           "icon": "away"
         }
       ]
     },
     {
       "iid": "fa128de6-9d7d-49a4-b6d8-4e4e234dee38",
-      "comment": "Clear Program Hold",
+      "name": "Clear Program Hold",
       "forceButtonOptions": true,
 
       "buttonOptions": [
         {
           "value": 1,
-          "comment": "Clear Hold",
+          "name": "Clear Hold",
           "eControlUse": [
             {
               "serviceiid": "0000004A-0000-1000-8000-0026BB765291", // Thermostat
@@ -455,7 +455,7 @@
     },
     {
       "iid": "c35da3c0-e004-40e3-b153-46655cdd9214",
-      "comment": "Fan Speed",
+      "name": "Fan Speed",
 
       "rangeOptions": {
         "icon": "fanspeed"
@@ -463,7 +463,7 @@
     },
     {
       "iid": "48f62aec-4171-4b4a-8f0e-1eeb6708b3fb",
-      "comment": "Fan Speed",
+      "name": "Fan Speed",
 
       "rangeOptions": {
         "icon": "fanspeed"
