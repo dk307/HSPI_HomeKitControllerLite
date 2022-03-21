@@ -53,7 +53,7 @@ namespace HomeKit.Http
 
             var waitTask = waitForResult.WaitAsync(cancellationTokenSource.Token);
 
-            var finishedTask = Task.WhenAny(waitTask, readAndParseTask);
+            var finishedTask = await Task.WhenAny(waitTask, readAndParseTask).ConfigureAwait(false);
 
             // this allow to throw error if parsing fails.
             await finishedTask.ConfigureAwait(false);

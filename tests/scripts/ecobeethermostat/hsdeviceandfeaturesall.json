@@ -273,7 +273,7 @@
         "value": "{\"Type\":2,\"Iid\":15}"
       }
     ],
-    "Name": "Temperature Display Units",
+    "Name": "Temperature Units",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -325,7 +325,7 @@
         "value": "1"
       }
     ],
-    "Name": "Cooling Threshold Temperature",
+    "Name": "Cooling Temperature Threshold",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -383,7 +383,7 @@
         "value": "1"
       }
     ],
-    "Name": "Heating Threshold Temperature",
+    "Name": "Heating Temperature Threshold",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -617,7 +617,7 @@
         "value": "{\"Type\":2,\"Iid\":22}"
       }
     ],
-    "Name": "Current Fan State",
+    "Name": "Fan Current State",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -657,7 +657,7 @@
         "value": "{\"Type\":2,\"Iid\":23}"
       }
     ],
-    "Name": "Current Program",
+    "Name": "Ecobee Current Mode",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -701,7 +701,7 @@
         "value": "1"
       }
     ],
-    "Name": "Home - Heating Threshold Temperature",
+    "Name": "Ecobee Home Target Heating",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -759,7 +759,7 @@
         "value": "1"
       }
     ],
-    "Name": "Home - Cooling Threshold Temperature",
+    "Name": "Ecobee Home Target Cooling",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -817,7 +817,7 @@
         "value": "1"
       }
     ],
-    "Name": "Sleep - Heating Threshold Temperature",
+    "Name": "Ecobee Sleep Target Heating",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -875,7 +875,7 @@
         "value": "1"
       }
     ],
-    "Name": "Sleep - Cooling Threshold Temperature",
+    "Name": "Ecobee Sleep Target Cooling",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -933,7 +933,7 @@
         "value": "1"
       }
     ],
-    "Name": "Away - Heating Threshold Temperature",
+    "Name": "Ecobee Away Target Heating",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -991,7 +991,7 @@
         "value": "1"
       }
     ],
-    "Name": "Away - Cooling Threshold Temperature",
+    "Name": "Ecobee Away Target Cooling",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -1045,7 +1045,7 @@
         "value": "{\"Type\":2,\"Iid\":30}"
       }
     ],
-    "Name": "Set Program",
+    "Name": "Ecobee Set Hold Schedule",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -1083,7 +1083,7 @@
         "value": "{\"Type\":2,\"Iid\":31}"
       }
     ],
-    "Name": "Timestamp",
+    "Name": "Ecobee Timestamp",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -1115,7 +1115,7 @@
         "value": "{\"Type\":2,\"Iid\":32}"
       }
     ],
-    "Name": "Clear Program Hold",
+    "Name": "Ecobee Clear Hold",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -1273,7 +1273,7 @@
         "value": "{\"Type\":2,\"Iid\":36}"
       }
     ],
-    "Name": "Fan Speed",
+    "Name": "Ecobee Fan Write Speed",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -1327,7 +1327,7 @@
         "value": "{\"Type\":2,\"Iid\":37}"
       }
     ],
-    "Name": "Fan Speed",
+    "Name": "Ecobee Fan Read Speed",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
@@ -1894,7 +1894,7 @@
         "value": "{\"Type\":2,\"Iid\":43}"
       }
     ],
-    "Name": "Status Low battery",
+    "Name": "Status Low Batt",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,

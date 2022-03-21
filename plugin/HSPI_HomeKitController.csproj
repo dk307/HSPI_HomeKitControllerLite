@@ -195,6 +195,7 @@
     <Compile Include="HomeKit\Utils\ServiceListConverter.cs" />
     <Compile Include="HomeKit\Utils\ServiceTypeJsonConverter.cs" />
     <Compile Include="HomeKit\Utils\UnitAttribute.cs" />
+    <Compile Include="Hspi\Pages\UnpairDeviceHandler.cs" />
     <Compile Include="Hspi\Pages\AddDeviceHandler.cs" />
     <Compile Include="Hspi\DeviceData\HsFeatureTypeData.cs" />
     <Compile Include="Hspi\DeviceData\HSMapping\ButtonOption.cs" />
@@ -313,41 +314,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AdditionalFiles>
     <Content Include="Hspi\html\AddDevice.html" />
-    <Content Include="Hspi\html\images\autofan.png" />
-    <Content Include="Hspi\html\images\away.png" />
-    <Content Include="Hspi\html\images\batterylow.png" />
-    <Content Include="Hspi\html\images\batterynormal.png" />
-    <Content Include="Hspi\html\images\batterynotchargeable.png" />
-    <Content Include="Hspi\html\images\batterynotcharging.png" />
-    <Content Include="Hspi\html\images\blowingairfan.png" />
-    <Content Include="Hspi\html\images\celsius.png" />
-    <Content Include="Hspi\html\images\cooling.png" />
-    <Content Include="Hspi\html\images\default.png" />
-    <Content Include="Hspi\html\images\fahrenheit.png" />
-    <Content Include="Hspi\html\images\fanspeed.png" />
-    <Content Include="Hspi\html\images\heatcoolauto.png" />
-    <Content Include="Hspi\html\images\heatcooloff.png" />
-    <Content Include="Hspi\html\images\heating.png" />
-    <Content Include="Hspi\html\images\home.png" />
-    <Content Include="Hspi\html\images\humidity.png" />
-    <Content Include="Hspi\html\images\icons.txt" />
-    <Content Include="Hspi\html\images\idlefan.png" />
-    <Content Include="Hspi\html\images\inactivefan.png" />
-    <Content Include="Hspi\html\images\manualonfan.png" />
-    <Content Include="Hspi\html\images\motiondetected.png" />
-    <Content Include="Hspi\html\images\motionnotdetected.png" />
-    <Content Include="Hspi\html\images\name.png" />
-    <Content Include="Hspi\html\images\occupancydetected.png" />
-    <Content Include="Hspi\html\images\occupancynotdetected.png" />
-    <Content Include="Hspi\html\images\off.png" />
-    <Content Include="Hspi\html\images\offline.png" />
-    <Content Include="Hspi\html\images\on.png" />
-    <Content Include="Hspi\html\images\online.png" />
-    <Content Include="Hspi\html\images\paused.png" />
-    <Content Include="Hspi\html\images\sleep.png" />
-    <Content Include="Hspi\html\images\temperature.png" />
-    <Content Include="Hspi\html\images\temperaturechange.png" />
-    <Content Include="Hspi\html\images\temperaturechange2.png" />
+    <Content Include="Hspi\html\UnpairDevice.html" />
     <Content Include="updater_override.tt" />
   </ItemGroup>
   <ItemGroup>

@@ -232,8 +232,8 @@ namespace HomeKit
         }
 
         private byte[] ConstainsInResponse<T>(string step,
-               ILookup<TlvType, TlvValue> response,
-               TlvType type) where T : Exception, new()
+                                              ILookup<TlvType, TlvValue> response,
+                                              TlvType type) where T : Exception, new()
         {
             if (!response.Contains(type))
             {
@@ -249,8 +249,8 @@ namespace HomeKit
         }
 
         private void HandlePairingResponse<T>(string step,
-                                   ILookup<TlvType, TlvValue> response,
-                                   IEnumerable<byte> expectedStateValue) where T : Exception, new()
+                                              ILookup<TlvType, TlvValue> response,
+                                              IEnumerable<byte> expectedStateValue) where T : Exception, new()
         {
             if (response.Contains(TlvType.State))
             {
@@ -311,7 +311,7 @@ namespace HomeKit
         }
 
         private async Task<PairingDeviceInfo> NewPairingStep5(SrpClient srpClient2,
-                                              CancellationToken cancellationToken)
+                                                              CancellationToken cancellationToken)
         {
             const string stepName = "Step5";
             Guid pairingId = Guid.NewGuid();

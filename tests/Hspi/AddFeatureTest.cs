@@ -197,57 +197,13 @@ namespace HSPI_HomeKitControllerTest
             plugIn.Object.ShutdownIO();
         }
 
-        private async Task<(Mock<PlugIn>, SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)>
-            StartPluginWithHapAccessory(HapAccessory hapAccessory, AsyncProducerConsumerQueue<bool> connectionQueue)
-        {
-            string hsData = hapAccessory.GetHsDeviceAndFeaturesString();
-
-            int[] refIds = null;
-            void updateValueCallback(int devOrFeatRef, EProperty property, object value)
-            {
-                if (refIds[1] == devOrFeatRef &&
-                    property == EProperty.Value)
-                {
-                    connectionQueue.Enqueue((double)value != 0);
-                }
-            }
-
-            TestHelper.SetupHsDataForSyncing(hsData,
-                                             updateValueCallback,
-                                             out Mock<PlugIn> plugIn,
-                                             out Mock<IHsController> mockHsController,
-                                             out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData);
-
-            refIds = deviceOrFeatureData.Keys.ToArray();
-
-            Assert.IsTrue(plugIn.Object.InitIO());
-
-            Assert.IsTrue(await connectionQueue.DequeueAsync(cancellationTokenSource.Token).ConfigureAwait(false));
-
-            int featureRefId = refIds.Max();
-            mockHsController.Setup(x => x.CreateFeatureForDevice(It.IsAny<NewFeatureData>()))
-                            .Returns((NewFeatureData r) =>
-                            {
-                                featureRefId++;
-                                deviceOrFeatureData.Add(featureRefId, r.Feature);
-                                return featureRefId;
-                            });
-
-            mockHsController.Setup(x => x.DeleteFeature(It.IsAny<int>()))
-                            .Returns((int featureRefId) =>
-                            {
-                                deviceOrFeatureData.Remove(featureRefId);
-                                return true;
-                            });
-
-            return (plugIn, deviceOrFeatureData);
-        }
-
         private async Task<string> TestEnabledFeatureChanged(HapAccessory hapAccessory,
                                                              Func<Page, Accessory, PageFactory> generateChanges)
         {
             AsyncProducerConsumerQueue<bool> connectionStatus = new();
-            var (plugIn, deviceOrFeatureData) = await StartPluginWithHapAccessory(hapAccessory, connectionStatus);
+            var (plugIn, deviceOrFeatureData) = await TestHelper.StartPluginWithHapAccessory(hapAccessory, 
+                                                                                             connectionStatus,
+                                                                                             cancellationTokenSource.Token);
 
             var refIds = deviceOrFeatureData.Keys.ToArray();
 

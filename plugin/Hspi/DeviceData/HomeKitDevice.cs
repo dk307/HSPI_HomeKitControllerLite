@@ -67,7 +67,14 @@ namespace Hspi.DeviceData
             return false;
         }
 
-        internal async Task<bool> CanRefesh(int devOrFeatRef, CancellationToken token)
+        public async Task Unpair(CancellationToken token)
+        {
+            Log.Debug("Unpairing {name}", manager.DisplayNameForLog);
+            await manager.Connection.RemovePairing(token).ConfigureAwait(false);
+            Log.Information("Unpaired {name}", manager.DisplayNameForLog);
+        }
+
+        public async Task<bool> CanRefresh(int devOrFeatRef, CancellationToken token)
         {
             var devices = hsDevices;
             foreach (var pair in devices)

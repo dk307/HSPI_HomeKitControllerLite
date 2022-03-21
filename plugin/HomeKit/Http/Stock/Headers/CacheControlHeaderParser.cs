@@ -8,7 +8,7 @@ namespace System.Net.Http.Headers
 {
     internal class CacheControlHeaderParser : BaseHeaderParser
     {
-        internal static readonly CacheControlHeaderParser Parser = new CacheControlHeaderParser();
+        internal static readonly CacheControlHeaderParser Parser = new ();
 
         // The Cache-Control header is special: It is a header supporting a list of values, but we represent the list
         // as _one_ instance of CacheControlHeaderValue. I.e we set 'SupportsMultipleValues' to 'true' since it is

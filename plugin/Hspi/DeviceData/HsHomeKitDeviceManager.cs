@@ -66,7 +66,7 @@ namespace Hspi.DeviceData
         {
             foreach (var device in homeKitDevices)
             {
-                bool done = await device.Value.CanRefesh(devOrFeatRef, combinedToken.Token).ConfigureAwait(false);
+                bool done = await device.Value.CanRefresh(devOrFeatRef, combinedToken.Token).ConfigureAwait(false);
 
                 if (done)
                 {

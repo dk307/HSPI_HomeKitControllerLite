@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Nito.AsyncEx;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -137,6 +138,7 @@ namespace HSPI_HomeKitControllerTest
             mockHsController.Setup(x => x.SaveINISetting("Settings", It.IsAny<string>(), It.IsAny<string>(), PlugInData.PlugInId + ".ini"));
             mockHsController.Setup(x => x.WriteLog(It.IsAny<ELogType>(), It.IsAny<string>(), PlugInData.PlugInName, It.IsAny<string>()));
             mockHsController.Setup(x => x.RegisterDeviceIncPage(PlugInData.PlugInId, It.IsAny<string>(), It.IsAny<string>()));
+            mockHsController.Setup(x => x.RegisterFeaturePage(PlugInData.PlugInId, It.IsAny<string>(), It.IsAny<string>()));
             mockHsController.Setup(x => x.GetRefsByInterface(PlugInData.PlugInId, true)).Returns(new List<int>());
             mockHsController.Setup(x => x.GetNameByRef(It.IsAny<int>())).Returns("Test");
             return mockHsController;
@@ -210,6 +212,54 @@ namespace HSPI_HomeKitControllerTest
             HtmlAgilityPack.HtmlDocument htmlDocument = new();
             htmlDocument.LoadHtml(html);
             Assert.AreEqual(0, htmlDocument.ParseErrors.Count());
+        }
+
+        public static async Task<(Mock<PlugIn>, SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)>
+         StartPluginWithHapAccessory(HapAccessory hapAccessory, 
+                                     AsyncProducerConsumerQueue<bool> connectionQueue,
+                                     CancellationToken cancellationToken)
+        {
+            string hsData = hapAccessory.GetHsDeviceAndFeaturesString();
+
+            int[] refIds = null;
+            void updateValueCallback(int devOrFeatRef, EProperty property, object value)
+            {
+                if (refIds[1] == devOrFeatRef &&
+                    property == EProperty.Value)
+                {
+                    connectionQueue.Enqueue((double)value != 0);
+                }
+            }
+
+            TestHelper.SetupHsDataForSyncing(hsData,
+                                             updateValueCallback,
+                                             out Mock<PlugIn> plugIn,
+                                             out Mock<IHsController> mockHsController,
+                                             out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData);
+
+            refIds = deviceOrFeatureData.Keys.ToArray();
+
+            Assert.IsTrue(plugIn.Object.InitIO());
+
+            Assert.IsTrue(await connectionQueue.DequeueAsync(cancellationToken).ConfigureAwait(false));
+
+            int featureRefId = refIds.Max();
+            mockHsController.Setup(x => x.CreateFeatureForDevice(It.IsAny<NewFeatureData>()))
+                            .Returns((NewFeatureData r) =>
+                            {
+                                featureRefId++;
+                                deviceOrFeatureData.Add(featureRefId, r.Feature);
+                                return featureRefId;
+                            });
+
+            mockHsController.Setup(x => x.DeleteFeature(It.IsAny<int>()))
+                            .Returns((int featureRefId) =>
+                            {
+                                deviceOrFeatureData.Remove(featureRefId);
+                                return true;
+                            });
+
+            return (plugIn, deviceOrFeatureData);
         }
     }
 }

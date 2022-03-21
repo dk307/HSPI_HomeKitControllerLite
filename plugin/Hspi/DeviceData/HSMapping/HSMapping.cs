@@ -7,18 +7,15 @@ using System.ComponentModel;
 
 namespace Hspi.DeviceData.HSMapping
 {
-
     public sealed record HSMapping
     {
         public HSMapping(Guid iid,
-                         string? name,
                          bool forceButtonOptions,
                          ImmutableArray<HSMappingDeviceType>? deviceTypes,
                          RangeOptions? rangeOptions,
                          ImmutableArray<ButtonOption>? buttonOptions)
         {
             Iid = iid;
-            Name = name;
             ForceButtonOptions = forceButtonOptions;
             DeviceTypes = deviceTypes;
             RangeOptions = rangeOptions;
@@ -27,10 +24,6 @@ namespace Hspi.DeviceData.HSMapping
 
         [JsonProperty("iid", Required = Required.Always)]
         public Guid Iid { get; init; }
-
-        [JsonProperty("name")]
-        public string? Name { get; init; }
-
 
         [JsonProperty("forceButtonOptions", DefaultValueHandling = DefaultValueHandling.Populate)]
         [DefaultValue(false)]

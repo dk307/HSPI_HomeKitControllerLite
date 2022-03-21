@@ -41,7 +41,7 @@
       "id": "0000025B-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Air Purifier State Current",
+      "name": "Air Purifier Current State",
       "id": "000000A9-0000-1000-8000-0026BB765291"
     },
     {
@@ -225,7 +225,7 @@
       "id": "00000136-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Door State Current",
+      "name": "Door Current State",
       "id": "0000000E-0000-1000-8000-0026BB765291"
     },
     {
@@ -245,11 +245,11 @@
       "id": "0000023E-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Fan State Current",
+      "name": "Fan Current State",
       "id": "000000AF-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Fan State Target",
+      "name": "Target Fan State",
       "id": "000000BF-0000-1000-8000-0026BB765291"
     },
     {
@@ -281,11 +281,11 @@
       "id": "0000024A-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Heating Cooling Current",
+      "name": "Current Heating Cooling State",
       "id": "0000000F-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Heating Cooling Target",
+      "name": "Target Heating Cooling State",
       "id": "00000033-0000-1000-8000-0026BB765291"
     },
     {
@@ -293,11 +293,11 @@
       "id": "0000021B-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Horizontal Tilt Current",
+      "name": "Horizontal Current Tilt",
       "id": "0000006C-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Horizontal Tilt Target",
+      "name": "Target Horizontal Tilt",
       "id": "0000007B-0000-1000-8000-0026BB765291"
     },
     {
@@ -345,7 +345,7 @@
       "id": "00000070-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Light Level Current",
+      "name": "Current Light Level",
       "id": "0000006B-0000-1000-8000-0026BB765291"
     },
     {
@@ -501,7 +501,7 @@
       "id": "0000023C-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Position Current",
+      "name": "Current Position",
       "id": "0000006D-0000-1000-8000-0026BB765291"
     },
     {
@@ -549,7 +549,7 @@
       "id": "00000226-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Relative Humidity Current",
+      "name": "Current Relative Humidity",
       "id": "00000010-0000-1000-8000-0026BB765291"
     },
     {
@@ -561,7 +561,7 @@
       "id": "000000CA-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Relative Humidity Target",
+      "name": "Target Relative Humidity",
       "id": "00000034-0000-1000-8000-0026BB765291"
     },
     {
@@ -605,11 +605,11 @@
       "id": "0000008E-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Security System State Current",
+      "name": "Security System Current State",
       "id": "00000066-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Security System State Target",
+      "name": "Target Security System State",
       "id": "00000067-0000-1000-8000-0026BB765291"
     },
     {
@@ -689,7 +689,7 @@
       "id": "00000257-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Slat State Current",
+      "name": "Slat Current State",
       "id": "000000AA-0000-1000-8000-0026BB765291"
     },
     {
@@ -809,19 +809,19 @@
       "id": "00000134-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Temperature Cooling Threshold",
+      "name": "Cooling Temperature Threshold",
       "id": "0000000D-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Temperature Current",
+      "name": "Current Temperature",
       "id": "00000011-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Temperature Heating Threshold",
+      "name": "Heating Temperature Threshold",
       "id": "00000012-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Temperature Target",
+      "name": "Target Temperature",
       "id": "00000035-0000-1000-8000-0026BB765291"
     },
     {
@@ -849,11 +849,11 @@
       "id": "00000703-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Tilt Current",
+      "name": "Current Tilt",
       "id": "000000C1-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Tilt Target",
+      "name": "Target Tilt",
       "id": "000000C2-0000-1000-8000-0026BB765291"
     },
     {
@@ -893,11 +893,11 @@
       "id": "00000037-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Vertical Tilt Current",
+      "name": "Vertical Current Tilt",
       "id": "0000006E-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Vertical Tilt Target",
+      "name": "Target Vertical Tilt",
       "id": "0000007D-0000-1000-8000-0026BB765291"
     },
     {
@@ -997,7 +997,7 @@
       "id": "4AAAF931-0DEC-11E5-B939-0800200C9A66"
     },
     {
-      "name": "Koogeek Realtime Energy_2",
+      "name": "Koogeek Realtime Energy 2",
       "id": "7BBBA96E-Eb2D-11E5-A837-0800200C9A66"
     },
     {
@@ -1046,27 +1046,27 @@
       "id": "B7DDB9A3-54BB-4572-91D2-F1F5B0510F8C"
     },
     {
-      "name": "Ecobee Home Target Heat",
+      "name": "Ecobee Home Target Heating",
       "id": "E4489BBC-5227-4569-93E5-B345E3E5508F"
     },
     {
-      "name": "Ecobee Home Target Cool",
+      "name": "Ecobee Home Target Cooling",
       "id": "7D381BAA-20F9-40E5-9BE9-Aeb92D4BECEF"
     },
     {
-      "name": "Ecobee Sleep Target Heat",
+      "name": "Ecobee Sleep Target Heating",
       "id": "73AAB542-892A-4439-879A-D2A883724B69"
     },
     {
-      "name": "Ecobee Sleep Target Cool",
+      "name": "Ecobee Sleep Target Cooling",
       "id": "5DA985F0-898A-4850-B987-B76C6C78D670"
     },
     {
-      "name": "Ecobee Away Target Heat",
+      "name": "Ecobee Away Target Heating",
       "id": "05B97374-6DC0-439B-A0FA-Ca33F612D425"
     },
     {
-      "name": "Ecobee Away Target Cool",
+      "name": "Ecobee Away Target Cooling",
       "id": "A251F6E7-Ac46-4190-9C5D-3D06277BDF9F"
     },
     {
@@ -1106,7 +1106,7 @@
       "id": "00000008-0000-1000-8000-001D4B474349"
     },
     {
-      "name": "Connectsense Energy Amps_20",
+      "name": "Connectsense Energy Amps 20",
       "id": "00000009-0000-1000-8000-001D4B474349"
     },
     {
