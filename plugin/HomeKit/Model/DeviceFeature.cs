@@ -1,5 +1,8 @@
 ﻿using System;
 
+#nullable enable
+
+
 namespace HomeKit.Model
 {
     [Flags]

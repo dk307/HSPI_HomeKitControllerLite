@@ -5,6 +5,8 @@
 using System.Diagnostics;
 using System.Globalization;
 
+#nullable enable
+
 namespace System.Net.Http.Headers
 {
     internal class Int64NumberHeaderParser : BaseHeaderParser
@@ -14,8 +16,6 @@ namespace System.Net.Http.Headers
         // different). The reason is that the comparer is only used by HttpHeaders when comparing values in a collection.
         // Value types are never used in collections (in fact HttpHeaderValueCollection expects T to be a reference
         // type).
-
-        internal static readonly Int64NumberHeaderParser Parser = new();
 
         private Int64NumberHeaderParser()
             : base(false)
@@ -28,5 +28,7 @@ namespace System.Net.Http.Headers
 
             return ((long)value).ToString(NumberFormatInfo.InvariantInfo);
         }
+
+        internal static readonly Int64NumberHeaderParser Parser = new();
     }
 }

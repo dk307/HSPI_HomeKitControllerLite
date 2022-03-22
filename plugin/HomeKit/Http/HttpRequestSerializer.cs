@@ -6,6 +6,8 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace HomeKit.Http
 {
     internal sealed class HttpRequestSerializer

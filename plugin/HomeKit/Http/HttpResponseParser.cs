@@ -619,12 +619,12 @@ namespace HomeKit.Http
 
         private static readonly byte[] Event10Bytes = Encoding.ASCII.GetBytes("EVENT/1.0");
         private static readonly byte[] Http11Bytes = Encoding.ASCII.GetBytes("HTTP/1.1");
+        private readonly AsyncProducerConsumerQueue<HttpResponseMessage> eventQueue;
         private readonly Deque<Action<HttpResponseMessage>> httpResponseCallbacks = new();
         private readonly int InitialReadBufferSize = 4096;
         private readonly ByteBufferWithIndex rawReadBuffer;
         private readonly ByteBufferWithIndex readBuffer;
         private readonly INetworkReadStream stream;
-        private readonly AsyncProducerConsumerQueue<HttpResponseMessage> eventQueue;
         private int readOffset = 0;
         private volatile IReadTransform? readTransform;
     }

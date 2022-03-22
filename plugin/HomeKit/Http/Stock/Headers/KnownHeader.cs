@@ -11,12 +11,6 @@ namespace System.Net.Http.Headers
 {
     internal sealed class KnownHeader
     {
-        private readonly string _name;
-        private readonly HttpHeaderType _headerType;
-        private readonly HttpHeaderParser _parser;
-        private readonly string[] _knownValues;
-        private readonly byte[] _asciiBytesWithColonSpace;
-
         public KnownHeader(string name) : this(name, HttpHeaderType.Custom, null)
         {
             Debug.Assert(!string.IsNullOrEmpty(name));
@@ -41,11 +35,16 @@ namespace System.Net.Http.Headers
             _asciiBytesWithColonSpace[_asciiBytesWithColonSpace.Length - 1] = (byte)' ';
         }
 
-        public string Name => _name;
-        public HttpHeaderParser Parser => _parser;
-        public HttpHeaderType HeaderType => _headerType;
-        public string[] KnownValues => _knownValues;
         public byte[] AsciiBytesWithColonSpace => _asciiBytesWithColonSpace;
         public HeaderDescriptor Descriptor => new(this);
+        public HttpHeaderType HeaderType => _headerType;
+        public string[] KnownValues => _knownValues;
+        public string Name => _name;
+        public HttpHeaderParser Parser => _parser;
+        private readonly byte[] _asciiBytesWithColonSpace;
+        private readonly HttpHeaderType _headerType;
+        private readonly string[] _knownValues;
+        private readonly string _name;
+        private readonly HttpHeaderParser _parser;
     }
 }
