@@ -2,11 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Diagnostics;
-
 namespace System.Net.Http.Headers
 {
-    // Don't derive from BaseHeaderParser since parsing is delegated to DateTimeOffset.TryParseExact() 
+    // Don't derive from BaseHeaderParser since parsing is delegated to DateTimeOffset.TryParseExact()
     // which will remove leading, trailing, and whitespace in the middle of the string.
     internal class DateHeaderParser : HttpHeaderParser
     {
@@ -17,8 +15,6 @@ namespace System.Net.Http.Headers
 
         public override string ToString(object value)
         {
-            Debug.Assert(value is DateTimeOffset);
-
             return HttpRuleParser.DateToString((DateTimeOffset)value);
         }
 

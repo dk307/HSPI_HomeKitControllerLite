@@ -1,4 +1,7 @@
-﻿namespace HomeKit.Http
+﻿
+#nullable enable
+
+namespace HomeKit.Http
 {
     internal interface IReadTransform
     {

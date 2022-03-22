@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
+
+#nullable enable
 
 namespace System.Net.Http
 {
@@ -38,6 +39,7 @@ namespace System.Net.Http
         }
 
         private static readonly HttpMethod s_connectMethod;
+
         private static readonly Dictionary<HttpMethod, HttpMethod> s_knownMethods = new(9)
         {
             { HttpMethod.Get, HttpMethod.Get },

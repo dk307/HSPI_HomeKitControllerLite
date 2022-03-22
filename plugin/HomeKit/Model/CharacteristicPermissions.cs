@@ -1,5 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
+
+#nullable enable
+
+
 namespace HomeKit.Model
 {
     public enum CharacteristicPermissions

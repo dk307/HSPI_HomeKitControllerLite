@@ -35,19 +35,9 @@ namespace System.Net.Http.Headers
             get { return null; }
         }
 
-        public string Separator
-        {
-            get
-            {
-                Debug.Assert(_supportsMultipleValues);
-                return _separator;
-            }
-        }
+        public string Separator => _separator;
 
-        public bool SupportsMultipleValues
-        {
-            get { return _supportsMultipleValues; }
-        }
+        public bool SupportsMultipleValues => _supportsMultipleValues;
 
         // If ValueType is a custom header value type (e.g. NameValueHeaderValue) it already implements ToString() correctly.
         // However for existing types like int, byte[], DateTimeOffset we can't override ToString(). Therefore the 

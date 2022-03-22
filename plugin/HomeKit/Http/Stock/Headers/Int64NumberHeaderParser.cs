@@ -5,6 +5,8 @@
 using System.Diagnostics;
 using System.Globalization;
 
+#nullable enable
+
 namespace System.Net.Http.Headers
 {
     internal class Int64NumberHeaderParser : BaseHeaderParser

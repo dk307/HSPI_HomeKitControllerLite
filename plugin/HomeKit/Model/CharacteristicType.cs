@@ -1,12 +1,8 @@
 ﻿#nullable enable
 
-using HomeKit.Utils;
 using Hspi;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
 
 #nullable enable
 

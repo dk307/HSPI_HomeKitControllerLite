@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
+#nullable enable
 
 namespace System.Net.Http.Headers
 {
@@ -15,9 +15,9 @@ namespace System.Net.Http.Headers
         {
         }
 
-        internal static readonly ProductInfoHeaderParser MultipleValueParser = new (true);
+        internal static readonly ProductInfoHeaderParser MultipleValueParser = new(true);
 
-        internal static readonly ProductInfoHeaderParser SingleValueParser = new (false);
+        internal static readonly ProductInfoHeaderParser SingleValueParser = new(false);
 
         // Unlike most other headers, User-Agent and Server use whitespace as separators
         private const string separator = " ";

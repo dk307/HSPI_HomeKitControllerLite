@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace HomeKit.Http
 {
     internal sealed class ByteBufferWithIndex
