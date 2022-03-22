@@ -6,20 +6,6 @@ namespace System.Net.Http
 {
     internal static class HttpMethodUtils
     {
-        private static readonly HttpMethod s_connectMethod;
-        private static readonly HttpMethod s_patchMethod;
-
-        private static readonly Dictionary<HttpMethod, HttpMethod> s_knownMethods = new(9)
-        {
-            { HttpMethod.Get, HttpMethod.Get },
-            { HttpMethod.Put, HttpMethod.Put },
-            { HttpMethod.Post, HttpMethod.Post },
-            { HttpMethod.Delete, HttpMethod.Delete },
-            { HttpMethod.Head, HttpMethod.Head },
-            { HttpMethod.Options, HttpMethod.Options },
-            { HttpMethod.Trace, HttpMethod.Trace }
-        };
-
         [Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3963:\"static\" fields should be initialized inline", Justification = "<Pending>")]
         [Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "<Pending>")]
         static HttpMethodUtils()
@@ -41,14 +27,28 @@ namespace System.Net.Http
             s_knownMethods.Add(s_patchMethod, s_patchMethod);
         }
 
+        public static HttpMethod Connect
+        {
+            get { return s_connectMethod; }
+        }
+
         internal static HttpMethod Normalize(HttpMethod method)
         {
             return s_knownMethods.TryGetValue(method, out HttpMethod normalized) ? normalized : method;
         }
 
-        public static HttpMethod Connect
+        private static readonly HttpMethod s_connectMethod;
+        private static readonly Dictionary<HttpMethod, HttpMethod> s_knownMethods = new(9)
         {
-            get { return s_connectMethod; }
-        }
+            { HttpMethod.Get, HttpMethod.Get },
+            { HttpMethod.Put, HttpMethod.Put },
+            { HttpMethod.Post, HttpMethod.Post },
+            { HttpMethod.Delete, HttpMethod.Delete },
+            { HttpMethod.Head, HttpMethod.Head },
+            { HttpMethod.Options, HttpMethod.Options },
+            { HttpMethod.Trace, HttpMethod.Trace }
+        };
+
+        private static readonly HttpMethod s_patchMethod;
     }
 }

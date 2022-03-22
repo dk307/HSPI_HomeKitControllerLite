@@ -10,9 +10,6 @@ namespace System.Net.Http.Headers
 {
     internal readonly struct HeaderDescriptor : IEquatable<HeaderDescriptor>
     {
-        private readonly string _headerName;
-        private readonly KnownHeader? _knownHeader;
-
         public HeaderDescriptor(KnownHeader knownHeader)
         {
             _knownHeader = knownHeader;
@@ -26,24 +23,13 @@ namespace System.Net.Http.Headers
             _knownHeader = null;
         }
 
-        public string Name => _headerName;
-        public HttpHeaderParser? Parser => _knownHeader?.Parser;
         public HttpHeaderType HeaderType => _knownHeader == null ? HttpHeaderType.Custom : _knownHeader.HeaderType;
         public KnownHeader? KnownHeader => _knownHeader;
-
-        [Diagnostics.CodeAnalysis.SuppressMessage("Blocker Code Smell", "S3877:Exceptions should not be thrown from unexpected methods", Justification = "<Pending>")]
-        public override bool Equals(object obj) => throw new InvalidOperationException();   // Ensure this is never called, to avoid boxing
-
-        public bool Equals(HeaderDescriptor other) =>
-            _knownHeader == null ?
-                string.Equals(_headerName, other._headerName, StringComparison.OrdinalIgnoreCase) :
-                _knownHeader == other._knownHeader;
-
-        public override int GetHashCode() => _knownHeader?.GetHashCode() ?? StringComparer.OrdinalIgnoreCase.GetHashCode(_headerName);
+        public string Name => _headerName;
+        public HttpHeaderParser? Parser => _knownHeader?.Parser;
+        public static bool operator !=(HeaderDescriptor left, HeaderDescriptor right) => !left.Equals(right);
 
         public static bool operator ==(HeaderDescriptor left, HeaderDescriptor right) => left.Equals(right);
-
-        public static bool operator !=(HeaderDescriptor left, HeaderDescriptor right) => !left.Equals(right);
 
         // Returns false for invalid header name.
         public static bool TryGet(ReadOnlySpan<byte> headerName, out HeaderDescriptor descriptor)
@@ -72,6 +58,17 @@ namespace System.Net.Http.Headers
             return new HeaderDescriptor(_knownHeader.Name);
         }
 
+        [Diagnostics.CodeAnalysis.SuppressMessage("Blocker Code Smell", "S3877:Exceptions should not be thrown from unexpected methods", Justification = "<Pending>")]
+        public override bool Equals(object obj) => throw new InvalidOperationException();
+
+        public bool Equals(HeaderDescriptor other) =>
+            _knownHeader == null ?
+                string.Equals(_headerName, other._headerName, StringComparison.OrdinalIgnoreCase) :
+                _knownHeader == other._knownHeader;
+
+        // Ensure this is never called, to avoid boxing
+        public override int GetHashCode() => _knownHeader?.GetHashCode() ?? StringComparer.OrdinalIgnoreCase.GetHashCode(_headerName);
+
         public string GetHeaderValue(ReadOnlySpan<byte> headerValue)
         {
             if (headerValue.Length == 0)
@@ -94,5 +91,8 @@ namespace System.Net.Http.Headers
 
             return HttpRuleParser.DefaultHttpEncoding.GetString(headerValue.ToArray());
         }
+
+        private readonly string _headerName;
+        private readonly KnownHeader? _knownHeader;
     }
 }

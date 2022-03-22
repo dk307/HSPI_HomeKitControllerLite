@@ -8,18 +8,6 @@ namespace System.Net.Http.Headers
 {
     internal class TransferCodingHeaderParser : BaseHeaderParser
     {
-        internal static readonly TransferCodingHeaderParser SingleValueParser =
-            new(false, CreateTransferCoding);
-
-        internal static readonly TransferCodingHeaderParser MultipleValueParser =
-            new(true, CreateTransferCoding);
-
-        internal static readonly TransferCodingHeaderParser SingleValueWithQualityParser =
-            new(false, CreateTransferCodingWithQuality);
-
-        internal static readonly TransferCodingHeaderParser MultipleValueWithQualityParser =
-            new(true, CreateTransferCodingWithQuality);
-
         private TransferCodingHeaderParser(bool supportsMultipleValues,
             Func<string, TransferCodingHeaderValue> transferCodingCreator)
             : base(supportsMultipleValues)
@@ -35,5 +23,16 @@ namespace System.Net.Http.Headers
         {
             return new TransferCodingWithQualityHeaderValue(value);
         }
+
+        internal static readonly TransferCodingHeaderParser MultipleValueParser =
+            new(true, CreateTransferCoding);
+
+        internal static readonly TransferCodingHeaderParser MultipleValueWithQualityParser =
+            new(true, CreateTransferCodingWithQuality);
+
+        internal static readonly TransferCodingHeaderParser SingleValueParser =
+                                                    new(false, CreateTransferCoding);
+        internal static readonly TransferCodingHeaderParser SingleValueWithQualityParser =
+            new(false, CreateTransferCodingWithQuality);
     }
 }

@@ -10,8 +10,6 @@ namespace System.Net.Http.Headers
     // which will remove leading, trailing, and whitespace in the middle of the string.
     internal class DateHeaderParser : HttpHeaderParser
     {
-        internal static readonly DateHeaderParser Parser = new ();
-
         private DateHeaderParser()
             : base(false)
         {
@@ -23,5 +21,7 @@ namespace System.Net.Http.Headers
 
             return HttpRuleParser.DateToString((DateTimeOffset)value);
         }
+
+        internal static readonly DateHeaderParser Parser = new();
     }
 }

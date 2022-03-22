@@ -154,7 +154,6 @@
     <Compile Include="HomeKit\Http\Stock\Headers\ProductInfoHeaderParser.cs" />
     <Compile Include="HomeKit\Http\Stock\Headers\TransferCodingHeaderParser.cs" />
     <Compile Include="HomeKit\Http\Stock\HttpMethodUtils.cs" />
-    <Compile Include="HomeKit\Http\Stock\HttpParseResult.cs" />
     <Compile Include="HomeKit\Http\Stock\HttpRuleParser.cs" />
     <Compile Include="HomeKit\InsecureConnection.cs" />
     <Compile Include="HomeKit\Model\Accessory.cs" />

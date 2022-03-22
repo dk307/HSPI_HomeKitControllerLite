@@ -15,8 +15,6 @@ namespace System.Net.Http.Headers
         // Value types are never used in collections (in fact HttpHeaderValueCollection expects T to be a reference
         // type).
 
-        internal static readonly Int64NumberHeaderParser Parser = new();
-
         private Int64NumberHeaderParser()
             : base(false)
         {
@@ -28,5 +26,7 @@ namespace System.Net.Http.Headers
 
             return ((long)value).ToString(NumberFormatInfo.InvariantInfo);
         }
+
+        internal static readonly Int64NumberHeaderParser Parser = new();
     }
 }

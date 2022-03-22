@@ -10,15 +10,16 @@ namespace System.Net.Http.Headers
     // must follow. Also leading separators are not allowed.
     internal class ProductInfoHeaderParser : HttpHeaderParser
     {
-        // Unlike most other headers, User-Agent and Server use whitespace as separators
-        private const string separator = " ";
-
-        internal static readonly ProductInfoHeaderParser SingleValueParser = new ProductInfoHeaderParser(false);
-        internal static readonly ProductInfoHeaderParser MultipleValueParser = new ProductInfoHeaderParser(true);
-
         private ProductInfoHeaderParser(bool supportsMultipleValues)
-            : base(supportsMultipleValues, separator)
+                    : base(supportsMultipleValues, separator)
         {
         }
+
+        internal static readonly ProductInfoHeaderParser MultipleValueParser = new (true);
+
+        internal static readonly ProductInfoHeaderParser SingleValueParser = new (false);
+
+        // Unlike most other headers, User-Agent and Server use whitespace as separators
+        private const string separator = " ";
     }
 }

@@ -10,15 +10,6 @@ namespace System.Net.Http.Headers
 {
     internal static class KnownHeaders
     {
-        public static readonly KnownHeader ContentEncoding = new("Content-Encoding", HttpHeaderType.Content, GenericHeaderParser.TokenListParser, new string[] { "gzip", "deflate" });
-        public static readonly KnownHeader ContentLength = new("Content-Length", HttpHeaderType.Content, Int64NumberHeaderParser.Parser);
-        public static readonly KnownHeader ContentRange = new("Content-Range", HttpHeaderType.Content, GenericHeaderParser.ContentRangeParser);
-        public static readonly KnownHeader ContentType = new("Content-Type", HttpHeaderType.Content, MediaTypeHeaderParser.SingleValueParser);
-        public static readonly KnownHeader Host = new("Host", HttpHeaderType.Request, GenericHeaderParser.HostParser);
-        public static readonly KnownHeader KeepAlive = new("Keep-Alive");
-        public static readonly KnownHeader TransferEncoding = new("Transfer-Encoding", HttpHeaderType.General, TransferCodingHeaderParser.MultipleValueParser, new string[] { "chunked" });
-        public static readonly KnownHeader UserAgent = new("User-Agent", HttpHeaderType.Request, ProductInfoHeaderParser.MultipleValueParser);
-
         // Helper interface for making GetCandidate generic over strings, utf8, etc
         private interface IHeaderNameAccessor
         {
@@ -26,33 +17,29 @@ namespace System.Net.Http.Headers
             char this[int index] { get; }
         }
 
-        private readonly struct StringAccessor : IHeaderNameAccessor
+        internal static KnownHeader? TryGetKnownHeader(string name)
         {
-            private readonly string _string;
-
-            public StringAccessor(string s)
+            var candidate = GetCandidate(new StringAccessor(name));
+            if (candidate != null && StringComparer.OrdinalIgnoreCase.Equals(name, candidate.Name))
             {
-                _string = s;
+                return candidate;
             }
 
-            public int Length => _string.Length;
-            public char this[int index] => _string[index];
+            return null;
         }
 
-        // Can't use Span here as it's unsupported.
-        private readonly unsafe struct BytePtrAccessor : IHeaderNameAccessor
+        internal static unsafe KnownHeader? TryGetKnownHeader(ReadOnlySpan<byte> name)
         {
-            private readonly byte* _p;
-            private readonly int _length;
-
-            public BytePtrAccessor(byte* p, int length)
+            fixed (byte* p = &MemoryMarshal.GetReference(name))
             {
-                _p = p;
-                _length = length;
+                var candidate = GetCandidate(new BytePtrAccessor(p, name.Length));
+                if (candidate != null && ByteArrayHelpers.EqualsOrdinalAsciiIgnoreCase(candidate.Name, name))
+                {
+                    return candidate;
+                }
             }
 
-            public int Length => _length;
-            public char this[int index] => (char)_p[index];
+            return null;
         }
 
         // Find possible known header match via lookup on length and a distinguishing char for that length.
@@ -119,29 +106,40 @@ namespace System.Net.Http.Headers
             return null;
         }
 
-        internal static KnownHeader? TryGetKnownHeader(string name)
+        // Can't use Span here as it's unsupported.
+        private readonly unsafe struct BytePtrAccessor : IHeaderNameAccessor
         {
-            var candidate = GetCandidate(new StringAccessor(name));
-            if (candidate != null && StringComparer.OrdinalIgnoreCase.Equals(name, candidate.Name))
+            public BytePtrAccessor(byte* p, int length)
             {
-                return candidate;
+                _p = p;
+                _length = length;
             }
 
-            return null;
+            public int Length => _length;
+            public char this[int index] => (char)_p[index];
+            private readonly int _length;
+            private readonly byte* _p;
         }
 
-        internal static unsafe KnownHeader? TryGetKnownHeader(ReadOnlySpan<byte> name)
+        private readonly struct StringAccessor : IHeaderNameAccessor
         {
-            fixed (byte* p = &MemoryMarshal.GetReference(name))
+            public StringAccessor(string s)
             {
-                var candidate = GetCandidate(new BytePtrAccessor(p, name.Length));
-                if (candidate != null && ByteArrayHelpers.EqualsOrdinalAsciiIgnoreCase(candidate.Name, name))
-                {
-                    return candidate;
-                }
+                _string = s;
             }
 
-            return null;
+            public int Length => _string.Length;
+            public char this[int index] => _string[index];
+            private readonly string _string;
         }
+
+        public static readonly KnownHeader ContentEncoding = new("Content-Encoding", HttpHeaderType.Content, GenericHeaderParser.TokenListParser, new string[] { "gzip", "deflate" });
+        public static readonly KnownHeader ContentLength = new("Content-Length", HttpHeaderType.Content, Int64NumberHeaderParser.Parser);
+        public static readonly KnownHeader ContentRange = new("Content-Range", HttpHeaderType.Content, GenericHeaderParser.ContentRangeParser);
+        public static readonly KnownHeader ContentType = new("Content-Type", HttpHeaderType.Content, MediaTypeHeaderParser.SingleValueParser);
+        public static readonly KnownHeader Host = new("Host", HttpHeaderType.Request, GenericHeaderParser.HostParser);
+        public static readonly KnownHeader KeepAlive = new("Keep-Alive");
+        public static readonly KnownHeader TransferEncoding = new("Transfer-Encoding", HttpHeaderType.General, TransferCodingHeaderParser.MultipleValueParser, new string[] { "chunked" });
+        public static readonly KnownHeader UserAgent = new("User-Agent", HttpHeaderType.Request, ProductInfoHeaderParser.MultipleValueParser);
     }
 }
