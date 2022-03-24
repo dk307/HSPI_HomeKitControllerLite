@@ -1,6 +1,7 @@
 ﻿using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
 using Hspi.Exceptions;
+using Hspi.Utils;
 using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
@@ -75,7 +76,7 @@ namespace Hspi.DeviceData
                 }
                 return typeData;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!ex.IsCancelException())
             {
                 throw new HsDeviceInvalidException(Invariant($"{tag} type not found"), ex);
             }

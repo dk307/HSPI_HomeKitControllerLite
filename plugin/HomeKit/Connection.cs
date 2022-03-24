@@ -1,6 +1,7 @@
 ﻿using HomeKit.Exceptions;
 using HomeKit.Http;
 using HomeKit.Model;
+using Hspi.Utils;
 using Newtonsoft.Json;
 using Nito.AsyncEx;
 using Serilog;
@@ -97,7 +98,7 @@ namespace HomeKit
                 SetSocketKeepAlive(client.Client, keepAliveTime, keepAliveInterval);
             }
 
-            Log.Information("Connected to {EndPoint}", Address);
+            Log.Information("Connected to {Name} at {EndPoint}", DisplayName, Address);
 
             HttpOperationOnStream value = new(UnderLyingStream, eventQueue);
             return StartListening(value, token);
@@ -307,7 +308,7 @@ namespace HomeKit
             {
                 throw;
             }
-            catch (Exception)
+            catch (Exception ex) when (!ex.IsCancelException())
             {
                 //ignore any error here as we throw a gneric error later
             }

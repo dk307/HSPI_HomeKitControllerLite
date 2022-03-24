@@ -121,7 +121,7 @@ namespace Hspi.DeviceData
 
             var mapping = HSMappings.Value.Mappings?.FirstOrDefault(x => x.Iid == characteristic.Type.Id);
 
-            featureFactory = SetName(characteristic, featureFactory, mapping);
+            featureFactory = SetName(characteristic, featureFactory);
             featureFactory = SetFeatureType(serviceType, featureFactory, mapping);
 
             var newData = featureFactory.PrepareForHsDevice(refId);
@@ -505,8 +505,7 @@ namespace Hspi.DeviceData
         }
 
         private static FeatureFactory SetName(Characteristic characteristic,
-                                              FeatureFactory featureFactory,
-                                              HSMapping.HSMapping? mapping)
+                                              FeatureFactory featureFactory)
         {
             string name = characteristic.Type.DisplayName ??
                           characteristic.Description ??

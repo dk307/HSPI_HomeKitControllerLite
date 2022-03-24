@@ -3,6 +3,7 @@ using HomeKit.Model;
 using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Devices.Controls;
+using Hspi.Utils;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using System;
@@ -129,7 +130,7 @@ namespace Hspi.DeviceData
                 UpdateDeviceValue(doubleValue);
 
             }
-            catch (Exception)
+            catch (Exception ex) when (!ex.IsCancelException())
             {
                 Log.Warning("Invalid value {value} received for the {name}", value, NameForLog);
                 UpdateDeviceValue(null);
