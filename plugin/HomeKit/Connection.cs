@@ -153,11 +153,11 @@ namespace HomeKit
         }
 
         protected async Task<R?> HandleJsonRequest<T, R>(HttpMethod httpMethod,
-                          T? value,
-                          string target,
-                          string query,
-                          string contentType = JsonContentType,
-                          CancellationToken cancellationToken = default) where R : class
+                                                         T? value,
+                                                         string target,
+                                                         string query,
+                                                         string contentType = JsonContentType,
+                                                         CancellationToken cancellationToken = default) where R : class
         {
             byte[]? bytesContent = null;
             if (value != null)

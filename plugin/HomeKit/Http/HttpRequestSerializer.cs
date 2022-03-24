@@ -16,7 +16,7 @@ namespace HomeKit.Http
         {
             bool isNotSupported = (request.HasHeaders() && (request.Headers.ExpectContinue == true || request.Headers.TransferEncodingChunked == true)) ||
                                   ((request.Method != HttpMethod.Get) && (request.Method != HttpMethod.Post) && (request.Method != HttpMethod.Put)) ||
-                                  ((request.Version.Minor == 0 && request.Version.Major == 1));
+                                  (request.Version.Minor == 0 && request.Version.Major == 1);
 
             if (isNotSupported)
             {
