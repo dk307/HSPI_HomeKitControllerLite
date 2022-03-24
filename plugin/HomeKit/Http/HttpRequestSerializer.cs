@@ -30,11 +30,11 @@ namespace HomeKit.Http
         {
             var normalizedMethod = HttpMethodUtils.Normalize(request.Method);
 
-            WriteStringAsync(normalizedMethod.Method);
+            WriteString(normalizedMethod.Method);
             WriteByteAsync((byte)' ');
 
             // Write request line
-            WriteStringAsync(request.RequestUri.GetComponents(UriComponents.PathAndQuery | UriComponents.Fragment, UriFormat.UriEscaped));
+            WriteString(request.RequestUri.GetComponents(UriComponents.PathAndQuery | UriComponents.Fragment, UriFormat.UriEscaped));
 
             WriteBytesAsync(s_spaceHttp11NewlineAsciiBytes);
 
@@ -63,11 +63,11 @@ namespace HomeKit.Http
             // wasn't sent, so as it's required by HTTP 1.1 spec, send one based on the Request Uri.
             if (!request.HasHeaders() || request.Headers.Host == null)
             {
-                WriteHostHeaderAsync(request.RequestUri);
+                WriteHostHeader(request.RequestUri);
             }
 
             // CRLF for end of headers.
-            WriteTwoBytesAsync((byte)'\r', (byte)'\n');
+            WriteTwoBytes((byte)'\r', (byte)'\n');
 
             // Add the body if there is one.
             if (request.Content != null)
@@ -77,9 +77,9 @@ namespace HomeKit.Http
             return senderMemoryStream.ToArray();
         }
 
-        private void WriteAsciiStringAsync(string s)
+        private void WriteAsciiString(string s)
         {
-            WriteStringAsync(s);
+            WriteString(s);
         }
 
         private void WriteByteAsync(byte b)
@@ -94,7 +94,7 @@ namespace HomeKit.Http
 
         private void WriteDecimalInt32Async(int value)
         {
-            WriteAsciiStringAsync(value.ToString());
+            WriteAsciiString(value.ToString());
         }
 
         private void WriteHeadersAsync(HttpHeaders headers)
@@ -107,13 +107,13 @@ namespace HomeKit.Http
                 }
                 else
                 {
-                    WriteAsciiStringAsync(header.Key.Name);
-                    WriteTwoBytesAsync((byte)':', (byte)' ');
+                    WriteAsciiString(header.Key.Name);
+                    WriteTwoBytes((byte)':', (byte)' ');
                 }
 
                 if (header.Value.Length > 0)
                 {
-                    WriteStringAsync(header.Value[0]);
+                    WriteString(header.Value[0]);
 
                     // Some headers such as User-Agent and Server use space as a separator (see: ProductInfoHeaderParser)
                     if (header.Value.Length > 1)
@@ -127,29 +127,29 @@ namespace HomeKit.Http
 
                         for (int i = 1; i < header.Value.Length; i++)
                         {
-                            WriteAsciiStringAsync(separator);
-                            WriteStringAsync(header.Value[i]);
+                            WriteAsciiString(separator ?? throw new InvalidOperationException("Invalid Separator for Header"));
+                            WriteString(header.Value[i]);
                         }
                     }
                 }
 
-                WriteTwoBytesAsync((byte)'\r', (byte)'\n');
+                WriteTwoBytes((byte)'\r', (byte)'\n');
             }
         }
 
-        private void WriteHostHeaderAsync(Uri uri)
+        private void WriteHostHeader(Uri uri)
         {
             WriteBytesAsync(KnownHeaders.Host.AsciiBytesWithColonSpace);
 
             if (uri.HostNameType == UriHostNameType.IPv6)
             {
                 WriteByteAsync((byte)'[');
-                WriteAsciiStringAsync(uri.IdnHost);
+                WriteAsciiString(uri.IdnHost);
                 WriteByteAsync((byte)']');
             }
             else
             {
-                WriteAsciiStringAsync(uri.IdnHost);
+                WriteAsciiString(uri.IdnHost);
             }
 
             if (!uri.IsDefaultPort)
@@ -158,10 +158,10 @@ namespace HomeKit.Http
                 WriteDecimalInt32Async(uri.Port);
             }
 
-            WriteTwoBytesAsync((byte)'\r', (byte)'\n');
+            WriteTwoBytes((byte)'\r', (byte)'\n');
         }
 
-        private void WriteStringAsync(string s)
+        private void WriteString(string s)
         {
             for (int i = 0; i < s.Length; i++)
             {
@@ -174,7 +174,7 @@ namespace HomeKit.Http
             }
         }
 
-        private void WriteTwoBytesAsync(byte b1, byte b2)
+        private void WriteTwoBytes(byte b1, byte b2)
         {
             WriteByteAsync(b1);
             WriteByteAsync(b2);

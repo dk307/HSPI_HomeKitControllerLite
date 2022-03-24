@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Immutable;
 
+#nullable enable
+
 namespace HomeKit.Model
 {
     public sealed record ServiceType : BaseGuidType
