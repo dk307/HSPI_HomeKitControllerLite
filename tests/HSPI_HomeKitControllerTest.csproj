@@ -70,6 +70,7 @@
     </Compile>
     <Compile Include="Accessory\HapAccessory.cs" />
     <Compile Include="Accessory\EcobeeThermostatAccessory.cs" />
+    <Compile Include="Accessory\MultiSensorSensorAccessory.cs" />
     <Compile Include="Accessory\TemperatureSensorAccessory.cs" />
     <Compile Include="Hspi\UnpairDeviceTest.cs" />
     <Compile Include="Hspi\SettingsPagesTest.cs" />
@@ -119,6 +120,21 @@
     <None Include="scripts\ecobeethermostat\hsdeviceandfeatures.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="scripts\multisensor\accessory.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="scripts\multisensor\controller.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="scripts\multisensor\enabledcharacteristics.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="scripts\multisensor\secondarydevicenewdata.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="scripts\multisensor\hsdeviceandfeatures.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="scripts\temperaturesensor\accessory.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -128,7 +144,7 @@
     <None Include="scripts\temperaturesensor\controller.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="scripts\temperaturesensor\enabledcharacteristics.json">
+    <None Include="scripts\temperaturesensor\enabledCharacteristics.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="scripts\temperaturesensor\hsdeviceandfeatures.json">
@@ -254,11 +270,14 @@
     <Content Include="scripts\ecobeethermostat\ecobeethermostat.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="scripts\temperaturesensor\temperaturesensor_changing.py">
+    <Content Include="scripts\multisensor\multisensor.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="scripts\temperaturesensor\temperaturesensor.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\temperaturesensor\temperaturesensor_changing.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

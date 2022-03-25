@@ -64,6 +64,14 @@ namespace HSPI_HomeKitControllerTest
             return (mockPlugin, mockHsController);
         }
 
+        public static async Task<MultiSensorSensorAccessory>
+            CreateMultiSensorPairedAccessory(CancellationToken token)
+        {
+            var hapAccessory = new MultiSensorSensorAccessory();
+            await hapAccessory.StartPaired(token).ConfigureAwait(false);
+            return hapAccessory;
+        }
+
         public static Mock<PlugIn> CreatePlugInMock()
         {
             return new Mock<PlugIn>(MockBehavior.Loose)
@@ -79,7 +87,6 @@ namespace HSPI_HomeKitControllerTest
             await hapAccessory.StartPaired(token).ConfigureAwait(false);
             return hapAccessory;
         }
-
         public static async Task<TemperatureSensorAccessory> CreateTemperatureUnPairedAccessory(string pin,
                                                                                   CancellationToken token)
         {
@@ -203,19 +210,10 @@ namespace HSPI_HomeKitControllerTest
             mockHsController.Setup(x => x.GetRefsByInterface(PlugInData.PlugInId, true))
                             .Returns(new List<int>() { deviceRefId });
 
-            mockHsController.Setup(x => x.GetDeviceWithFeaturesByRef(deviceRefId))
-                            .Returns(device);
-        }
-
-        public static void VerifyHtmlValid(string html)
-        {
-            HtmlAgilityPack.HtmlDocument htmlDocument = new();
-            htmlDocument.LoadHtml(html);
-            Assert.AreEqual(0, htmlDocument.ParseErrors.Count());
         }
 
         public static async Task<(Mock<PlugIn>, SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)>
-         StartPluginWithHapAccessory(HapAccessory hapAccessory, 
+         StartPluginWithHapAccessory(HapAccessory hapAccessory,
                                      AsyncProducerConsumerQueue<bool> connectionQueue,
                                      CancellationToken cancellationToken)
         {
@@ -239,9 +237,6 @@ namespace HSPI_HomeKitControllerTest
 
             refIds = deviceOrFeatureData.Keys.ToArray();
 
-            Assert.IsTrue(plugIn.Object.InitIO());
-
-            Assert.IsTrue(await connectionQueue.DequeueAsync(cancellationToken).ConfigureAwait(false));
 
             int featureRefId = refIds.Max();
             mockHsController.Setup(x => x.CreateFeatureForDevice(It.IsAny<NewFeatureData>()))
@@ -259,7 +254,18 @@ namespace HSPI_HomeKitControllerTest
                                 return true;
                             });
 
+            Assert.IsTrue(plugIn.Object.InitIO());
+
+            Assert.IsTrue(await connectionQueue.DequeueAsync(cancellationToken).ConfigureAwait(false));
+
             return (plugIn, deviceOrFeatureData);
+        }
+
+        public static void VerifyHtmlValid(string html)
+        {
+            HtmlAgilityPack.HtmlDocument htmlDocument = new();
+            htmlDocument.LoadHtml(html);
+            Assert.AreEqual(0, htmlDocument.ParseErrors.Count());
         }
     }
 }

@@ -1,0 +1,15 @@
+{
+  "mac": "DE:56:26:A0:67:4C",
+  "config_version": 2,
+  "paired_clients": {
+    "81bb82c6-8c5c-46a6-a7a2-3a163daabe91": "01e0cc5f74db40a11f022baf92391e90c049e8a0b923497219786944ea1bf20b"
+  },
+  "client_properties": {
+    "81bb82c6-8c5c-46a6-a7a2-3a163daabe91": {
+      "permissions": 1
+    }
+  },
+  "accessories_hash": "8781dd6cb421cc65d9ec28ff74b71bfe0af8f9fe7ec6b597525732690fbb982b75add310b4f7bbe73ac36ee0dc2dac82c6c459269e4a22b055df29d83f945d0a",
+  "private_key": "e28e292a98f91488f8b1baf50c69fd30b284bb165613f1010c23544f6a8e45c0",
+  "public_key": "3e49c72c8e72ca2ea8ee1bb40654f7601332e75b2b31fa5b7dfd4c3b5436aff7"
+}

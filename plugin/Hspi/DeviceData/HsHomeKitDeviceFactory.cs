@@ -394,7 +394,8 @@ namespace Hspi.DeviceData
                                                                IEnumerable<ulong> enabledCharacteristics)
         {
             var plugExtra = new PlugExtraData();
-            plugExtra.AddNamed(PairInfoPlugExtraTag, JsonConvert.SerializeObject(pairingDeviceInfo, Formatting.Indented));
+            string pairingJsonData = JsonConvert.SerializeObject(pairingDeviceInfo, Formatting.Indented);
+            plugExtra.AddNamed(PairInfoPlugExtraTag, pairingJsonData);
             plugExtra.AddNamed(FallbackAddressPlugExtraTag, JsonConvert.SerializeObject(fallbackAddress, Formatting.Indented, new IPEndPointJsonConverter()));
             plugExtra.AddNamed(AidPlugExtraTag, JsonConvert.SerializeObject(accessory.Aid));
             plugExtra.AddNamed(EnabledCharacteristicPlugExtraTag, JsonConvert.SerializeObject(enabledCharacteristics));
