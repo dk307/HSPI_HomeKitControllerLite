@@ -23,13 +23,12 @@ namespace HSPI_HomeKitControllerTest
     {
         protected HapAccessory(string dirName, string scriptFile = null)
         {
+            this.dirName = dirName;
             string workingDirectory = GetWorkingDirectory();
             this.scriptFile = Path.Combine(workingDirectory, dirName, (scriptFile ?? dirName) + ".py");
             this.accessoryFile = Path.Combine(workingDirectory, dirName, "accessory.json");
             this.controllerFile = Path.Combine(workingDirectory, dirName, "controller.json");
             this.defaultEnabledCharacteristics = Path.Combine(workingDirectory, dirName, "enabledcharacteristics.json");
-            this.hsDeviceAndFeatures = Path.Combine(workingDirectory, dirName, "hsdeviceandfeatures.json");
-            this.accessoryDeviceData = Path.Combine(workingDirectory, dirName, "accessorydevicedata.json");
         }
 
         ~HapAccessory()
@@ -71,7 +70,7 @@ namespace HSPI_HomeKitControllerTest
             GC.SuppressFinalize(this);
         }
 
-        public string GetAccessoryDeviceDataString() => File.ReadAllText(this.accessoryDeviceData, Encoding.UTF8);
+        public string GetAccessoryDeviceDataString() => GetFileData("accessorydevicedata.json");
 
         public PairingDeviceInfo GetAccessoryParingInfo()
         {
@@ -87,7 +86,7 @@ namespace HSPI_HomeKitControllerTest
             return pairingInfo;
         }
 
-        public string GetHsDeviceAndFeaturesString() => File.ReadAllText(this.hsDeviceAndFeatures, Encoding.UTF8);
+        public string GetHsDeviceAndFeaturesString() => GetFileData("hsdeviceandfeatures.json");
 
         public async Task PairAndCreate(CancellationToken cancellationToken)
         {
@@ -177,6 +176,12 @@ namespace HSPI_HomeKitControllerTest
             }
         }
 
+        protected string GetFileData(string fileName)
+        {
+            string workingDirectory = GetWorkingDirectory();
+            string filePath = Path.Combine(workingDirectory, dirName, fileName);
+            return File.ReadAllText(filePath, Encoding.UTF8);
+        }
         private static PythonScriptWrapper CreateUnPairedAccessory(string scriptName,
                                                                    string pin,
                                                                    string persistFile)
@@ -187,7 +192,6 @@ namespace HSPI_HomeKitControllerTest
             var hapAccessory = new PythonScriptWrapper(scriptName, args);
             return hapAccessory;
         }
-
         public const int StartDeviceRefId = 8475;
         public const int StartFeatureRefId = 9385;
         protected readonly string accessoryFile;
@@ -195,8 +199,7 @@ namespace HSPI_HomeKitControllerTest
         protected readonly string defaultEnabledCharacteristics;
         protected readonly string scriptFile;
         protected PythonScriptWrapper scriptRunner;
-        private readonly string accessoryDeviceData;
-        private readonly string hsDeviceAndFeatures;
-        private bool disposedValue;
+        private readonly string dirName;
+         private bool disposedValue;
     }
 }

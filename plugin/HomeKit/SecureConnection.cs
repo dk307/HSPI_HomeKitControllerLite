@@ -94,7 +94,7 @@ namespace HomeKit
 
                         return true;
                     }
-                    catch (Exception)
+                    catch (Exception ex) when (!ex.IsCancelException())
                     {
                         Log.Warning("Ping to {Name} failed", DisplayName);
                         return false;
@@ -347,7 +347,7 @@ namespace HomeKit
                     using var _ = await enqueueLock.LockAsync(cancellationToken).ConfigureAwait(false);
                     EnqueueResults(result);
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (!ex.IsCancelException())
                 {
                     Log.Warning("Failed to Process event with {message} for {Name} with {error}",
                                 jsonEventMessage, DisplayName, ex.GetFullMessage());

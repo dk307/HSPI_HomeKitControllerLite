@@ -1,5 +1,6 @@
 ﻿using HomeKit.Model;
 using HomeKit.Utils;
+using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Devices.Identification;
 using Hspi;
@@ -7,7 +8,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Nito.AsyncEx;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -144,6 +147,79 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsNotNull((string)result2["ErrorMessage"]);
 
             plugIn.Object.ShutdownIO();
+        }
+
+        [TestMethod]
+        public async Task AddSecondaryAccessory()
+        {
+            using var hapAccessory = await TestHelper.CreateMultiSensorPairedAccessory(cancellationTokenSource.Token)
+                                                     .ConfigureAwait(false);
+
+            AsyncProducerConsumerQueue<bool> connectionQueue = new();
+            string hsData = hapAccessory.GetHsDeviceAndFeaturesString();
+
+            int[] refIds = null;
+            void updateValueCallback(int devOrFeatRef, EProperty property, object value)
+            {
+                if (refIds[1] == devOrFeatRef &&
+                    property == EProperty.Value)
+                {
+                    connectionQueue.Enqueue((double)value != 0);
+                }
+            }
+
+            TestHelper.SetupHsDataForSyncing(hsData,
+                                             updateValueCallback,
+                                             out Mock<PlugIn> plugIn,
+                                             out Mock<IHsController> mockHsController,
+                                             out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData);
+
+            // Capture create device data
+            NewDeviceData newDataForDevice = null;
+            mockHsController.Setup(x => x.CreateDevice(It.IsAny<NewDeviceData>()))
+                            .Returns<NewDeviceData>(r =>
+                            {
+                                const int NewDeviceRef = HapAccessory.StartDeviceRefId + 1;
+                                newDataForDevice = r;
+
+                                // set up to return device
+                                HsDevice device = new(NewDeviceRef);
+                                foreach (var pair in r.Device)
+                                {
+                                    device.Changes.Add(pair.Key, pair.Value);
+                                }
+
+                                mockHsController.Setup(x => x.GetDeviceWithFeaturesByRef(NewDeviceRef))
+                                    .Returns(device);
+
+                                // add to sorted dict
+                                deviceOrFeatureData[NewDeviceRef] = r.Device;
+
+                                return NewDeviceRef;
+                            });
+
+            refIds = deviceOrFeatureData.Keys.ToArray();
+
+            int featureRefId = refIds.Max();
+            mockHsController.Setup(x => x.CreateFeatureForDevice(It.IsAny<NewFeatureData>()))
+                            .Returns((NewFeatureData r) =>
+                            {
+                                featureRefId++;
+                                deviceOrFeatureData.Add(featureRefId, r.Feature);
+                                return featureRefId;
+                            });
+
+            Assert.IsTrue(plugIn.Object.InitIO());
+            Assert.IsTrue(await connectionQueue.DequeueAsync(cancellationTokenSource.Token).ConfigureAwait(false));
+
+            Assert.IsNotNull(newDataForDevice);
+
+            // remove as it is different on machines
+            ((PlugExtraData)newDataForDevice.Device[EProperty.PlugExtraData]).RemoveNamed("fallback.address");
+
+            string newDeviceJson = JsonConvert.SerializeObject(newDataForDevice.Device, TestHelper.CreateJsonSerializer());
+            Assert.AreEqual(hapAccessory.GetSecondaryDeviceNewDataString(), newDeviceJson);
+
         }
 
         private readonly CancellationTokenSource cancellationTokenSource = new();

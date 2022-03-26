@@ -1,0 +1,36 @@
+{
+  "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
+  "Relationship": 2,
+  "Interface": "HomeKitController",
+  "Misc": 4352,
+  "UserAccess": "Any",
+  "Location2": "Plugin",
+  "Location": "HomeKit Controller",
+  "Name": "HumiditySensor",
+  "DeviceType": {
+    "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
+    "ApiType": 512,
+    "Type": 0,
+    "SubType": 0,
+    "SubTypeDescription": "",
+    "Summary": ""
+  },
+  "PlugExtraData": [
+    {
+      "key": "pairing.info",
+      "value": "{\r\n  \"DeviceInformation\": {\r\n    \"CategoryIdentifier\": \"Bridges\",\r\n    \"ConfigurationNumber\": 2,\r\n    \"DisplayName\": \"Bridge A0674C\",\r\n    \"Feature\": \"None\",\r\n    \"Id\": \"DE:56:26:A0:67:4C\",\r\n    \"Model\": \"Bridge\",\r\n    \"Protocol\": \"1.1\"\r\n  },\r\n  \"AccessoryPairingId\": [\r\n    68,\r\n    69,\r\n    58,\r\n    53,\r\n    54,\r\n    58,\r\n    50,\r\n    54,\r\n    58,\r\n    65,\r\n    48,\r\n    58,\r\n    54,\r\n    55,\r\n    58,\r\n    52,\r\n    67\r\n  ],\r\n  \"AccessoryPublicKey\": [\r\n    62,\r\n    73,\r\n    199,\r\n    44,\r\n    142,\r\n    114,\r\n    202,\r\n    46,\r\n    168,\r\n    238,\r\n    27,\r\n    180,\r\n    6,\r\n    84,\r\n    247,\r\n    96,\r\n    19,\r\n    50,\r\n    231,\r\n    91,\r\n    43,\r\n    49,\r\n    250,\r\n    91,\r\n    125,\r\n    253,\r\n    76,\r\n    59,\r\n    84,\r\n    54,\r\n    175,\r\n    247\r\n  ],\r\n  \"ControllerPairingId\": \"81bb82c6-8c5c-46a6-a7a2-3a163daabe91\",\r\n  \"ControllerDevicePrivateKey\": [\r\n    74,\r\n    168,\r\n    160,\r\n    82,\r\n    180,\r\n    244,\r\n    9,\r\n    86,\r\n    0,\r\n    117,\r\n    33,\r\n    32,\r\n    240,\r\n    161,\r\n    208,\r\n    216,\r\n    200,\r\n    92,\r\n    141,\r\n    155,\r\n    133,\r\n    179,\r\n    126,\r\n    176,\r\n    84,\r\n    185,\r\n    135,\r\n    187,\r\n    66,\r\n    255,\r\n    109,\r\n    105\r\n  ],\r\n  \"ControllerDevicePublicKey\": [\r\n    1,\r\n    224,\r\n    204,\r\n    95,\r\n    116,\r\n    219,\r\n    64,\r\n    161,\r\n    31,\r\n    2,\r\n    43,\r\n    175,\r\n    146,\r\n    57,\r\n    30,\r\n    144,\r\n    192,\r\n    73,\r\n    232,\r\n    160,\r\n    185,\r\n    35,\r\n    73,\r\n    114,\r\n    25,\r\n    120,\r\n    105,\r\n    68,\r\n    234,\r\n    27,\r\n    242,\r\n    11\r\n  ],\r\n  \"EnableKeepAliveForConnection\": true,\r\n  \"PollingTimeSpan\": \"00:01:00\"\r\n}"
+    },
+    {
+      "key": "accessory.aid",
+      "value": "34534"
+    },
+    {
+      "key": "enabled.characteristic",
+      "value": "[9]"
+    },
+    {
+      "key": "cached.accessory.info",
+      "value": "{\"aid\":34534,\"services\":[{\"iid\":1,\"type\":\"0000003e-0000-1000-8000-0026bb765291\",\"primary\":null,\"hidden\":null,\"characteristics\":[{\"iid\":2,\"type\":\"00000014-0000-1000-8000-0026bb765291\",\"value\":null,\"perms\":[\"pw\"],\"ev\":null,\"format\":\"bool\",\"description\":null,\"unit\":null,\"minValue\":null,\"maxValue\":null,\"minStep\":null,\"maxLen\":null,\"maxDataLen\":null,\"valid-values\":null,\"valid-values-range\":null,\"TTL\":null,\"pid\":null},{\"iid\":3,\"type\":\"00000020-0000-1000-8000-0026bb765291\",\"value\":\"\",\"perms\":[\"pr\"],\"ev\":null,\"format\":\"string\",\"description\":null,\"unit\":null,\"minValue\":null,\"maxValue\":null,\"minStep\":null,\"maxLen\":null,\"maxDataLen\":null,\"valid-values\":null,\"valid-values-range\":null,\"TTL\":null,\"pid\":null},{\"iid\":4,\"type\":\"00000021-0000-1000-8000-0026bb765291\",\"value\":\"\",\"perms\":[\"pr\"],\"ev\":null,\"format\":\"string\",\"description\":null,\"unit\":null,\"minValue\":null,\"maxValue\":null,\"minStep\":null,\"maxLen\":null,\"maxDataLen\":null,\"valid-values\":null,\"valid-values-range\":null,\"TTL\":null,\"pid\":null},{\"iid\":5,\"type\":\"00000023-0000-1000-8000-0026bb765291\",\"value\":\"HumiditySensor\",\"perms\":[\"pr\"],\"ev\":null,\"format\":\"string\",\"description\":null,\"unit\":null,\"minValue\":null,\"maxValue\":null,\"minStep\":null,\"maxLen\":null,\"maxDataLen\":null,\"valid-values\":null,\"valid-values-range\":null,\"TTL\":null,\"pid\":null},{\"iid\":6,\"type\":\"00000030-0000-1000-8000-0026bb765291\",\"value\":\"default\",\"perms\":[\"pr\"],\"ev\":null,\"format\":\"string\",\"description\":null,\"unit\":null,\"minValue\":null,\"maxValue\":null,\"minStep\":null,\"maxLen\":null,\"maxDataLen\":null,\"valid-values\":null,\"valid-values-range\":null,\"TTL\":null,\"pid\":null},{\"iid\":7,\"type\":\"00000052-0000-1000-8000-0026bb765291\",\"value\":\"\",\"perms\":[\"pr\"],\"ev\":null,\"format\":\"string\",\"description\":null,\"unit\":null,\"minValue\":null,\"maxValue\":null,\"minStep\":null,\"maxLen\":null,\"maxDataLen\":null,\"valid-values\":null,\"valid-values-range\":null,\"TTL\":null,\"pid\":null}]},{\"iid\":8,\"type\":\"00000082-0000-1000-8000-0026bb765291\",\"primary\":null,\"hidden\":null,\"characteristics\":[{\"iid\":9,\"type\":\"00000010-0000-1000-8000-0026bb765291\",\"value\":22,\"perms\":[\"pr\",\"ev\"],\"ev\":null,\"format\":\"float\",\"description\":null,\"unit\":\"percentage\",\"minValue\":0.0,\"maxValue\":100.0,\"minStep\":1.0,\"maxLen\":null,\"maxDataLen\":null,\"valid-values\":null,\"valid-values-range\":null,\"TTL\":null,\"pid\":null}]}]}"
+    }
+  ]
+}

@@ -8,32 +8,12 @@ namespace System.Net.Http.Headers
 {
     internal class MediaTypeHeaderParser : BaseHeaderParser
     {
-        private readonly Func<string, MediaTypeHeaderValue> _mediaTypeCreator;
+        internal static readonly MediaTypeHeaderParser SingleValueParser = new(false);
 
-        internal static readonly MediaTypeHeaderParser SingleValueParser = new(false,
-            CreateMediaType);
-
-        internal static readonly MediaTypeHeaderParser SingleValueWithQualityParser = new(false,
-            CreateMediaTypeWithQuality);
-
-        internal static readonly MediaTypeHeaderParser MultipleValuesParser = new(true,
-            CreateMediaTypeWithQuality);
-
-        private MediaTypeHeaderParser(bool supportsMultipleValues, Func<string, MediaTypeHeaderValue> mediaTypeCreator)
+        private MediaTypeHeaderParser(bool supportsMultipleValues)
             : base(supportsMultipleValues)
         {
             _supportsMultipleValues = supportsMultipleValues;
-            _mediaTypeCreator = mediaTypeCreator;
-        }
-
-        private static MediaTypeHeaderValue CreateMediaType(string mediaType)
-        {
-            return new MediaTypeHeaderValue(mediaType);
-        }
-
-        private static MediaTypeHeaderValue CreateMediaTypeWithQuality(string mediaType)
-        {
-            return new MediaTypeWithQualityHeaderValue(mediaType);
         }
     }
 }

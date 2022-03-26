@@ -140,7 +140,7 @@ namespace HSPI_HomeKitControllerTest
         }
 
         private static string GetHsDeviceAndFeatureData(int refId,
-                                                   SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
+                                                        SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)
         {
             // remove as it is different on machines
             ((PlugExtraData)deviceOrFeatureData[refId][EProperty.PlugExtraData]).RemoveNamed("fallback.address");

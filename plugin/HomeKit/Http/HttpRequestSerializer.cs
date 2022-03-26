@@ -14,17 +14,13 @@ namespace HomeKit.Http
     {
         public HttpRequestSerializer(HttpRequestMessage request)
         {
-            if (request.HasHeaders())
-            {
-                if (request.Headers.ExpectContinue == true)
-                {
-                    throw new NotSupportedException("Expect Continue not supported");
-                }
+            bool isNotSupported = (request.HasHeaders() && (request.Headers.ExpectContinue == true || request.Headers.TransferEncodingChunked == true)) ||
+                                  ((request.Method != HttpMethod.Get) && (request.Method != HttpMethod.Post) && (request.Method != HttpMethod.Put)) ||
+                                  (request.Version.Minor == 0 && request.Version.Major == 1);
 
-                if (request.Headers.TransferEncodingChunked == true)
-                {
-                    throw new NotSupportedException("Chuncked Encoding not supported");
-                }
+            if (isNotSupported)
+            {
+                throw new NotSupportedException("Request not supported");
             }
 
             this.request = request;
@@ -32,30 +28,15 @@ namespace HomeKit.Http
 
         public async Task<byte[]> ConvertToBytes()
         {
-            HttpMethod normalizedMethod = HttpMethodUtils.Normalize(request.Method);
+            var normalizedMethod = HttpMethodUtils.Normalize(request.Method);
 
-            WriteStringAsync(normalizedMethod.Method);
+            WriteString(normalizedMethod.Method);
             WriteByteAsync((byte)' ');
 
             // Write request line
-            if (ReferenceEquals(normalizedMethod, HttpMethodUtils.Connect))
-            {
-                // RFC 7231 #section-4.3.6.
-                // Write only CONNECT foo.com:345 HTTP/1.1
-                if (!request.HasHeaders() || request.Headers.Host == null)
-                {
-                    throw new HttpRequestException("net_http_request_no_host");
-                }
-                WriteAsciiStringAsync(request.Headers.Host);
-            }
-            else
-            {
-                WriteStringAsync(request.RequestUri.GetComponents(UriComponents.PathAndQuery | UriComponents.Fragment, UriFormat.UriEscaped));
-            }
+            WriteString(request.RequestUri.GetComponents(UriComponents.PathAndQuery | UriComponents.Fragment, UriFormat.UriEscaped));
 
-            // Fall back to 1.1 for all versions other than 1.0
-            bool isHttp10 = request.Version.Minor == 0 && request.Version.Major == 1;
-            WriteBytesAsync(isHttp10 ? s_spaceHttp10NewlineAsciiBytes : s_spaceHttp11NewlineAsciiBytes);
+            WriteBytesAsync(s_spaceHttp11NewlineAsciiBytes);
 
             // Write request headers
             if (request.HasHeaders())
@@ -67,9 +48,7 @@ namespace HomeKit.Http
             {
                 // Write out Content-Length: 0 header to indicate no body,
                 // unless this is a method that never has a body.
-                if (!ReferenceEquals(normalizedMethod, HttpMethod.Get) &&
-                    !ReferenceEquals(normalizedMethod, HttpMethod.Head) &&
-                    !ReferenceEquals(normalizedMethod, HttpMethodUtils.Connect))
+                if (!ReferenceEquals(normalizedMethod, HttpMethod.Get))
                 {
                     WriteBytesAsync(s_contentLength0NewlineAsciiBytes);
                 }
@@ -84,11 +63,11 @@ namespace HomeKit.Http
             // wasn't sent, so as it's required by HTTP 1.1 spec, send one based on the Request Uri.
             if (!request.HasHeaders() || request.Headers.Host == null)
             {
-                WriteHostHeaderAsync(request.RequestUri);
+                WriteHostHeader(request.RequestUri);
             }
 
             // CRLF for end of headers.
-            WriteTwoBytesAsync((byte)'\r', (byte)'\n');
+            WriteTwoBytes((byte)'\r', (byte)'\n');
 
             // Add the body if there is one.
             if (request.Content != null)
@@ -98,9 +77,9 @@ namespace HomeKit.Http
             return senderMemoryStream.ToArray();
         }
 
-        private void WriteAsciiStringAsync(string s)
+        private void WriteAsciiString(string s)
         {
-            WriteStringAsync(s);
+            WriteString(s);
         }
 
         private void WriteByteAsync(byte b)
@@ -115,12 +94,12 @@ namespace HomeKit.Http
 
         private void WriteDecimalInt32Async(int value)
         {
-            WriteAsciiStringAsync(value.ToString());
+            WriteAsciiString(value.ToString());
         }
 
         private void WriteHeadersAsync(HttpHeaders headers)
         {
-            foreach (KeyValuePair<HeaderDescriptor, string[]> header in headers.GetHeaderDescriptorsAndValues())
+            foreach (var header in headers.GetHeaderDescriptorsAndValues())
             {
                 if (header.Key.KnownHeader != null)
                 {
@@ -128,19 +107,19 @@ namespace HomeKit.Http
                 }
                 else
                 {
-                    WriteAsciiStringAsync(header.Key.Name);
-                    WriteTwoBytesAsync((byte)':', (byte)' ');
+                    WriteAsciiString(header.Key.Name);
+                    WriteTwoBytes((byte)':', (byte)' ');
                 }
 
                 if (header.Value.Length > 0)
                 {
-                    WriteStringAsync(header.Value[0]);
+                    WriteString(header.Value[0]);
 
                     // Some headers such as User-Agent and Server use space as a separator (see: ProductInfoHeaderParser)
                     if (header.Value.Length > 1)
                     {
                         var parser = header.Key.Parser;
-                        string separator = HttpHeaderParser.DefaultSeparator;
+                        var separator = HttpHeaderParser.DefaultSeparator;
                         if (parser != null && parser.SupportsMultipleValues)
                         {
                             separator = parser.Separator;
@@ -148,29 +127,29 @@ namespace HomeKit.Http
 
                         for (int i = 1; i < header.Value.Length; i++)
                         {
-                            WriteAsciiStringAsync(separator);
-                            WriteStringAsync(header.Value[i]);
+                            WriteAsciiString(separator ?? throw new InvalidOperationException("Invalid Separator for Header"));
+                            WriteString(header.Value[i]);
                         }
                     }
                 }
 
-                WriteTwoBytesAsync((byte)'\r', (byte)'\n');
+                WriteTwoBytes((byte)'\r', (byte)'\n');
             }
         }
 
-        private void WriteHostHeaderAsync(Uri uri)
+        private void WriteHostHeader(Uri uri)
         {
             WriteBytesAsync(KnownHeaders.Host.AsciiBytesWithColonSpace);
 
             if (uri.HostNameType == UriHostNameType.IPv6)
             {
                 WriteByteAsync((byte)'[');
-                WriteAsciiStringAsync(uri.IdnHost);
+                WriteAsciiString(uri.IdnHost);
                 WriteByteAsync((byte)']');
             }
             else
             {
-                WriteAsciiStringAsync(uri.IdnHost);
+                WriteAsciiString(uri.IdnHost);
             }
 
             if (!uri.IsDefaultPort)
@@ -179,10 +158,10 @@ namespace HomeKit.Http
                 WriteDecimalInt32Async(uri.Port);
             }
 
-            WriteTwoBytesAsync((byte)'\r', (byte)'\n');
+            WriteTwoBytes((byte)'\r', (byte)'\n');
         }
 
-        private void WriteStringAsync(string s)
+        private void WriteString(string s)
         {
             for (int i = 0; i < s.Length; i++)
             {
@@ -195,14 +174,13 @@ namespace HomeKit.Http
             }
         }
 
-        private void WriteTwoBytesAsync(byte b1, byte b2)
+        private void WriteTwoBytes(byte b1, byte b2)
         {
             WriteByteAsync(b1);
             WriteByteAsync(b2);
         }
 
         private static readonly byte[] s_contentLength0NewlineAsciiBytes = Encoding.ASCII.GetBytes("Content-Length: 0\r\n");
-        private static readonly byte[] s_spaceHttp10NewlineAsciiBytes = Encoding.ASCII.GetBytes(" HTTP/1.0\r\n");
         private static readonly byte[] s_spaceHttp11NewlineAsciiBytes = Encoding.ASCII.GetBytes(" HTTP/1.1\r\n");
         private readonly HttpRequestMessage request;
         private readonly MemoryStream senderMemoryStream = new();

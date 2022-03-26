@@ -55,7 +55,7 @@ namespace Hspi.DeviceData
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (!ex.IsCancelException())
                 {
                     Log.Error("Failed to process {command} with {ex}", colSend.ControlValue, ex.GetFullMessage());
                 }
@@ -92,7 +92,7 @@ namespace Hspi.DeviceData
                     var pairingInfo = HsHomeKitRootDevice.GetPairingInfo(HS, refId);
                     homeKitDeviceIds.Add(new ValueTuple<int, string>(refId, pairingInfo.DeviceInformation.Id));
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (!ex.IsCancelException())
                 {
                     Log.Warning("{name} has invalid plugin data and load failed with {error}. Please repair it.",
                                 HsHomeKitDevice.GetNameForLog(HS, refId),

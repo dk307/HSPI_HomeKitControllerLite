@@ -121,7 +121,7 @@ namespace Hspi.DeviceData
 
             var mapping = HSMappings.Value.Mappings?.FirstOrDefault(x => x.Iid == characteristic.Type.Id);
 
-            featureFactory = SetName(characteristic, featureFactory, mapping);
+            featureFactory = SetName(characteristic, featureFactory);
             featureFactory = SetFeatureType(serviceType, featureFactory, mapping);
 
             var newData = featureFactory.PrepareForHsDevice(refId);
@@ -394,7 +394,8 @@ namespace Hspi.DeviceData
                                                                IEnumerable<ulong> enabledCharacteristics)
         {
             var plugExtra = new PlugExtraData();
-            plugExtra.AddNamed(PairInfoPlugExtraTag, JsonConvert.SerializeObject(pairingDeviceInfo, Formatting.Indented));
+            string pairingJsonData = JsonConvert.SerializeObject(pairingDeviceInfo, Formatting.Indented);
+            plugExtra.AddNamed(PairInfoPlugExtraTag, pairingJsonData);
             plugExtra.AddNamed(FallbackAddressPlugExtraTag, JsonConvert.SerializeObject(fallbackAddress, Formatting.Indented, new IPEndPointJsonConverter()));
             plugExtra.AddNamed(AidPlugExtraTag, JsonConvert.SerializeObject(accessory.Aid));
             plugExtra.AddNamed(EnabledCharacteristicPlugExtraTag, JsonConvert.SerializeObject(enabledCharacteristics));
@@ -505,8 +506,7 @@ namespace Hspi.DeviceData
         }
 
         private static FeatureFactory SetName(Characteristic characteristic,
-                                              FeatureFactory featureFactory,
-                                              HSMapping.HSMapping? mapping)
+                                              FeatureFactory featureFactory)
         {
             string name = characteristic.Type.DisplayName ??
                           characteristic.Description ??

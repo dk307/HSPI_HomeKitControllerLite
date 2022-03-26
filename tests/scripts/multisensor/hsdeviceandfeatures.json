@@ -1,0 +1,132 @@
+{
+  "$type": "System.Collections.Generic.SortedDictionary`2[[System.Int32, mscorlib],[System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib]], System",
+  "8475": {
+    "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
+    "PlugExtraData": [
+      {
+        "key": "accessory.aid",
+        "value": "1"
+      },
+      {
+        "key": "enabled.characteristic",
+        "value": "[6]"
+      },
+      {
+        "key": "pairing.info",
+        "value": "{\"DeviceInformation\":{\"CategoryIdentifier\":\"Bridges\",\"ConfigurationNumber\":2,\"DisplayName\":\"Bridge A0674C\",\"Feature\":\"None\",\"Id\":\"DE:56:26:A0:67:4C\",\"Model\":\"Bridge\",\"Protocol\":\"1.1\"},\"AccessoryPairingId\":[68,69,58,53,54,58,50,54,58,65,48,58,54,55,58,52,67],\"AccessoryPublicKey\":[62,73,199,44,142,114,202,46,168,238,27,180,6,84,247,96,19,50,231,91,43,49,250,91,125,253,76,59,84,54,175,247],\"ControllerPairingId\":\"81bb82c6-8c5c-46a6-a7a2-3a163daabe91\",\"ControllerDevicePrivateKey\":[74,168,160,82,180,244,9,86,0,117,33,32,240,161,208,216,200,92,141,155,133,179,126,176,84,185,135,187,66,255,109,105],\"ControllerDevicePublicKey\":[1,224,204,95,116,219,64,161,31,2,43,175,146,57,30,144,192,73,232,160,185,35,73,114,25,120,105,68,234,27,242,11],\"EnableKeepAliveForConnection\":true,\"PollingTimeSpan\":\"00:01:00\"}"
+      }
+    ],
+    "Relationship": 2,
+    "Name": "Test Device"
+  },
+  "9386": {
+    "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
+    "Relationship": 4,
+    "Interface": "HomeKitController",
+    "Misc": 4368,
+    "UserAccess": "Any",
+    "Location2": "Plugin",
+    "Location": "HomeKit Controller",
+    "Name": "Connected",
+    "DeviceType": {
+      "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
+      "ApiType": 513,
+      "Type": 0,
+      "SubType": 0,
+      "SubTypeDescription": "",
+      "Summary": ""
+    },
+    "PlugExtraData": [
+      {
+        "key": "device.type",
+        "value": "{\"Type\":1,\"Iid\":null}"
+      }
+    ],
+    "StatusGraphics": {
+      "$type": "HomeSeer.PluginSdk.Devices.StatusGraphicCollection, PluginSdk",
+      "Values": {
+        "$type": "System.Collections.Generic.List`1[[HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk]], mscorlib",
+        "$values": [
+          {
+            "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
+            "Label": "Offline",
+            "ControlUse": 0,
+            "Graphic": "HomeKitController\\images\\offline.png",
+            "IsRange": false,
+            "HasAdditionalData": false,
+            "TargetRange": {
+              "$type": "HomeSeer.PluginSdk.Devices.ValueRange, PluginSdk",
+              "Min": 0.0,
+              "Max": 0.0,
+              "Offset": 0.0,
+              "DecimalPlaces": 0,
+              "Prefix": "",
+              "Suffix": ""
+            },
+            "RangeMin": 0.0,
+            "RangeMax": 0.0,
+            "Value": 0.0
+          },
+          {
+            "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
+            "Label": "Online",
+            "ControlUse": 0,
+            "Graphic": "HomeKitController\\images\\online.png",
+            "IsRange": false,
+            "HasAdditionalData": false,
+            "TargetRange": {
+              "$type": "HomeSeer.PluginSdk.Devices.ValueRange, PluginSdk",
+              "Min": 0.0,
+              "Max": 0.0,
+              "Offset": 0.0,
+              "DecimalPlaces": 0,
+              "Prefix": "",
+              "Suffix": ""
+            },
+            "RangeMin": 0.0,
+            "RangeMax": 0.0,
+            "Value": 1.0
+          }
+        ]
+      },
+      "Count": 2
+    },
+    "AssociatedDevices": {
+      "$type": "System.Collections.Generic.HashSet`1[[System.Int32, mscorlib]], System.Core",
+      "$values": [
+        8475
+      ]
+    }
+  },
+  "9387": {
+    "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
+    "Relationship": 4,
+    "Interface": "HomeKitController",
+    "Misc": 4368,
+    "UserAccess": "Any",
+    "Location2": "Plugin",
+    "Location": "HomeKit Controller",
+    "PlugExtraData": [
+      {
+        "key": "device.type",
+        "value": "{\"Type\":2,\"Iid\":6}"
+      }
+    ],
+    "Name": "Serial Number",
+    "DeviceType": {
+      "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
+      "ApiType": 513,
+      "Type": 0,
+      "SubType": 0,
+      "SubTypeDescription": "",
+      "Summary": ""
+    },
+    "AssociatedDevices": {
+      "$type": "System.Collections.Generic.HashSet`1[[System.Int32, mscorlib]], System.Core",
+      "$values": [
+        8475
+      ]
+    },
+    "StatusString": "default"
+  }
+}
