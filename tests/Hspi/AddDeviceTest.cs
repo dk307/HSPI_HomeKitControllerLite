@@ -214,8 +214,12 @@ namespace HSPI_HomeKitControllerTest
 
             Assert.IsNotNull(newDataForDevice);
 
+            // remove as it is different on machines
+            ((PlugExtraData)newDataForDevice.Device[EProperty.PlugExtraData]).RemoveNamed("fallback.address");
+
             string newDeviceJson = JsonConvert.SerializeObject(newDataForDevice.Device, TestHelper.CreateJsonSerializer());
             Assert.AreEqual(hapAccessory.GetSecondaryDeviceNewDataString(), newDeviceJson);
+
         }
 
         private readonly CancellationTokenSource cancellationTokenSource = new();

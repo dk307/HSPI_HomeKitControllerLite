@@ -8,7 +8,6 @@ namespace HSPI_HomeKitControllerTest
         public EcobeeThermostatAccessory()
             : base("ecobeethermostat")
         {
-            string workingDir = GetWorkingDirectory();
         }
 
         public override int InitialUpdatesExpectedForDefaultEnabledCharacteristics => 55;

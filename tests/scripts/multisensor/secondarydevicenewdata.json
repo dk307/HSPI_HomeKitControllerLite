@@ -21,10 +21,6 @@
       "value": "{\r\n  \"DeviceInformation\": {\r\n    \"CategoryIdentifier\": \"Bridges\",\r\n    \"ConfigurationNumber\": 2,\r\n    \"DisplayName\": \"Bridge A0674C\",\r\n    \"Feature\": \"None\",\r\n    \"Id\": \"DE:56:26:A0:67:4C\",\r\n    \"Model\": \"Bridge\",\r\n    \"Protocol\": \"1.1\"\r\n  },\r\n  \"AccessoryPairingId\": [\r\n    68,\r\n    69,\r\n    58,\r\n    53,\r\n    54,\r\n    58,\r\n    50,\r\n    54,\r\n    58,\r\n    65,\r\n    48,\r\n    58,\r\n    54,\r\n    55,\r\n    58,\r\n    52,\r\n    67\r\n  ],\r\n  \"AccessoryPublicKey\": [\r\n    62,\r\n    73,\r\n    199,\r\n    44,\r\n    142,\r\n    114,\r\n    202,\r\n    46,\r\n    168,\r\n    238,\r\n    27,\r\n    180,\r\n    6,\r\n    84,\r\n    247,\r\n    96,\r\n    19,\r\n    50,\r\n    231,\r\n    91,\r\n    43,\r\n    49,\r\n    250,\r\n    91,\r\n    125,\r\n    253,\r\n    76,\r\n    59,\r\n    84,\r\n    54,\r\n    175,\r\n    247\r\n  ],\r\n  \"ControllerPairingId\": \"81bb82c6-8c5c-46a6-a7a2-3a163daabe91\",\r\n  \"ControllerDevicePrivateKey\": [\r\n    74,\r\n    168,\r\n    160,\r\n    82,\r\n    180,\r\n    244,\r\n    9,\r\n    86,\r\n    0,\r\n    117,\r\n    33,\r\n    32,\r\n    240,\r\n    161,\r\n    208,\r\n    216,\r\n    200,\r\n    92,\r\n    141,\r\n    155,\r\n    133,\r\n    179,\r\n    126,\r\n    176,\r\n    84,\r\n    185,\r\n    135,\r\n    187,\r\n    66,\r\n    255,\r\n    109,\r\n    105\r\n  ],\r\n  \"ControllerDevicePublicKey\": [\r\n    1,\r\n    224,\r\n    204,\r\n    95,\r\n    116,\r\n    219,\r\n    64,\r\n    161,\r\n    31,\r\n    2,\r\n    43,\r\n    175,\r\n    146,\r\n    57,\r\n    30,\r\n    144,\r\n    192,\r\n    73,\r\n    232,\r\n    160,\r\n    185,\r\n    35,\r\n    73,\r\n    114,\r\n    25,\r\n    120,\r\n    105,\r\n    68,\r\n    234,\r\n    27,\r\n    242,\r\n    11\r\n  ],\r\n  \"EnableKeepAliveForConnection\": true,\r\n  \"PollingTimeSpan\": \"00:01:00\"\r\n}"
     },
     {
-      "key": "fallback.address",
-      "value": "{\"Address\":\"192.168.1.82\",\"Port\":51234}"
-    },
-    {
       "key": "accessory.aid",
       "value": "34534"
     },
