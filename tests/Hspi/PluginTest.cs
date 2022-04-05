@@ -19,22 +19,30 @@ namespace HSPI_HomeKitControllerTest
             cancellationTokenSource.CancelAfter(60 * 1000);
         }
 
-        [TestMethod]
-        public void CheckDebugLevelSettingChange()
+        [DataTestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void CheckDebugLevelSettingChange(bool initialValue)
         {
-            var (plugInMock, _) = TestHelper.CreateMockPluginAndHsController(new Dictionary<string, string>());
+            var settingsFromIni = new Dictionary<string, string>
+            {
+                { "LoggingDebugId", initialValue.ToString() },
+                { "LogToFileId", initialValue.ToString() }
+            };
+
+            var (plugInMock, _) = TestHelper.CreateMockPluginAndHsController(settingsFromIni);
 
             PlugIn plugIn = plugInMock.Object;
 
             var settingsCollection = new SettingsCollection
             {
                 // invert all default values
-                SettingsPages.CreateDefault(enableDebugLoggingDefault : true,
-                                            logToFileDefault : true)
+                SettingsPages.CreateDefault(enableDebugLoggingDefault : !initialValue,
+                                            logToFileDefault : !initialValue)
             };
 
             Assert.IsTrue(plugIn.SaveJuiSettingsPages(settingsCollection.ToJsonString()));
-            Assert.IsTrue(Log.Logger.IsEnabled(Serilog.Events.LogEventLevel.Debug));
+            Assert.AreEqual(Log.Logger.IsEnabled(Serilog.Events.LogEventLevel.Debug), !initialValue);
             plugInMock.Verify();
         }
 
