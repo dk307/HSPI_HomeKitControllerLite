@@ -108,7 +108,6 @@ namespace Hspi
         {
             try
             {
-                UpdateDebugLevel();
                 Log.Information("Plugin Starting");
                 Settings.Add(SettingsPages.CreateDefault());
                 LoadSettingsFromIni();
@@ -193,8 +192,10 @@ namespace Hspi
 
         private void UpdateDebugLevel()
         {
-            bool debugLevel = true;
-            bool logToFile = false;
+            CheckNotNull(settingsPages);
+
+            bool debugLevel = settingsPages.DebugLoggingEnabled;
+            bool logToFile = settingsPages.LogtoFileEnabled;
             this.LogDebug = debugLevel;
             Logger.ConfigureLogging(LogDebug, logToFile, HomeSeerSystem);
         }
