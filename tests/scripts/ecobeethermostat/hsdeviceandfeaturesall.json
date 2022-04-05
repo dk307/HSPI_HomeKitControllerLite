@@ -1894,7 +1894,7 @@
         "value": "{\"Type\":2,\"Iid\":43}"
       }
     ],
-    "Name": "Status Low Batt",
+    "Name": "Status Low Battery",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
       "ApiType": 513,
