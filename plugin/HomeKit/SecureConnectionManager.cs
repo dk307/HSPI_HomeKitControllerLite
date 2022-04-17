@@ -35,7 +35,6 @@ namespace HomeKit
 
         public async Task ConnectionAndListen(PairingDeviceInfo info,
                                               IPEndPoint fallbackEndPoint,
-                                              TimeSpan? pollingInterval,
                                               CancellationToken token)
         {
             try
@@ -63,7 +62,8 @@ namespace HomeKit
                 //listen and process events
                 while (!token.IsCancellationRequested)
                 {
-                    var waitTask = Task.Delay(pollingInterval ?? TimeSpan.MaxValue, token);
+                    var delay = info.PollingTimeSpan?.TotalMilliseconds ?? -1;
+                    var waitTask = Task.Delay((int)delay, token);
                     var finishedTask = await Task.WhenAny(listenTask, eventProcessTask, waitTask).ConfigureAwait(false);
 
                     if (waitTask == finishedTask)

@@ -162,11 +162,7 @@ namespace HomeKit
             byte[]? bytesContent = null;
             if (value != null)
             {
-                JsonSerializerSettings jsonSerializerSettings = new()
-                {
-                    Formatting = Formatting.None
-                };
-                var content = JsonConvert.SerializeObject(value, typeof(T), jsonSerializerSettings);
+                var content = JsonConvert.SerializeObject(value, typeof(T), CreateJsonSerializer());
                 bytesContent = Encoding.UTF8.GetBytes(content);
             }
 
@@ -203,7 +199,15 @@ namespace HomeKit
             }
 
             var responseData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<R>(responseData);
+            return JsonConvert.DeserializeObject<R>(responseData, CreateJsonSerializer());
+        }
+
+        private static JsonSerializerSettings CreateJsonSerializer()
+        {
+            return new()
+            {
+                Formatting = Formatting.None,
+            };
         }
 
         protected async Task<HttpResponseMessage> Request(HttpMethod httpMethod,

@@ -280,7 +280,6 @@ namespace Hspi.DeviceData
 
             await manager.ConnectionAndListen(pairingInfo,
                                               fallbackAddress,
-                                              TimeSpan.FromSeconds(30),
                                               cancellationToken).ConfigureAwait(false);
         }
 
