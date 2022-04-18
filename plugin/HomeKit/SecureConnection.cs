@@ -268,7 +268,7 @@ namespace HomeKit
                 {
                     { "aid", AidIidPair.Aid  },
                     { "iid", AidIidPair.Iid  },
-                    { "ev", subscribe? 1: 0 }
+                    { "ev", subscribe }
                 };
                 doneSubscriptions.Add(AidIidPair);
                 characteristicsRequest.Add(requestData);
