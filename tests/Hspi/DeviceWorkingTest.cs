@@ -89,7 +89,7 @@ namespace HSPI_HomeKitControllerTest
                 else if (TargetTemperatureRefId == devOrFeatRef &&
                          property == EProperty.Value &&
                          !targetTemperatureSetOnUpdate.IsSet &&
-                         !onlineEvent.IsSet)
+                         onlineEvent.IsSet)
                 {
                     targetTemperatureSetOnUpdate.Set();
                 }

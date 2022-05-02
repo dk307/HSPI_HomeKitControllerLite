@@ -55,8 +55,9 @@ namespace Hspi.DeviceData
                 {
                     if (valueToSend != null)
                     {
+                        Log.Information("Updated {name} with {value}", manager.DisplayNameForLog, valueToSend);
                         await manager.Connection.PutCharacteristic(valueToSend, cancellationToken).ConfigureAwait(false);
-                        Log.Information("Updated {value} for {name}", valueToSend, manager.DisplayNameForLog);
+                        Log.Information("Updated {name} with {value}", manager.DisplayNameForLog, valueToSend);
 
                         await manager.Connection.RefreshValues(pollingIids.Add(valueToSend), token).ConfigureAwait(false);
                     }
@@ -213,8 +214,8 @@ namespace Hspi.DeviceData
             Log.Information("Devices ready and listening for {name}", manager.DisplayNameForLog);
         }
 
-        private async void DeviceConnectionChangedEvent(object sender,
-                                                        DeviceConnectionChangedArgs e)
+        private void DeviceConnectionChangedEvent(object sender,
+                                                  DeviceConnectionChangedArgs e)
         {
             if (e.Connected)
             {
@@ -223,11 +224,8 @@ namespace Hspi.DeviceData
                 {
                     CreateFeaturesAndDevices();
 
-                    // get all values initially to refresh even the vent ones.
-                    await manager.Connection.RefreshValues(null, cancellationToken).ConfigureAwait(false);
-
                     // update the devices that need to polled
-                    SetupPollingForNonEventCharacteristics();
+                    CalculatePollingAndSubscribeAidIid();
                 }
 
                 // update last connected address
@@ -250,24 +248,34 @@ namespace Hspi.DeviceData
             }
         }
 
-        private void SetupPollingForNonEventCharacteristics()
+        private void CalculatePollingAndSubscribeAidIid()
         {
             var accessoryInfo = manager.Connection.DeviceReportedInfo;
-            var subscribedMap = manager.Connection.SubscriptionsToDevice.ToLookup(x => x.Aid);
 
+            List<AidIidPair> subscribe = new();
             List<AidIidPair> polling = new();
-            foreach (var aid in accessoryInfo.Accessories.Select(x => x.Aid))
+            foreach (var accessory in accessoryInfo.Accessories)
             {
-                var allFeatureDevices = hsDevices[aid].CharacteristicFeatures.Keys;
-                var subscribedMapForAccessory = subscribedMap[aid];
-                var nonSubscribedFeatures = allFeatureDevices.Where(iid => !subscribedMapForAccessory.Any(x => x.Iid == iid));
+                //filter by what device features exist
+                foreach (var iid in hsDevices[accessory.Aid].CharacteristicFeatures.Keys)
+                {
+                    var characteristic = accessory.FindCharacteristic(iid).Item2;
 
-                polling.AddRange(nonSubscribedFeatures.Select(x => new AidIidPair(aid, x)));
+                    if (characteristic?.SupportsNotifications ?? false)
+                    {
+                        subscribe.Add(new AidIidPair(accessory.Aid, iid));
+                    }
+                    else if (characteristic?.Permissions.Contains(CharacteristicPermissions.PairedRead) ?? false)
+                    {
+                        polling.Add(new AidIidPair(accessory.Aid, iid));
+                    }
+                }
             }
 
-            var aidIidPairs = polling.ToImmutableList();
-            Interlocked.Exchange(ref this.pollingIids, aidIidPairs);
-            manager.SetPolling(aidIidPairs);
+            Interlocked.Exchange(ref this.pollingIids, polling.ToImmutableList());
+            Interlocked.Exchange(ref this.subscribeIids, subscribe.ToImmutableList());
+
+            manager.SetSubscribeAndPollingAidIids(new SubscribeAndPollingAidIids(this.subscribeIids, this.pollingIids));
         }
 
         private async Task UpdateDeviceProperties()
@@ -292,6 +300,7 @@ namespace Hspi.DeviceData
         private ImmutableDictionary<ulong, HsHomeKitRootDevice> hsDevices =
                              ImmutableDictionary<ulong, HsHomeKitRootDevice>.Empty;
 
+        private ImmutableList<AidIidPair> subscribeIids = ImmutableList<AidIidPair>.Empty;
         private ImmutableList<AidIidPair> pollingIids = ImmutableList<AidIidPair>.Empty;
     }
 }

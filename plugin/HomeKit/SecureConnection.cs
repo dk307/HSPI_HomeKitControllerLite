@@ -42,8 +42,6 @@ namespace HomeKit
 
         public PairingDeviceInfo PairingInfo => pairingInfo;
 
-        public ImmutableHashSet<AidIidPair> SubscriptionsToDevice => subscriptionsToDevice;
-
         public override async Task<Task> ConnectAndListen(IPEndPoint fallbackAddress, CancellationToken token)
         {
             using var _ = await connectionLock.LockAsync(token).ConfigureAwait(false);
@@ -106,7 +104,7 @@ namespace HomeKit
 
         public async Task PutCharacteristic(AidIidValue id, CancellationToken token)
         {
-            Log.Information("Making update to {value}", id);
+            Log.Debug("Making {name} update to {value}", id);
             JObject request = new();
 
             JArray characteristicsRequest = new();
@@ -183,40 +181,31 @@ namespace HomeKit
             Log.Information("Removed Pairing for {Name}", DisplayName);
         }
 
-        public async Task<Task> TrySubscribeAll(CancellationToken token)
+        public async Task<Task> TrySubscribe(IEnumerable<AidIidPair> subscribe, CancellationToken token)
         {
             using var _ = await connectionLock.LockAsync(token).ConfigureAwait(false);
 
-            CheckHasDeviceInfo();
             var builder = subscriptionsToDevice.ToBuilder();
-            foreach (var accessory in this.DeviceReportedInfo.Accessories)
+            foreach (var neededSubscriptions in subscribe.ToLookup(x => x.Aid))
             {
-                var neededSubscriptions = accessory.Services.Values.SelectMany(
-                                        s => s.Characteristics.Values.Where(c => c.SupportsNotifications))
-                                        .Select(x => new AidIidPair(accessory.Aid, x.Iid));
+                var changedSubscriptions = await ChangeSubscription(neededSubscriptions, true, token)
+                                                 .ConfigureAwait(false);
 
-                if (!neededSubscriptions.Any())
+                foreach (var pair in changedSubscriptions)
                 {
-                    continue;
+                    builder.Add(pair);
                 }
 
-                var changedSubscriptions = await ChangeSubscription(neededSubscriptions, true, token).ConfigureAwait(false);
-
-                foreach (var AidIidPair in changedSubscriptions)
+                if (neededSubscriptions.Count() != changedSubscriptions.Count) 
                 {
-                    builder.Add(AidIidPair);
+                    Log.Warning("Some of the device subscriptions failed for {Name} Aid:{aid}", DisplayName, neededSubscriptions.Key);
                 }
 
-                if (neededSubscriptions.Count() != changedSubscriptions.Count)
-                {
-                    Log.Warning("Some of the device subscriptions failed for {Name}:{accessory}", DisplayName, accessory.Name);
-                }
-
-                Interlocked.Exchange(ref subscriptionsToDevice, builder.ToImmutableHashSet());
-
-                Log.Information("Subscribed for {count} events from {Name}:{accessory}",
-                                    subscriptionsToDevice.Count, DisplayName, accessory.Name);
+                Log.Information("Subscribed for {count} events from {Name} Aid:{value}",
+                                 changedSubscriptions.Count, DisplayName, neededSubscriptions.Key);
             }
+
+            Interlocked.Exchange(ref subscriptionsToDevice, builder.ToImmutableHashSet());
 
             if (processEventTask?.IsCompleted ?? true)
             {

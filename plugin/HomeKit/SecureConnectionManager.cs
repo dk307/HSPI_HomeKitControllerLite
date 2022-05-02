@@ -1,6 +1,6 @@
 ﻿using HomeKit.Model;
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,12 +12,17 @@ namespace HomeKit
 {
     internal sealed record DeviceConnectionChangedArgs(bool Connected);
 
+    internal sealed record SubscribeAndPollingAidIids(ImmutableList<AidIidPair> Subscribe,
+                                                      ImmutableList<AidIidPair> Polling);
+
     internal sealed class SecureConnectionManager
     {
         public delegate void DeviceConnectionChangedHandler(object sender, DeviceConnectionChangedArgs e);
 
         public event AccessoryValueChangedHandler? AccessoryValueChangedEvent;
+
         public event DeviceConnectionChangedHandler? DeviceConnectionChangedEvent;
+
         public SecureConnection Connection
         {
             get
@@ -55,9 +60,14 @@ namespace HomeKit
                 Interlocked.Exchange(ref connection, secureHomeKitConnection);
                 secureHomeKitConnection.AccessoryValueChangedEvent += AccessoryValueChangedEventForward;
 
-                var eventProcessTask = await secureHomeKitConnection.TrySubscribeAll(token);
-
+                // create devices & features & setup polling & subscribe iids
                 EnqueueConnectionEvent(true);
+
+                // subscribe before refresh
+                var eventProcessTask = await secureHomeKitConnection.TrySubscribe(subscribeAndPollingAidIids.Subscribe, token);
+
+                // get all values initially to refresh even the event ones.
+                await connection!.RefreshValues(null, token).ConfigureAwait(false);
 
                 //listen and process events
                 while (!token.IsCancellationRequested)
@@ -68,7 +78,7 @@ namespace HomeKit
 
                     if (waitTask == finishedTask)
                     {
-                        await secureHomeKitConnection.RefreshValues(pollingIids, token).ConfigureAwait(false);
+                        await secureHomeKitConnection.RefreshValues(subscribeAndPollingAidIids.Polling, token).ConfigureAwait(false);
                     }
                     else
                     {
@@ -85,9 +95,9 @@ namespace HomeKit
             }
         }
 
-        public void SetPolling(IEnumerable<AidIidPair>? iids)
+        public void SetSubscribeAndPollingAidIids(SubscribeAndPollingAidIids value)
         {
-            Interlocked.Exchange(ref pollingIids, iids);
+            Interlocked.Exchange(ref this.subscribeAndPollingAidIids, value);
         }
 
         private void AccessoryValueChangedEventForward(object sender, AccessoryValueChangedArgs e)
@@ -107,6 +117,6 @@ namespace HomeKit
         private volatile SecureConnection? connection;
         private bool? lastConnectionEvent;
         private string? lastDisplayName;
-        private IEnumerable<AidIidPair>? pollingIids;
+        private SubscribeAndPollingAidIids subscribeAndPollingAidIids = new(ImmutableList<AidIidPair>.Empty, ImmutableList<AidIidPair>.Empty);
     }
 }

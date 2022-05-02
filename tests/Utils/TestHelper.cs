@@ -261,6 +261,15 @@ namespace HSPI_HomeKitControllerTest
             return (plugIn, deviceOrFeatureData);
         }
 
+        public static async Task WaitTillSameAsync(string expected, Func<string> valueFtn, CancellationToken token)
+        {
+            while(!token.IsCancellationRequested && expected != valueFtn())
+            {
+                await Task.Delay(500, token).ConfigureAwait(false);
+            }
+            Assert.AreEqual(expected, valueFtn());
+        }
+
         public static void VerifyHtmlValid(string html)
         {
             HtmlAgilityPack.HtmlDocument htmlDocument = new();

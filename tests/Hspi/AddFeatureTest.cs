@@ -1,8 +1,6 @@
 ﻿using HomeKit.Model;
 using HomeSeer.Jui.Views;
-using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
-using Hspi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
@@ -23,6 +21,43 @@ namespace HSPI_HomeKitControllerTest
         public AddFeatureTest()
         {
             cancellationTokenSource.CancelAfter(60 * 1000);
+        }
+
+        [DataTestMethod]
+        [DataRow("999", true)]
+        [DataRow("", false)]
+        public async Task ChangeOptionsThroughDevicePage(string pollingTimeSpan,
+                                                         bool enableKeepAliveForConnection)
+        {
+            using var hapAccessory = await TestHelper.CreateChangingTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
+
+            var jsonData = await TestEnabledFeatureChanged(hapAccessory, ChangeOptions, null).ConfigureAwait(false);
+
+            var data = JsonConvert.DeserializeObject<SortedDictionary<int, Dictionary<EProperty, object>>>(jsonData,
+                                                                                                           TestHelper.CreateJsonSerializer());
+
+            var plugExtraData = (JArray)data[HapAccessory.StartDeviceRefId][EProperty.PlugExtraData];
+
+            var pairingDeviceInfo = JsonConvert.DeserializeObject<PairingDeviceInfo>((string)plugExtraData.First(x => (string)x["key"] == "pairing.info")["value"]);
+
+            Assert.AreEqual(enableKeepAliveForConnection, pairingDeviceInfo.EnableKeepAliveForConnection);
+            Assert.AreEqual(string.IsNullOrWhiteSpace(pollingTimeSpan) ? null : TimeSpan.FromSeconds(int.Parse(pollingTimeSpan)),
+                            pairingDeviceInfo.PollingTimeSpan);
+
+            PageFactory ChangeOptions(Page page, Accessory accessory)
+            {
+                var changes = PageFactory.CreateDeviceConfigPage(page.Id, page.Name);
+
+                var pollingTimeSpanView = page.GetViewById<InputView>("PollingTimeSpan");
+                var enableKeepAliveForConnectionView = page.GetViewById<ToggleView>("EnableKeepAliveForConnection");
+                pollingTimeSpanView.UpdateValue(pollingTimeSpan);
+                enableKeepAliveForConnectionView.IsEnabled = enableKeepAliveForConnection;
+
+                changes = changes.WithView(pollingTimeSpanView);
+                changes = changes.WithView(enableKeepAliveForConnectionView);
+
+                return changes;
+            }
         }
 
         [TestMethod]
@@ -46,8 +81,7 @@ namespace HSPI_HomeKitControllerTest
 
             string expectedHsAndDeviceData = hapAccessory.GetHsDeviceAndFeaturesAllString();
 
-            var jsonData = await TestEnabledFeatureChanged(hapAccessory, AddFeatures).ConfigureAwait(false);
-            Assert.AreEqual(expectedHsAndDeviceData, jsonData);
+            await TestEnabledFeatureChanged(hapAccessory, AddFeatures, expectedHsAndDeviceData).ConfigureAwait(false);
 
             static PageFactory AddFeatures(Page page, Accessory accessory)
             {
@@ -70,52 +104,13 @@ namespace HSPI_HomeKitControllerTest
                 return changes;
             }
         }
-
-        [DataTestMethod]
-        [DataRow("999", true)]
-        [DataRow("", false)]
-        public async Task ChangeOptionsThroughDevicePage(string pollingTimeSpan,
-                                                         bool enableKeepAliveForConnection)
-        {
-            using var hapAccessory = await TestHelper.CreateChangingTemperaturePairedAccessory(CancellationToken.None).ConfigureAwait(false);
-
-            var jsonData = await TestEnabledFeatureChanged(hapAccessory, ChangeOptions).ConfigureAwait(false);
-
-            var data = JsonConvert.DeserializeObject<SortedDictionary<int, Dictionary<EProperty, object>>>(jsonData,
-                                                                                                           TestHelper.CreateJsonSerializer());
-
-            var plugExtraData = (JArray)data[HapAccessory.StartDeviceRefId][EProperty.PlugExtraData];
-
-            var pairingDeviceInfo = JsonConvert.DeserializeObject<PairingDeviceInfo>((string)plugExtraData.First(x => (string)x["key"] == "pairing.info")["value"]);
-
-            Assert.AreEqual(enableKeepAliveForConnection, pairingDeviceInfo.EnableKeepAliveForConnection);
-            Assert.AreEqual(string.IsNullOrWhiteSpace(pollingTimeSpan) ? null : TimeSpan.FromSeconds(int.Parse(pollingTimeSpan)), 
-                            pairingDeviceInfo.PollingTimeSpan);
-
-            PageFactory ChangeOptions(Page page, Accessory accessory)
-            {
-                var changes = PageFactory.CreateDeviceConfigPage(page.Id, page.Name);
-
-                var pollingTimeSpanView = page.GetViewById<InputView>("PollingTimeSpan");
-                var enableKeepAliveForConnectionView = page.GetViewById<ToggleView>("EnableKeepAliveForConnection");
-                pollingTimeSpanView.UpdateValue(pollingTimeSpan);
-                enableKeepAliveForConnectionView.IsEnabled = enableKeepAliveForConnection;
-
-                changes = changes.WithView(pollingTimeSpanView);
-                changes = changes.WithView(enableKeepAliveForConnectionView);
-
-                return changes;
-            }
-        }
-
         [TestMethod]
         public async Task FeatureDeletedThroughDevicePage()
         {
             using var hapAccessory = await TestHelper.CreateEcobeeThermostatPairedAccessory(CancellationToken.None).ConfigureAwait(false);
             string expectedHsAndDeviceData = hapAccessory.GetHsDeviceAndFeaturesNoneString();
 
-            var jsonData = await TestEnabledFeatureChanged(hapAccessory, RemoveFeatures).ConfigureAwait(false);
-            Assert.AreEqual(expectedHsAndDeviceData, jsonData);
+            await TestEnabledFeatureChanged(hapAccessory, RemoveFeatures, expectedHsAndDeviceData).ConfigureAwait(false);
 
             static PageFactory RemoveFeatures(Page page, Accessory accessory)
             {
@@ -191,17 +186,19 @@ namespace HSPI_HomeKitControllerTest
             // -1 for root
             Assert.AreEqual(hapAccessory.ExpectedDeviceCreates, deviceOrFeatureData.Count - 1);
 
-            string jsonData = GetHsDeviceAndFeatureData(device.Ref, deviceOrFeatureData);
-            Assert.AreEqual(hapAccessory.GetHsDeviceAndFeaturesString(), jsonData);
-
+            //wait till refresh
+            await TestHelper.WaitTillSameAsync(hapAccessory.GetHsDeviceAndFeaturesString(),
+                                               () => GetHsDeviceAndFeatureData(device.Ref, deviceOrFeatureData),
+                                               cancellationTokenSource.Token);
             plugIn.Object.ShutdownIO();
         }
 
         private async Task<string> TestEnabledFeatureChanged(HapAccessory hapAccessory,
-                                                             Func<Page, Accessory, PageFactory> generateChanges)
+                                                     Func<Page, Accessory, PageFactory> generateChanges,
+                                                     string expectedHsAndDeviceData)
         {
             AsyncProducerConsumerQueue<bool> connectionStatus = new();
-            var (plugIn, deviceOrFeatureData) = await TestHelper.StartPluginWithHapAccessory(hapAccessory, 
+            var (plugIn, deviceOrFeatureData) = await TestHelper.StartPluginWithHapAccessory(hapAccessory,
                                                                                              connectionStatus,
                                                                                              cancellationTokenSource.Token);
 
@@ -226,12 +223,18 @@ namespace HSPI_HomeKitControllerTest
 
             // Assert restart of device
             Assert.IsFalse(await connectionStatus.DequeueAsync(cancellationTokenSource.Token).ConfigureAwait(false));
-            Assert.IsTrue(await connectionStatus.DequeueAsync(cancellationTokenSource.Token).ConfigureAwait(false));
+            Assert.IsTrue(await connectionStatus.DequeueAsync(cancellationTokenSource.Token).ConfigureAwait(false)); 
 
-            string jsonData = GetHsDeviceAndFeatureData(refIds[0], deviceOrFeatureData);
+            if (expectedHsAndDeviceData != null)
+            {
+                await TestHelper.WaitTillSameAsync(expectedHsAndDeviceData,
+                                                  () => GetHsDeviceAndFeatureData(refIds[0], deviceOrFeatureData),
+                                                  cancellationTokenSource.Token);
+            }
 
+            string data = GetHsDeviceAndFeatureData(refIds[0], deviceOrFeatureData);
             plugIn.Object.ShutdownIO();
-            return jsonData;
+            return data;
         }
 
         private readonly CancellationTokenSource cancellationTokenSource = new();
