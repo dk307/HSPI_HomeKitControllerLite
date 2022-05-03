@@ -508,9 +508,7 @@ namespace Hspi.DeviceData
         private static FeatureFactory SetName(Characteristic characteristic,
                                               FeatureFactory featureFactory)
         {
-            string name = characteristic.Type.DisplayName ??
-                          characteristic.Description ??
-                          characteristic.Type.Id.ToString("D");
+            string name = characteristic.DisplayName;
             return featureFactory.WithName(name);
         }
 

@@ -42,7 +42,7 @@ namespace Hspi.Pages
                 foreach (var characteristic in service.Value.Characteristics)
                 {
                     ToggleView view = new(PrefixIdCharacteristics + characteristic.Key.ToString(CultureInfo.InvariantCulture),
-                                          characteristic.Value.Type.DisplayName ?? "Unknown - " + characteristic.Value.Type.Id.ToString(),
+                                          characteristic.Value.DisplayName,
                                           enabledCharacteristics.Contains(characteristic.Key));
                     selectCharacteristicsView.AddView(view);
                 }

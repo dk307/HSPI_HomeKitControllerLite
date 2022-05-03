@@ -105,6 +105,9 @@ namespace HomeKit.Model
         [JsonIgnore]
         public int? DecimalPlaces => StepValue != null ? GetPrecision((decimal)StepValue) : null;
 
+        [JsonIgnore]
+        public string DisplayName => Type.DisplayName ?? Description ?? "Unknown - " + Type.Id.ToString("D");
+
         private static int GetPrecision(decimal x)
         {
             int precision = 0;

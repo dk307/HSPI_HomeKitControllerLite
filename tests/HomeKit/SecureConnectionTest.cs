@@ -1,4 +1,5 @@
 ﻿using HomeKit;
+using HomeKit.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Nito.AsyncEx;
@@ -105,7 +106,9 @@ namespace HSPI_HomeKitControllerTest
             AsyncProducerConsumerQueue<AccessoryValueChangedArgs> changedEventQueue = new();
             connection.AccessoryValueChangedEvent += (s, e) => changedEventQueue.Enqueue(e);
 
-            await connection.TrySubscribeAll(Token).ConfigureAwait(false);
+            var list = new List<AidIidPair>();
+            list.Add(new AidIidPair(1, 11));
+            await connection.TrySubscribe(list, Token).ConfigureAwait(false);
 
             await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false); //original value
             var data = await changedEventQueue.DequeueAsync(Token).ConfigureAwait(false);
