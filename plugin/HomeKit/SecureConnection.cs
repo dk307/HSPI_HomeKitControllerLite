@@ -131,7 +131,7 @@ namespace HomeKit
                     ParseHapStatus(row, out var aid, out var iid, out var status);
 
                     Log.Warning("Failed to update {Name} aid:{aid} iid:{iid} failed with {status}",
-                                    DisplayName, aid, iid, status);
+                                    DisplayName, aid!, iid!, status!);
 
                     throw new AccessoryException(aid, iid, status);
                 }
@@ -278,7 +278,7 @@ namespace HomeKit
                     ParseHapStatus(row, out var aid, out var iid, out var status);
 
                     Log.Warning("Failed to change subscription for {name} aid:{aid} iid:{iid} failed with {status} for {Name}",
-                                    DisplayName, aid, iid, status);
+                                    DisplayName, aid!, iid!, status!);
                     if (aid != null && iid != null)
                     {
                         doneSubscriptions.Remove(new AidIidPair(aid.Value, iid.Value));

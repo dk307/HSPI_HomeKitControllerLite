@@ -4,6 +4,7 @@ using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Devices.Identification;
 using Hspi;
+using Hspi.Pages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
@@ -45,7 +46,7 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsTrue(plugIn.Object.InitIO());
 
             //discover
-            string data = plugIn.Object.PostBackProc("AddDevice.html", "{\"action\":\"search\"}", string.Empty, 0);
+            string data = plugIn.Object.PostBackProc(AddOrRepairDeviceHandler.PageName, "{\"action\":\"search\"}", string.Empty, 0);
 
             var result = JsonConvert.DeserializeObject<JObject>(data);
 
@@ -57,10 +58,11 @@ namespace HSPI_HomeKitControllerTest
 
             pairRequest.Add("action", new JValue("pair"));
             pairRequest.Add("pincode", new JValue(pin));
+            pairRequest.Add("refId", new JValue(-1));
             pairRequest.Add("data", (result["Data"] as JArray)[0]);
 
             //add
-            string data2 = plugIn.Object.PostBackProc("AddDevice.html", pairRequest.ToString(), string.Empty, 0);
+            string data2 = plugIn.Object.PostBackProc(AddOrRepairDeviceHandler.PageName, pairRequest.ToString(), string.Empty, 0);
 
             var result2 = JsonConvert.DeserializeObject<JObject>(data2);
 
@@ -95,7 +97,7 @@ namespace HSPI_HomeKitControllerTest
             TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
             Assert.IsTrue(plugIn.Object.InitIO());
 
-            string data = plugIn.Object.PostBackProc("AddDevice.html", "{\"action\":\"search\"}", string.Empty, 0);
+            string data = plugIn.Object.PostBackProc(AddOrRepairDeviceHandler.PageName, "{\"action\":\"search\"}", string.Empty, 0);
             Assert.AreEqual("{\"ErrorMessage\":null,\"Data\":[]}", data);
             plugIn.Object.ShutdownIO();
         }
@@ -107,7 +109,7 @@ namespace HSPI_HomeKitControllerTest
             TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
             Assert.IsTrue(plugIn.Object.InitIO());
 
-            string data = plugIn.Object.PostBackProc("AddDevice.html", "{\"action\":\"search\"}", string.Empty, 0);
+            string data = plugIn.Object.PostBackProc(AddOrRepairDeviceHandler.PageName, "{\"action\":\"search\"}", string.Empty, 0);
             Assert.AreEqual("{\"ErrorMessage\":null,\"Data\":[]}", data);
             plugIn.Object.ShutdownIO();
         }
@@ -125,7 +127,7 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsTrue(plugIn.Object.InitIO());
 
             //discover
-            string data = plugIn.Object.PostBackProc("AddDevice.html", "{\"action\":\"search\"}", string.Empty, 0);
+            string data = plugIn.Object.PostBackProc(AddOrRepairDeviceHandler.PageName, "{\"action\":\"search\"}", string.Empty, 0);
 
             var result = JsonConvert.DeserializeObject<JObject>(data);
 
@@ -137,10 +139,11 @@ namespace HSPI_HomeKitControllerTest
 
             pairRequest.Add("action", new JValue("pair"));
             pairRequest.Add("pincode", new JValue("345-34-345"));
+            pairRequest.Add("refId", new JValue(-1));
             pairRequest.Add("data", (result["Data"] as JArray)[0]);
 
             //add
-            string data2 = plugIn.Object.PostBackProc("AddDevice.html", pairRequest.ToString(), string.Empty, 0);
+            string data2 = plugIn.Object.PostBackProc(AddOrRepairDeviceHandler.PageName, pairRequest.ToString(), string.Empty, 0);
             var result2 = JsonConvert.DeserializeObject<JObject>(data2);
 
             Assert.IsNotNull(result2);
@@ -219,7 +222,76 @@ namespace HSPI_HomeKitControllerTest
 
             string newDeviceJson = JsonConvert.SerializeObject(newDataForDevice.Device, TestHelper.CreateJsonSerializer());
             Assert.AreEqual(hapAccessory.GetSecondaryDeviceNewDataString(), newDeviceJson);
+        }
 
+        [TestMethod]
+        public async Task RepairDevice()
+        {
+            string pin = "235-34-255";
+            using var hapAccessory = await TestHelper.CreateMultiSensorUnpairedAccessory(pin, cancellationTokenSource.Token)
+                                                     .ConfigureAwait(false);
+
+            AsyncProducerConsumerQueue<bool> connectionQueue = new();
+            string hsData = hapAccessory.GetHsDeviceAndFeaturesString();
+
+            int[] refIds = null;
+            PlugExtraData extraData = null;
+            void updateValueCallback(int devOrFeatRef, EProperty property, object value)
+            {
+                if (refIds[1] == devOrFeatRef &&
+                    property == EProperty.Value)
+                {
+                    connectionQueue.Enqueue((double)value != 0);
+                }
+                else if (property == EProperty.PlugExtraData)
+                {
+                    extraData = (PlugExtraData)value;
+                }
+            }
+
+            TestHelper.SetupHsDataForSyncing(hsData,
+                                             updateValueCallback,
+                                             out Mock<PlugIn> plugIn,
+                                             out Mock<IHsController> mockHsController,
+                                             out SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData);
+
+            refIds = deviceOrFeatureData.Keys.ToArray();
+
+            Assert.IsTrue(plugIn.Object.InitIO());
+
+            //discover
+            string data = plugIn.Object.PostBackProc(AddOrRepairDeviceHandler.PageName, "{\"action\":\"search\"}", string.Empty, 0);
+
+            var result = JsonConvert.DeserializeObject<JObject>(data);
+
+            Assert.IsNotNull(result);
+            Assert.IsNull((string)result["ErrorMessage"]);
+            Assert.AreEqual(1, (result["Data"] as JArray).Count);
+
+            JObject pairRequest = new();
+
+            pairRequest.Add("action", new JValue("pair"));
+            pairRequest.Add("pincode", new JValue(pin));
+            pairRequest.Add("refId", new JValue(HapAccessory.StartDeviceRefId));
+            pairRequest.Add("data", (result["Data"] as JArray)[0]);
+
+            //add
+            string data2 = plugIn.Object.PostBackProc(AddOrRepairDeviceHandler.PageName, pairRequest.ToString(), string.Empty, 0);
+
+            var result2 = JsonConvert.DeserializeObject<JObject>(data2);
+
+            Assert.IsNotNull(result2);
+            Assert.IsNull((string)result2["ErrorMessage"]);
+
+            // check new data was added
+            Assert.IsNotNull(extraData);
+
+            Accessory accessory = JsonConvert.DeserializeObject<Accessory>(extraData["cached.accessory.info"]);
+            Assert.IsNotNull(accessory);
+            Assert.IsNotNull(JsonConvert.DeserializeObject<PairingDeviceInfo>(extraData["pairing.info"]));
+            Assert.AreEqual(1UL, JsonConvert.DeserializeObject<ulong>(extraData["accessory.aid"]));
+            Assert.IsNotNull(JsonConvert.DeserializeObject<IPEndPoint>(extraData["fallback.address"], new IPEndPointJsonConverter()));
+            plugIn.Object.ShutdownIO();
         }
 
         private readonly CancellationTokenSource cancellationTokenSource = new();

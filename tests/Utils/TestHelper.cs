@@ -72,6 +72,14 @@ namespace HSPI_HomeKitControllerTest
             return hapAccessory;
         }
 
+        public static async Task<MultiSensorSensorAccessory> 
+            CreateMultiSensorUnpairedAccessory(string pin, CancellationToken token)
+        {
+            var hapAccessory = new MultiSensorSensorAccessory();
+            await hapAccessory.StartUnpaired(pin, token).ConfigureAwait(false);
+            return hapAccessory;
+        }
+
         public static Mock<PlugIn> CreatePlugInMock()
         {
             return new Mock<PlugIn>(MockBehavior.Loose)
@@ -87,6 +95,7 @@ namespace HSPI_HomeKitControllerTest
             await hapAccessory.StartPaired(token).ConfigureAwait(false);
             return hapAccessory;
         }
+
         public static async Task<TemperatureSensorAccessory> CreateTemperatureUnPairedAccessory(string pin,
                                                                                   CancellationToken token)
         {
@@ -209,7 +218,6 @@ namespace HSPI_HomeKitControllerTest
 
             mockHsController.Setup(x => x.GetRefsByInterface(PlugInData.PlugInId, true))
                             .Returns(new List<int>() { deviceRefId });
-
         }
 
         public static async Task<(Mock<PlugIn>, SortedDictionary<int, Dictionary<EProperty, object>> deviceOrFeatureData)>
@@ -237,7 +245,6 @@ namespace HSPI_HomeKitControllerTest
 
             refIds = deviceOrFeatureData.Keys.ToArray();
 
-
             int featureRefId = refIds.Max();
             mockHsController.Setup(x => x.CreateFeatureForDevice(It.IsAny<NewFeatureData>()))
                             .Returns((NewFeatureData r) =>
@@ -263,7 +270,7 @@ namespace HSPI_HomeKitControllerTest
 
         public static async Task WaitTillSameAsync(string expected, Func<string> valueFtn, CancellationToken token)
         {
-            while(!token.IsCancellationRequested && expected != valueFtn())
+            while (!token.IsCancellationRequested && expected != valueFtn())
             {
                 await Task.Delay(500, token).ConfigureAwait(false);
             }

@@ -157,7 +157,7 @@ namespace Hspi.DeviceData
             {
                 var typeData = HsHomeKitFeatureDevice.GetTypeData(feature.PlugExtraData);
                 if (typeData.Type == HsHomeKitFeatureDevice.FeatureType.Characteristics &&
-                    (typeData.Iid == null || !enabledCharacteristics.Contains(typeData.Iid.Value)))
+                   (typeData.Iid == null || !enabledCharacteristics.Contains(typeData.Iid.Value)))
                 {
                     Log.Information("Deleting {featureName} for {deviceName}", feature.Name, device.Name);
                     HS.DeleteFeature(feature.Ref);
@@ -280,9 +280,10 @@ namespace Hspi.DeviceData
 
         private async Task UpdateDeviceProperties()
         {
-            //open aid == 1 device or first
-            int refId = originalRefIds.Select(x => (int?)x).First(refId => HsHomeKitRootDevice.GetAid(HS, refId!.Value) == 1) ??
+            //open aid == Accessory.MainAid device or first
+            int refId = originalRefIds.Select(x => (int?)x).First(refId => HsHomeKitRootDevice.GetAid(HS, refId!.Value) == Accessory.MainAid) ??
                         originalRefIds.First();
+
             var pairingInfo = HsHomeKitBaseRootDevice.GetPairingInfo(HS, refId);
             var fallbackAddress = HsHomeKitBaseRootDevice.GetFallBackAddress(HS, refId);
 

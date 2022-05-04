@@ -16,11 +16,11 @@ using static System.FormattableString;
 
 namespace Hspi.Pages
 {
-    internal static class AddDeviceHandler
+    internal static class AddOrRepairDeviceHandler
     {
         public static (string, bool) PostBackProc(string data,
-                                          IHsController hsController,
-                                          CancellationToken cancellationToken)
+                                                  IHsController hsController,
+                                                  CancellationToken cancellationToken)
         {
             return PostBackProcAsync(data, hsController, cancellationToken).ResultForSync();
         }
@@ -41,6 +41,7 @@ namespace Hspi.Pages
         {
             var pincode = requestObject["pincode"]?.ToString();
             var discoveredDevice = requestObject["data"]?.ToObject<DiscoveredDevice>();
+            var existingRefId = (int?)requestObject["refId"];
 
             if ((pincode == null) || (discoveredDevice == null))
             {
@@ -52,19 +53,33 @@ namespace Hspi.Pages
             await secureConnection.ConnectAndListen(discoveredDevice.Address, cancellationToken).ConfigureAwait(false);
 
             var accessoryInfo = secureConnection.DeviceReportedInfo;
-            var accessory1Aid = accessoryInfo?.Accessories.FirstOrDefault(x => x.Aid == 1);
-            if (accessory1Aid == null)
+            if (existingRefId.HasValue && existingRefId.Value != -1)
             {
-                Log.Error("No Aid 1 accessor found for {name}", discoveredDevice.DisplayName);
-                throw new InvalidOperationException(Invariant($"No Aid 1 accessory found for {discoveredDevice.DisplayName}"));
+                HsHomeKitDeviceFactory.RepairDevice(hsController,
+                                                    existingRefId.Value,
+                                                    pairingInfo,
+                                                    discoveredDevice.Address,
+                                                    accessoryInfo);
+
+                Log.Information("Repaired {refId} for {name}", existingRefId.Value, discoveredDevice.DisplayName);
             }
+            else
+            {
+                var accessory1Aid = accessoryInfo?.Accessories.FirstOrDefault(x => x.Aid == Accessory.MainAid);
+                if (accessory1Aid == null)
+                {
+                    Log.Error("No Aid 1 accessor found for {name}", discoveredDevice.DisplayName);
+                    throw new InvalidOperationException(Invariant($"No Aid 1 accessory found for {discoveredDevice.DisplayName}"));
+                }
 
-            int refId = HsHomeKitDeviceFactory.CreateDevice(hsController,
-                                                              pairingInfo,
-                                                              discoveredDevice.Address,
-                                                              accessory1Aid);
 
-            Log.Information("Created {refId} for {name}", refId, discoveredDevice.DisplayName);
+                int refId = HsHomeKitDeviceFactory.CreateDevice(hsController,
+                                                                pairingInfo,
+                                                                discoveredDevice.Address,
+                                                                accessory1Aid);
+
+                Log.Information("Created {refId} for {name}", refId, discoveredDevice.DisplayName);
+            }
 
             var result = new Result();
             return JsonConvert.SerializeObject(result);
@@ -91,6 +106,7 @@ namespace Hspi.Pages
                 return (JsonConvert.SerializeObject(result), false);
             }
         }
-        public const string PageName = "AddDevice.html";
+
+        public const string PageName = "AddOrRepairDevice.html";
     }
 }

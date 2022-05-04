@@ -10,6 +10,7 @@ namespace HomeKit.Model
 {
     internal sealed record Accessory
     {
+        public const ulong MainAid = 1;
         public Accessory(ulong aid, IImmutableDictionary<ulong, Service> services)
         {
             Aid = aid;

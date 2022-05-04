@@ -8,7 +8,7 @@
     <!--This liquid tag loads all of the necessary css files for HomeSeer-->
     {{includefile '/bootstrap/css/page_common.css'}}
     <link href="../bootstrap/css/addons-pro/steppers.min.css" rel="stylesheet">
-    <title>Pair a new HomeKit Accessory</title>
+    <title>Pair a HomeKit Accessory</title>
 </head>
 <body class="body homeseer-skin">
     <!--These liquid tags add the HomeSeer header and navbar to the top of the page when appropriate-->
@@ -20,31 +20,49 @@
         <!-- MDB Steppers -->
         <ul id="process-stepper" class="stepper linear">
             <li class="step active locked">
-                <div data-step-label="Locate accessory" class="step-title waves-effect waves-dark">Step 1</div>
+                <div data-step-label="Add or Repair device" class="step-title waves-effect waves-dark">Step 1</div>
                 <div class="step-new-content">
-					Make sure the device isn't already paired before continuing. Make sure that device is in same network as Homeseer.<BR>
-                    Click the button below to scan your network for accessories.
-                    <div class="step-actions">
-                        <button id="btnStep2" class="waves-effect waves-dark btn btn-sm btn-primary next-step" data-feedback="step1FeedbackFunction">LOCATE ACCESSORIES</button>
+					Select a device to repair or add a new device
+					{{ devicelist=plugin_function 'HomeKitController' 'GetDeviceList' [] }}
+                    <select class='mdb-select md-form' id='device-select' searchable="Search for a device here..." required>
+						<option value='-1' selected>Add a New Device</option>
+						{{ for device in devicelist }}
+						<option value='{{device.key}}'>{{device.value}}</option>
+						{{ end }}
+					</select>
+                    <div class="step-actions">                   
+                        <button class="waves-effect waves-dark btn btn-sm btn-primary next-step">SELECT</button>
                     </div>
                 </div>
             </li>
-            <li class="step">
-                <div data-step-label="Pair accessory" class="step-title waves-effect waves-dark">Step 2</div>
-                <div id="step2" class="step-new-content">
-                    <div id="accessory-select-div">
 
+            <li class="step">
+                <div data-step-label="Select accessory" class="step-title waves-effect waves-dark">Step 2</div>
+                <div id="step2" class="step-new-content">
+					Make sure the device isn't already paired before continuing. Make sure that device is in same network as Homeseer.<BR>
+                    Click the button below to scan your network for accessories.
+                    <div class="step-actions" style="margin-top: 32px;">
+						<button class="waves-effect waves-dark btn btn-sm btn-secondary previous-step">BACK</button>
+						<button class="waves-effect waves-dark btn btn-sm btn-primary next-step" data-feedback="step2FeedbackFunction">LOCATE ACCESSORIES</button>
+                    </div>
+                </div>
+            </li>
+
+            <li class="step">
+                <div data-step-label="Select accessory" class="step-title waves-effect waves-dark">Step 3</div>
+                <div id="step3" class="step-new-content">
+                    <div id="accessory-select-div">
                     </div>
                     <div class="step-actions" style="margin-top: 32px;">
                         <button class="waves-effect waves-dark btn btn-sm btn-secondary previous-step">BACK</button>
-                        <button id="select-accessory-button" class="waves-effect waves-dark btn btn-sm btn-primary next-step">SELECT</button>
+                        <button class="waves-effect waves-dark btn btn-sm btn-primary next-step">SELECT</button>
                     </div>
                 </div>
             </li>
 
             <li class="step">
-                <div data-step-label="Enter pincode" class="step-title waves-effect waves-dark">Step 3</div>
-                <div id="step3" class="step-new-content">
+                <div data-step-label="Enter pincode" class="step-title waves-effect waves-dark">Step 4</div>
+                <div id="step4" class="step-new-content">
                     <br/>
                         Enter the pincode in format (XXX-XX-XXX)
                     <br/>
@@ -61,13 +79,13 @@
 
                     <div class="step-actions" style="margin-top: 32px;">
                         <button class="waves-effect waves-dark btn btn-sm btn-secondary previous-step">BACK</button>
-                        <button class="waves-effect waves-dark btn btn-sm btn-primary next-step" data-feedback="step3FeedbackFunction">PAIR</button>
+                        <button class="waves-effect waves-dark btn btn-sm btn-primary next-step" data-feedback="step4FeedbackFunction">PAIR</button>
                     </div>
                 </div>
             </li>
 
             <li class="step">
-                <div data-step-label="Finish" class="step-title waves-effect waves-dark">Step 4</div>
+                <div data-step-label="Finish" class="step-title waves-effect waves-dark">Step 5</div>
                 <div id="lastStep" class="step-new-content">
                     <p id="lastStepText">
                         The accessory has been successfully paired. Click Finish to go to the devices page.
@@ -90,7 +108,7 @@
             $('.stepper').mdbStepper();
         })
 
-        function step1FeedbackFunction() {
+        function step2FeedbackFunction() {
 			var formObject = {
 			   action: "search"
 		    };
@@ -98,14 +116,13 @@
             $.ajax({
                 type: "POST",
                 async: "true",
-                url: '/HomeKitController/AddDevice.html',
+                url: '/HomeKitController/AddOrRepairDevice.html',
                 cache: false,
                 data: data,
                 success: function (response) {
                     var result = JSON.parse(response);
                     var errorMessage = result.ErrorMessage;
-					
-					
+									
 					var selectHtml = "";
 					if (errorMessage != null) {
 						selectHtml = "<p>" + errorMessage + "</p>";
@@ -124,7 +141,7 @@
 							}
 							 							
 							selectHtml += "<p>Select accessory you want to pair</p>"
-							selectHtml += "<select class='mdb-select md-form' id='accessory-select'>" +
+							selectHtml += "<select class='mdb-select md-form' id='accessory-select' required>" +
 											   "<option value=' ' disabled selected>Select Accessory</option>";
 							for (var i = 0; i < discoveredAccessories.length; i++) {
 								selectHtml += "<option value='" + i + "'> " + discoveredAccessories[i].DisplayName + "</option>";
@@ -133,10 +150,9 @@
 							 
 						}						
 					}
-					
-					
+								
                     $('#accessory-select-div').html(selectHtml);
-                    $('.mdb-select').materialSelect();
+                    $('#accessory-select').materialSelect();
                     $('#process-stepper').nextStep();
                 },
                 error: function () {
@@ -146,10 +162,11 @@
             });
         }
 
-        function step3FeedbackFunction() {			
+        function step4FeedbackFunction() {			
 			var formObject = {
 			   action: "pair",
 			   data: discoveredAccessories[$('#accessory-select').val()],
+			   refId: $('#device-select').val(),
 			   pincode: $('#pincode-input').val()
 		    };
 			
@@ -160,7 +177,7 @@
             $.ajax({
                 type: "POST",
                 async: "true",
-                url: '/HomeKitController/AddDevice.html',
+                url: '/HomeKitController/AddOrRepairDevice.html',
                 cache: false,
                 data: data,
                 success: function (response) {
@@ -176,7 +193,7 @@
                 },
                 error: function () {
                     $('#process-stepper').destroyFeedback();
-                    alert("Error");
+                    alert("Error in pairing");
                 }
             });
         }

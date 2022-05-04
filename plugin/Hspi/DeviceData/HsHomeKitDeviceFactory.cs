@@ -57,17 +57,7 @@ namespace Hspi.DeviceData
                                        IPEndPoint fallbackAddress,
                                        Accessory accessory)
         {
-            //find default enabled characteristics
-            static bool validServiceType(Service x) => x.Type != ServiceType.AccessoryInformation &&
-                                                       x.Type != ServiceType.ProtocolInformation;
-            var defaultCharacteristics =
-                accessory.Services.Values.FirstOrDefault(x => x.Primary == true && validServiceType(x))?.Characteristics?.Values ??
-                accessory.Services.Values.FirstOrDefault(validServiceType)?.Characteristics?.Values ??
-                Array.Empty<Characteristic>();
-
-            //Ignore hidden & unknown
-            defaultCharacteristics = defaultCharacteristics
-                .Where(x => !x.Permissions.Contains(CharacteristicPermissions.Hidden) && !string.IsNullOrEmpty(x.Type.DisplayName));
+            var defaultCharacteristics = GetDefaultCharacteristics(accessory);
 
             var extraData = CreateRootPlugInExtraData(pairingDeviceInfo,
                                                       fallbackAddress,
@@ -150,6 +140,40 @@ namespace Hspi.DeviceData
             AddUnitSuffix(hsController, newData, characteristic);
 
             return hsController.CreateFeatureForDevice(newData);
+        }
+
+        public static void RepairDevice(IHsController hsController,
+                                        int existingRefId,
+                                        PairingDeviceInfo pairingDeviceInfo,
+                                        IPEndPoint fallbackAddress,
+                                        DeviceReportedInfo deviceReportedInfo)
+        {
+            var hsMainDevice = new HsHomeKitBaseRootDevice(hsController, existingRefId);
+            string existingDeviceId = hsMainDevice.PairingInfo.DeviceInformation.Id;
+
+            // update all devices with same device id
+            var interfaceRefIds = hsController.GetRefsByInterface(PlugInData.PlugInId, true);
+            foreach (var refId in interfaceRefIds)
+            {
+                var hsDevice = new HsHomeKitBaseRootDevice(hsController, refId);
+
+                if (existingDeviceId == hsDevice.PairingInfo.DeviceInformation.Id)
+                {
+                    var accessory = deviceReportedInfo.Accessories.FirstOrDefault(x => x.Aid == hsDevice.Aid);
+                    if (accessory != null)
+                    {
+                        UpdatePairingInfo(hsController,
+                                          hsDevice,
+                                          pairingDeviceInfo,
+                                          fallbackAddress,
+                                          accessory);
+                    }
+                    else
+                    {
+                        Log.Warning("Did not find {aid} on HomeKit Device for {name}", hsDevice.Aid, hsDevice.NameForLog);
+                    }
+                }
+            }
         }
 
         private static void AddPlugExtraValue(NewFeatureData data,
@@ -435,9 +459,25 @@ namespace Hspi.DeviceData
             }
         }
 
+        private static IEnumerable<Characteristic> GetDefaultCharacteristics(Accessory accessory)
+        {
+            //find default enabled characteristics
+            static bool validServiceType(Service x) => x.Type != ServiceType.AccessoryInformation &&
+                                                       x.Type != ServiceType.ProtocolInformation;
+            var defaultCharacteristics =
+                accessory.Services.Values.FirstOrDefault(x => x.Primary == true && validServiceType(x))?.Characteristics?.Values ??
+                accessory.Services.Values.FirstOrDefault(validServiceType)?.Characteristics?.Values ??
+                Array.Empty<Characteristic>();
+
+            //Ignore hidden & unknown
+            defaultCharacteristics = defaultCharacteristics
+                .Where(x => !x.Permissions.Contains(CharacteristicPermissions.Hidden) && !string.IsNullOrEmpty(x.Type.DisplayName));
+            return defaultCharacteristics;
+        }
+
         private static string GetDefaultIcon(IHsController hsController, Characteristic characteristic)
         {
-            var defaultIconName = characteristic.Type.DisplayName?.ToLower().Replace(" ", "");
+            var defaultIconName = characteristic.DisplayName?.ToLower().Replace(" ", "");
 
             if (defaultIconName != null)
             {
@@ -512,14 +552,31 @@ namespace Hspi.DeviceData
             return featureFactory.WithName(name);
         }
 
+        private static void UpdatePairingInfo(IHsController hsController,
+                                                                                                                                                                                                              HsHomeKitBaseRootDevice hsDevice,
+                                              PairingDeviceInfo pairingDeviceInfo,
+                                              IPEndPoint fallbackAddress,
+                                              Accessory accessory)
+        {
+            var defaultCharacteristics = hsDevice.EnabledCharacteristic;
+
+            var plugInExtra = CreateRootPlugInExtraData(pairingDeviceInfo,
+                                                       fallbackAddress,
+                                                       accessory,
+                                                       defaultCharacteristics);
+
+            hsController.UpdatePropertyByRef(hsDevice.RefId, EProperty.PlugExtraData, plugInExtra);
+
+            Log.Information("Repaired device {friendlyName}", hsDevice.NameForLog);
+        }
         private const string DefaultIcon = "default";
         private const string OffIcon = "off";
         private const string OnIcon = "on";
 
         private static readonly Lazy<HSMappings> HSMappings = new(() =>
-                                                                       {
-                                                                           string json = Encoding.UTF8.GetString(Resource.HSMappings);
-                                                                           return JsonHelper.DeserializeObject<HSMappings>(json);
-                                                                       }, true);
+                                                                                                              {
+                                                                                                                  string json = Encoding.UTF8.GetString(Resource.HSMappings);
+                                                                                                                  return JsonHelper.DeserializeObject<HSMappings>(json);
+                                                                                                              }, true);
     }
 }
