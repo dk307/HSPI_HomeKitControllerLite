@@ -30,10 +30,11 @@ namespace Hspi.Pages
                                                                     Task<HsHomeKitDeviceManager> hsHomeKitDeviceManagerFtn,
                                                                     CancellationToken cancellationToken)
         {
+            string? action = null;
             try
             {
                 var requestObject = JsonConvert.DeserializeObject<JObject>(data);
-                var action = requestObject["action"]?.ToString();
+                action = requestObject["action"]?.ToString();
                 return action switch
                 {
                     "unpair" => (await UnpairDevice(hsController,
@@ -45,7 +46,9 @@ namespace Hspi.Pages
             }
             catch (Exception ex)
             {
-                var result = new Result { ErrorMessage = ex.GetFullMessage() };
+                string errorMessage = ex.GetFullMessage();
+                Log.Error("Operation {action} failed with {error}", action, errorMessage);
+                var result = new Result { ErrorMessage = errorMessage };
                 return (JsonConvert.SerializeObject(result), false);
             }
         }

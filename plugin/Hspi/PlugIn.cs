@@ -54,7 +54,7 @@ namespace Hspi
             Log.Debug("PostBackProc for {page} with {data}", page, data);
             var (result, restart) = page switch
             {
-                AddDeviceHandler.PageName => AddDeviceHandler.PostBackProc(data,
+                AddOrRepairDeviceHandler.PageName => AddOrRepairDeviceHandler.PostBackProc(data,
                                                                            HomeSeerSystem,
                                                                            ShutdownCancellationToken),
                 UnpairDeviceHandler.PageName => UnpairDeviceHandler.PostBackProc(data,
@@ -115,10 +115,14 @@ namespace Hspi
                 UpdateDebugLevel();
 
                 // Device Add Page
-                HomeSeerSystem.RegisterDeviceIncPage(PlugInData.PlugInId, "AddDevice.html", "Pair HomeKit Device");
+                HomeSeerSystem.RegisterDeviceIncPage(PlugInData.PlugInId,
+                                                     AddOrRepairDeviceHandler.PageName,
+                                                     "Add or Repair Device");
 
                 // Other Pages
-                HomeSeerSystem.RegisterFeaturePage(PlugInData.PlugInId, "UnpairDevice.html", "Unpair HomeKit Device");
+                HomeSeerSystem.RegisterFeaturePage(PlugInData.PlugInId,
+                                                   UnpairDeviceHandler.PageName,
+                                                   "Unpair Device");
 
                 RestartProcessing();
 
@@ -228,11 +232,7 @@ namespace Hspi
             var result = new Dictionary<int, string>();
             foreach (var refId in HomeSeerSystem.GetRefsByInterface(PlugInData.PlugInId, true))
             {
-                var rootDevice = new HsHomeKitBaseRootDevice(HomeSeerSystem, refId);
-                if (rootDevice.Aid == 1)
-                {
-                    result.Add(refId, HsHomeKitDevice.GetNameForLog(HomeSeerSystem, refId));
-                }
+                result.Add(refId, HsHomeKitDevice.GetNameForLog(HomeSeerSystem, refId));
             }
             return result;
         }

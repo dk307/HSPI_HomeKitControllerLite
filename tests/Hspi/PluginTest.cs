@@ -118,8 +118,8 @@ namespace HSPI_HomeKitControllerTest
             Assert.IsTrue(plugin.Object.InitIO());
             plugin.Object.ShutdownIO();
             plugin.Object.Dispose();
-            mockHsController.Verify(x => x.RegisterDeviceIncPage(PlugInData.PlugInId, "AddDevice.html", "Pair HomeKit Device"));
-            mockHsController.Verify(x => x.RegisterFeaturePage(PlugInData.PlugInId, "UnpairDevice.html", "Unpair HomeKit Device"));
+            mockHsController.Verify(x => x.RegisterDeviceIncPage(PlugInData.PlugInId, "AddOrRepairDevice.html", "Add or Repair Device"));
+            mockHsController.Verify(x => x.RegisterFeaturePage(PlugInData.PlugInId, "UnpairDevice.html", "Unpair Device"));
         }
 
         [TestMethod]
