@@ -157,6 +157,7 @@ namespace HSPI_HomeKitControllerTest
             mockHsController.Setup(x => x.RegisterFeaturePage(PlugInData.PlugInId, It.IsAny<string>(), It.IsAny<string>()));
             mockHsController.Setup(x => x.GetRefsByInterface(PlugInData.PlugInId, true)).Returns(new List<int>());
             mockHsController.Setup(x => x.GetNameByRef(It.IsAny<int>())).Returns("Test");
+            mockHsController.Setup(x => x.GetAppPath()).Returns(string.Empty);
             return mockHsController;
         }
 

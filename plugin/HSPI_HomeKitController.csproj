@@ -305,7 +305,7 @@
     <AdditionalFiles Include="install.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AdditionalFiles>
-    <Content Include="Hspi\html\AddDevice.html" />
+    <Content Include="Hspi\html\AddOrRepairDevice.html" />
     <Content Include="Hspi\html\UnpairDevice.html" />
     <Content Include="updater_override.tt" />
   </ItemGroup>
