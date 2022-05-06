@@ -38,7 +38,7 @@
                                 {{ end }}
                             </select>
                             <div class="step-actions">
-                                <button id="step1-continue-btn" class="waves-effect waves-dark btn btn-sm btn-primary next-step" data-feedback="step1FeedbackFunction()">UNPAIR</button>
+                                <button class="waves-effect waves-dark btn btn-sm btn-primary next-step" data-feedback="step1FeedbackFunction">UNPAIR</button>
                             </div>
                         </div>
                     </li>
@@ -51,7 +51,7 @@
                             <div id="step2-summary-txt">Unpair finished successfully</div>
                             <div class="step-actions pt-4">
 								<button class="waves-effect waves-dark btn btn-sm btn-secondary previous-step">BACK</button>
-                                <button class="waves-effect waves-dark btn btn-sm btn-primary m-0 mt-4" onclick="finish()" type="button">FINISH</button>
+                                <button class="waves-effect waves-dark btn btn-sm btn-primary" onclick="finish()" type="button">FINISH</button>
                             </div>
                         </div>
                     </li>
@@ -65,14 +65,13 @@
     <!-- Placed at the end of the document so the pages load faster -->
     {{includefile 'bootstrap/js/page_common.js'}}
     <script type="text/javascript" src="../bootstrap/js/addons-pro/steppers.min.js"></script>
-    <script type="text/JavaScript">
+    <script type="text/javascript">
 		var discoveredAccessories = null;
         $(document).ready(function () {
             $('.stepper').mdbStepper();
         })
 
         function step1FeedbackFunction() {
-			alert("y");
 			var formObject = {
 			   action: "unpair",
 			   data: $('#accessory-select').val()
