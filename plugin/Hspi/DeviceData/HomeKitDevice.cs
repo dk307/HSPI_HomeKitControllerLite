@@ -156,11 +156,24 @@ namespace Hspi.DeviceData
             foreach (var feature in device.Features)
             {
                 var typeData = HsHomeKitFeatureDevice.GetTypeData(feature.PlugExtraData);
-                if (typeData.Type == HsHomeKitFeatureDevice.FeatureType.Characteristics &&
-                   (typeData.Iid == null || !enabledCharacteristics.Contains(typeData.Iid.Value)))
+
+                if (typeData.Type == HsHomeKitFeatureDevice.FeatureType.Characteristics && typeData.Iid != null)
                 {
-                    Log.Information("Deleting {featureName} for {deviceName}", feature.Name, device.Name);
-                    HS.DeleteFeature(feature.Ref);
+                    bool delete = false;
+                    if (!enabledCharacteristics.Contains(typeData.Iid.Value))
+                    {
+                        Log.Information("Deleting {featureName} for {deviceName} because it is not enabled", feature.Name, device.Name);
+                        delete = true;
+                    }
+                    if (!delete && accessory.FindCharacteristic(typeData.Iid.Value).Item2 == null)
+                    {
+                        Log.Information("Deleting {featureName} for {deviceName} because not found on homekit device", feature.Name, device.Name);
+                        delete = true;
+                    }
+                    if (delete)
+                    {
+                        HS.DeleteFeature(feature.Ref);
+                    }
                 }
             }
 
