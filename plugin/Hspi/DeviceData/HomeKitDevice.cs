@@ -115,6 +115,7 @@ namespace Hspi.DeviceData
             int connectedRefId = HsHomeKitDeviceFactory.CreateAndUpdateConnectedFeature(HS, device);
 
             List<HsHomeKitCharacteristicFeatureDevice> featureRefIds = new();
+            List<ulong> invalidEnabledCharacteristics = new();
             foreach (var enabledCharacteristic in enabledCharacteristics)
             {
                 var (service, characteristic) = accessory.FindCharacteristic(enabledCharacteristic);
@@ -122,6 +123,7 @@ namespace Hspi.DeviceData
                 if ((service == null) || (characteristic == null))
                 {
                     Log.Warning("Enabled Characteristic {id} not found on {name}", enabledCharacteristic, manager.DisplayNameForLog);
+                    invalidEnabledCharacteristics.Add(enabledCharacteristic);
                     continue;
                 }
 
@@ -153,11 +155,31 @@ namespace Hspi.DeviceData
             }
 
             // delete removed ones
+            RemoveDeletedCharacteristics(accessory, device, enabledCharacteristics);
+
+            var hsHomeKirRootDevice = new HsHomeKitRootDevice(HS,
+                                                              refId,
+                                                              new HsHomeKitConnectedFeatureDevice(HS, connectedRefId),
+                                                              featureRefIds);
+
+            if (invalidEnabledCharacteristics.Count > 0)
+            {
+                hsHomeKirRootDevice.SetEnabledCharacteristics(enabledCharacteristics.Except(invalidEnabledCharacteristics));
+            }
+
+            return hsHomeKirRootDevice;
+        }
+
+        private void RemoveDeletedCharacteristics(Accessory accessory,
+                                                  HomeSeer.PluginSdk.Devices.HsDevice device,
+                                                  ImmutableSortedSet<ulong> enabledCharacteristics)
+        {
             foreach (var feature in device.Features)
             {
                 var typeData = HsHomeKitFeatureDevice.GetTypeData(feature.PlugExtraData);
 
-                if (typeData.Type == HsHomeKitFeatureDevice.FeatureType.Characteristics && typeData.Iid != null)
+                if (typeData.Type == HsHomeKitFeatureDevice.FeatureType.Characteristics &&
+                    typeData.Iid != null)
                 {
                     bool delete = false;
                     if (!enabledCharacteristics.Contains(typeData.Iid.Value))
@@ -176,11 +198,6 @@ namespace Hspi.DeviceData
                     }
                 }
             }
-
-            return new HsHomeKitRootDevice(HS,
-                                           refId,
-                                           new HsHomeKitConnectedFeatureDevice(HS, connectedRefId),
-                                           featureRefIds);
         }
 
         private void CreateFeaturesAndDevices()
