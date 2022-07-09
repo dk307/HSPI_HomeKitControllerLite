@@ -1,4 +1,5 @@
 ﻿using HomeKit.Model;
+using Serilog;
 using System;
 using System.Collections.Immutable;
 using System.Net;
@@ -44,7 +45,7 @@ namespace HomeKit
         {
             try
             {
-                EnqueueConnectionEvent(false);
+                FireConnectionEvent(false);
 
                 if (connection != null)
                 {
@@ -61,12 +62,14 @@ namespace HomeKit
                 secureHomeKitConnection.AccessoryValueChangedEvent += AccessoryValueChangedEventForward;
 
                 // create devices & features & setup polling & subscribe iids
-                EnqueueConnectionEvent(true);
+                FireConnectionEvent(true);
 
                 // subscribe before refresh
+                Log.Debug("Subscribing to characteristics for {name}", lastDisplayName);
                 var eventProcessTask = await secureHomeKitConnection.TrySubscribe(subscribeAndPollingAidIids.Subscribe, token);
 
                 // get all values initially to refresh even the event ones.
+                Log.Debug("Refreshing all values for {name}", lastDisplayName);
                 await connection!.RefreshValues(null, token).ConfigureAwait(false);
 
                 //listen and process events
@@ -91,7 +94,7 @@ namespace HomeKit
             }
             finally
             {
-                EnqueueConnectionEvent(false);
+                FireConnectionEvent(false);
             }
         }
 
@@ -105,7 +108,7 @@ namespace HomeKit
             this.AccessoryValueChangedEvent?.Invoke(this, e);
         }
 
-        private void EnqueueConnectionEvent(bool connection)
+        private void FireConnectionEvent(bool connection)
         {
             if (lastConnectionEvent != connection)
             {
