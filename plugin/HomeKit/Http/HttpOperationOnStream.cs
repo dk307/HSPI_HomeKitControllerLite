@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.FormattableString;
 
 #nullable enable
 
@@ -51,16 +52,27 @@ namespace HomeKit.Http
                     CancellationTokenSource.CreateLinkedTokenSource(token);
             cancellationTokenSource.CancelAfter(CalltimeoutMilliseconds);
 
-            var waitTask = waitForResult.WaitAsync(cancellationTokenSource.Token);
+            try
+            {
+                var waitTask = waitForResult.WaitAsync(cancellationTokenSource.Token);
 
-            var finishedTask = await Task.WhenAny(waitTask, readAndParseTask).ConfigureAwait(false);
+                var finishedTask = await Task.WhenAny(waitTask, readAndParseTask).ConfigureAwait(false);
 
-            // this allow to throw error if parsing fails.
-            await finishedTask.ConfigureAwait(false);
+                // this allow to throw error if parsing fails.
+                await finishedTask.ConfigureAwait(false);
+            }
+            catch(TaskCanceledException ex)
+            {
+                if(ex.CancellationToken == cancellationTokenSource.Token)
+                {
+                    throw new HttpRequestException(Invariant($"Request timed out to {request.RequestUri}"));
+                }
+                throw;
+            }
 
             if (response == null)
             {
-                throw new InvalidDataException("http response unexpected null or timed out");
+                throw new HttpRequestException(Invariant($"Http response unexpected null or timed out for {request.RequestUri}"));
             }
 
             response.RequestMessage = request;

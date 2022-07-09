@@ -202,14 +202,6 @@ namespace HomeKit
             return JsonConvert.DeserializeObject<R>(responseData, CreateJsonSerializer());
         }
 
-        private static JsonSerializerSettings CreateJsonSerializer()
-        {
-            return new()
-            {
-                Formatting = Formatting.None,
-            };
-        }
-
         protected async Task<HttpResponseMessage> Request(HttpMethod httpMethod,
                                                           string target,
                                                           string query,
@@ -217,6 +209,7 @@ namespace HomeKit
                                                           string? contentType = null,
                                                           CancellationToken token = default)
         {
+
             var builder = new UriBuilder
             {
                 Port = Address.Port,
@@ -254,6 +247,13 @@ namespace HomeKit
             this.httpOperationOnStream.UpdateTransforms(readTransform, writeTransform);
         }
 
+        private static JsonSerializerSettings CreateJsonSerializer()
+        {
+            return new()
+            {
+                Formatting = Formatting.None,
+            };
+        }
         private static void SetSocketKeepAlive(Socket socket,
                                                TimeSpan keepAliveTime,
                                                TimeSpan keepAliveInterval)
@@ -283,7 +283,10 @@ namespace HomeKit
             CheckConnectionValid();
 
             using var _ = await streamLock.LockAsync(token).ConfigureAwait(false);
-            Log.Debug("Making call {httpMethod} to {target}", request.Method, request.RequestUri);
+
+            Log.Debug("Making call {httpMethod} to {target} with Body :{body}", request.Method, 
+                            request.RequestUri,
+                            await GetRequestBody(request).ConfigureAwait(false));
 
             var response = await httpOperationOnStream.Request(request, token);
 
@@ -294,6 +297,17 @@ namespace HomeKit
                             request.RequestUri, response.StatusCode, error);
             }
             return response;
+
+            static async Task<string?> GetRequestBody(HttpRequestMessage request)
+            {
+                if (request.Content is ByteArrayContent byteArrayContent)
+                {
+                    var data = await byteArrayContent.ReadAsByteArrayAsync().ConfigureAwait(false);
+                    return Encoding.UTF8.GetString(data);
+
+                }
+                return null;
+            }
         }
         private async ValueTask TryParseHapStatus(string target, HttpResponseMessage response)
         {
@@ -303,7 +317,7 @@ namespace HomeKit
                 var accessoryError = JsonConvert.DeserializeObject<AccessoryError>(jsonData);
                 if (accessoryError != null)
                 {
-                    Log.Error("Unexpected {StatusCode} response with {HapError} for {target} for {EndPoint",
+                    Log.Error("Unexpected {StatusCode} response with {HapError} for {target} for {EndPoint}",
                                 response.StatusCode, accessoryError.Status, target, Address);
                     throw new AccessoryException(accessoryError.Status);
                 }

@@ -104,7 +104,7 @@ namespace HomeKit
 
         public async Task PutCharacteristic(AidIidValue id, CancellationToken token)
         {
-            Log.Debug("Making {name} update to {value}", id);
+            Log.Debug("Making update:{id}", id);
             JObject request = new();
 
             JArray characteristicsRequest = new();

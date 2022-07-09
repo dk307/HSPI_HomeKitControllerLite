@@ -36,7 +36,7 @@ namespace Hspi.DeviceData
             manager.AccessoryValueChangedEvent += AccessoryValueChangedEvent;
 
             string name = String.Join(",", refIds.Select(x => x.ToString(CultureInfo.InvariantCulture)));
-            Utils.TaskHelper.StartAsyncWithErrorChecking(Invariant($"Device Start {name}"),
+            Utils.TaskHelper.StartAsyncWithErrorChecking(Invariant($"Device RefId(s) {name}"),
                                                          UpdateDeviceProperties,
                                                          cancellationToken,
                                                          TimeSpan.FromSeconds(15));
@@ -268,7 +268,7 @@ namespace Hspi.DeviceData
             }
             else
             {
-                Log.Debug("Disconnected from {name}", manager.DisplayNameForLog);
+                Log.Information("Disconnected from {name}", manager.DisplayNameForLog);
             }
 
             // update connected state after everything is done
