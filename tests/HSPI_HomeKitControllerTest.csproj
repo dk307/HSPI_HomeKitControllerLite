@@ -156,7 +156,7 @@
       <Version>4.4.1</Version>
     </PackageReference>
     <PackageReference Include="HomeSeer-PluginSDK">
-      <Version>1.4.0</Version>
+      <Version>1.4.1</Version>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
       <Version>1.11.42</Version>
