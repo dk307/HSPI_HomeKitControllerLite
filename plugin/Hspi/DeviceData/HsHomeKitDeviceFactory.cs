@@ -477,6 +477,7 @@ namespace Hspi.DeviceData
 
         private static string GetDefaultIcon(IHsController hsController, Characteristic characteristic)
         {
+            // remove spaces and lower
             var defaultIconName = characteristic.DisplayName?.ToLower().Replace(" ", "");
 
             if (defaultIconName != null)
