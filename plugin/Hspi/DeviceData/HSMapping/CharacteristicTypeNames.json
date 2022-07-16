@@ -437,11 +437,11 @@
       "id": "0000020D-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Nfc Access Control Point",
+      "name": "NFC Access Control Point",
       "id": "00000264-0000-1000-8000-0026BB765291"
     },
     {
-      "name": "Nfc Access Supported Configuration",
+      "name": "NFC Access Supported Configuration",
       "id": "00000265-0000-1000-8000-0026BB765291"
     },
     {
@@ -1152,50 +1152,6 @@
     {
       "name": "Ecobee Notifications",
       "id": "1B1515F2-CC45-409F-991F-C480987F92C3"
-    },
-    {
-      "name": "Access Code Control Point",
-      "id": "00000262-0000-1000-8000-0026BB765291"
-    },
-    {
-      "name": "Access Code Supported Configuration",
-      "id": "00000261-0000-1000-8000-0026BB765291"
-    },
-    {
-      "name": "Configuration State",
-      "id": "00000263-0000-1000-8000-0026BB765291"
-    },
-    {
-      "name": "Hardware Finish",
-      "id": "0000026C-0000-1000-8000-0026BB765291"
-    },
-    {
-      "name": "NFC Access Control Point",
-      "id": "00000264-0000-1000-8000-0026BB765291"
-    },
-    {
-      "name": "NFC Access Supported Configuration",
-      "id": "00000265-0000-1000-8000-0026BB765291"
-    },
-    {
-      "name": "Siri Light On Use",
-      "id": "00000258-0000-1000-8000-0026BB765291"
-    },
-    {
-      "name": "Siri Listening",
-      "id": "00000256-0000-1000-8000-0026BB765291"
-    },
-    {
-      "name": "Siri Touch To Use",
-      "id": "00000257-0000-1000-8000-0026BB765291"
-    },
-    {
-      "name": "Supported Asset Types",
-      "id": "00000268-0000-1000-8000-0026BB765291"
-    },
-    {
-      "name": "Supported Diagnostics Modes",
-      "id": "0000024C-0000-1000-8000-0026BB765291"
     }
   ]
 }
