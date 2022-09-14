@@ -261,9 +261,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\plugin\HSPI_HomeKitController.csproj">
+    <ProjectReference Include="..\plugin\HSPI_HomeKitControllerLite.csproj">
       <Project>{6afed710-7bb6-40e3-b4cd-4642da950411}</Project>
-      <Name>HSPI_HomeKitController</Name>
+      <Name>HSPI_HomeKitControllerLite</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

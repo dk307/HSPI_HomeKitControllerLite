@@ -26,11 +26,11 @@
   "9386": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "Name": "Connected",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
@@ -55,7 +55,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Offline",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\offline.png",
+            "Graphic": "HomeKitControllerLite\\images\\offline.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -75,7 +75,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Online",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\online.png",
+            "Graphic": "HomeKitControllerLite\\images\\online.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -107,11 +107,11 @@
   "9387": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -146,7 +146,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\temperature.png",
+            "Graphic": "HomeKitControllerLite\\images\\temperature.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {

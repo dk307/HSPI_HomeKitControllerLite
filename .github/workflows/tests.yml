@@ -10,9 +10,9 @@ env:
     SONAR_PROJECT_KEY: "dk307_HSPI_HomeKitController"
     SONAR_SCANNER_DOWNLOAD_URL: "https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.4.0.40033/sonar-scanner-msbuild-5.4.0.40033-net46.zip"
     DOTCOVER_DOWNLOAD_URL: "https://download.jetbrains.com/resharper/dotUltimate.2021.2.2/JetBrains.dotCover.CommandLineTools.2021.2.2.zip"
-    SLN_FILE: "HSPI_HomeKitController.sln"
-    TEST_FILE_WIN: "tests\\bin\\x86\\Debug\\HSPI_HomeKitControllerTest.dll"
-    TEST_FILE_UBUNTU: "./tests/bin/x86/Debug/HSPI_HomeKitControllerTest.dll"
+    SLN_FILE: "HSPI_HomeKitControllerLite.sln"
+    TEST_FILE_WIN: "tests\\bin\\x86\\Debug\\HSPI_HomeKitControllerLiteTest.dll"
+    TEST_FILE_UBUNTU: "./tests/bin/x86/Debug/HSPI_HomeKitControllerLiteTest.dll"
 
 jobs:
   build-cache-test-win:

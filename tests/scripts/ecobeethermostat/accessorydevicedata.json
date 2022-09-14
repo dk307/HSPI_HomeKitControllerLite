@@ -1,24 +1,24 @@
 {
-  "$type": "HomeKit.Model.DeviceReportedInfo, HSPI_HomeKitController",
+  "$type": "HomeKit.Model.DeviceReportedInfo, HSPI_HomeKitControllerLite",
   "accessories": {
-    "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.Accessory, HSPI_HomeKitController]], System.Collections.Immutable",
+    "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.Accessory, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
     "$values": [
       {
-        "$type": "HomeKit.Model.Accessory, HSPI_HomeKitController",
+        "$type": "HomeKit.Model.Accessory, HSPI_HomeKitControllerLite",
         "aid": 1,
         "services": [
           {
-            "$type": "HomeKit.Model.Service, HSPI_HomeKitController",
+            "$type": "HomeKit.Model.Service, HSPI_HomeKitControllerLite",
             "iid": 1,
             "type": "0000003e-0000-1000-8000-0026bb765291",
             "primary": false,
             "characteristics": [
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 2,
                 "type": "00000014-0000-1000-8000-0026bb765291",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pw"
                   ]
@@ -26,12 +26,12 @@
                 "format": "bool"
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 3,
                 "type": "00000020-0000-1000-8000-0026bb765291",
                 "value": "",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -39,12 +39,12 @@
                 "format": "string"
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 4,
                 "type": "00000021-0000-1000-8000-0026bb765291",
                 "value": "",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -52,12 +52,12 @@
                 "format": "string"
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 5,
                 "type": "00000023-0000-1000-8000-0026bb765291",
                 "value": "EcoBee",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -65,12 +65,12 @@
                 "format": "string"
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 6,
                 "type": "00000030-0000-1000-8000-0026bb765291",
                 "value": "default",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -78,12 +78,12 @@
                 "format": "string"
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 7,
                 "type": "00000052-0000-1000-8000-0026bb765291",
                 "value": "",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -93,18 +93,18 @@
             ]
           },
           {
-            "$type": "HomeKit.Model.Service, HSPI_HomeKitController",
+            "$type": "HomeKit.Model.Service, HSPI_HomeKitControllerLite",
             "iid": 8,
             "type": "000000a2-0000-1000-8000-0026bb765291",
             "primary": false,
             "characteristics": [
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 9,
                 "type": "00000037-0000-1000-8000-0026bb765291",
                 "value": "01.01.00",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "ev"
@@ -115,18 +115,18 @@
             ]
           },
           {
-            "$type": "HomeKit.Model.Service, HSPI_HomeKitController",
+            "$type": "HomeKit.Model.Service, HSPI_HomeKitControllerLite",
             "iid": 10,
             "type": "0000004a-0000-1000-8000-0026bb765291",
             "primary": true,
             "characteristics": [
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 11,
                 "type": "0000000f-0000-1000-8000-0026bb765291",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "ev"
@@ -143,12 +143,12 @@
                 }
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 12,
                 "type": "00000033-0000-1000-8000-0026bb765291",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw",
@@ -167,12 +167,12 @@
                 }
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 13,
                 "type": "00000011-0000-1000-8000-0026bb765291",
                 "value": 0.0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "ev"
@@ -185,12 +185,12 @@
                 "minStep": 0.1
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 14,
                 "type": "00000035-0000-1000-8000-0026bb765291",
                 "value": 10,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw",
@@ -204,12 +204,12 @@
                 "minStep": 0.1
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 15,
                 "type": "00000036-0000-1000-8000-0026bb765291",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw",
@@ -226,12 +226,12 @@
                 }
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 16,
                 "type": "0000000d-0000-1000-8000-0026bb765291",
                 "value": 18.3,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw",
@@ -246,12 +246,12 @@
                 "minStep": 0.1
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 17,
                 "type": "00000012-0000-1000-8000-0026bb765291",
                 "value": 7.2,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw",
@@ -266,12 +266,12 @@
                 "minStep": 0.1
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 18,
                 "type": "00000010-0000-1000-8000-0026bb765291",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "ev"
@@ -285,12 +285,12 @@
                 "minStep": 1.0
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 19,
                 "type": "00000034-0000-1000-8000-0026bb765291",
                 "value": 20.0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw",
@@ -305,12 +305,12 @@
                 "minStep": 1.0
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 20,
                 "type": "00000023-0000-1000-8000-0026bb765291",
                 "value": "",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -319,12 +319,12 @@
                 "description": "Char"
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 21,
                 "type": "000000bf-0000-1000-8000-0026bb765291",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw",
@@ -338,12 +338,12 @@
                 "minStep": 1.0
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 22,
                 "type": "000000af-0000-1000-8000-0026bb765291",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "ev"
@@ -356,12 +356,12 @@
                 "minStep": 1.0
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 23,
                 "type": "b7ddb9a3-54bb-4572-91d2-f1f5b0510f8c",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -373,12 +373,12 @@
                 "minStep": 1.0
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 24,
                 "type": "e4489bbc-5227-4569-93e5-b345e3e5508f",
                 "value": 7.2,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw"
@@ -392,12 +392,12 @@
                 "minStep": 0.1
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 25,
                 "type": "7d381baa-20f9-40e5-9be9-aeb92d4becef",
                 "value": 18.3,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw"
@@ -411,12 +411,12 @@
                 "minStep": 0.1
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 26,
                 "type": "73aab542-892a-4439-879a-d2a883724b69",
                 "value": 7.2,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw"
@@ -430,12 +430,12 @@
                 "minStep": 0.1
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 27,
                 "type": "5da985f0-898a-4850-b987-b76c6c78d670",
                 "value": 18.3,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw"
@@ -449,12 +449,12 @@
                 "minStep": 0.1
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 28,
                 "type": "05b97374-6dc0-439b-a0fa-ca33f612d425",
                 "value": 7.2,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw"
@@ -468,12 +468,12 @@
                 "minStep": 0.1
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 29,
                 "type": "a251f6e7-ac46-4190-9c5d-3d06277bdf9f",
                 "value": 18.3,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw"
@@ -487,11 +487,11 @@
                 "minStep": 0.1
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 30,
                 "type": "1b300bc2-cffc-47ff-89f9-bd6ccf5f2853",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pw"
                   ]
@@ -503,12 +503,12 @@
                 "minStep": 1.0
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 31,
                 "type": "1621f556-1367-443c-af19-82af018e99de",
                 "value": "",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw"
@@ -518,11 +518,11 @@
                 "description": "Char"
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 32,
                 "type": "fa128de6-9d7d-49a4-b6d8-4e4e234dee38",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pw"
                   ]
@@ -531,12 +531,12 @@
                 "description": "Char"
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 33,
                 "type": "4a6ae4f6-036c-495d-87cc-b3702b437741",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -548,12 +548,12 @@
                 "minStep": 1.0
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 34,
                 "type": "db7bf261-7042-4194-8bd1-3aa22830aedd",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -565,12 +565,12 @@
                 "minStep": 1.0
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 35,
                 "type": "41935e3e-b54d-42e9-b8b9-d33c6319f0af",
                 "value": false,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -579,12 +579,12 @@
                 "description": "Char"
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 36,
                 "type": "c35da3c0-e004-40e3-b153-46655cdd9214",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "pw"
@@ -598,12 +598,12 @@
                 "minStep": 1.0
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 37,
                 "type": "48f62aec-4171-4b4a-8f0e-1eeb6708b3fb",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -616,12 +616,12 @@
                 "minStep": 1.0
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 38,
                 "type": "1b1515f2-cc45-409f-991f-c480987f92c3",
                 "value": "",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -633,17 +633,17 @@
             ]
           },
           {
-            "$type": "HomeKit.Model.Service, HSPI_HomeKitController",
+            "$type": "HomeKit.Model.Service, HSPI_HomeKitControllerLite",
             "iid": 39,
             "type": "00000085-0000-1000-8000-0026bb765291",
             "characteristics": [
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 40,
                 "type": "00000022-0000-1000-8000-0026bb765291",
                 "value": false,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "ev"
@@ -652,12 +652,12 @@
                 "format": "bool"
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 41,
                 "type": "00000023-0000-1000-8000-0026bb765291",
                 "value": "",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -667,12 +667,12 @@
                 "maxLen": 200
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 42,
                 "type": "00000075-0000-1000-8000-0026bb765291",
                 "value": false,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "ev"
@@ -682,12 +682,12 @@
                 "description": "Char1"
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 43,
                 "type": "00000079-0000-1000-8000-0026bb765291",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "ev"
@@ -700,12 +700,12 @@
                 "minStep": 1.0
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 44,
                 "type": "bfe61c70-4a40-11e6-bdf4-0800200c9a66",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -720,17 +720,17 @@
             ]
           },
           {
-            "$type": "HomeKit.Model.Service, HSPI_HomeKitController",
+            "$type": "HomeKit.Model.Service, HSPI_HomeKitControllerLite",
             "iid": 45,
             "type": "00000086-0000-1000-8000-0026bb765291",
             "characteristics": [
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 46,
                 "type": "00000071-0000-1000-8000-0026bb765291",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "ev"
@@ -746,12 +746,12 @@
                 }
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 47,
                 "type": "00000023-0000-1000-8000-0026bb765291",
                 "value": "",
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr"
                   ]
@@ -760,12 +760,12 @@
                 "description": "Char1"
               },
               {
-                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitController",
+                "$type": "HomeKit.Model.Characteristic, HSPI_HomeKitControllerLite",
                 "iid": 48,
                 "type": "a8f798e0-4a40-11e6-bdf4-0800200c9a66",
                 "value": 0,
                 "perms": {
-                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitController]], System.Collections.Immutable",
+                  "$type": "System.Collections.Immutable.ImmutableList`1[[HomeKit.Model.CharacteristicPermissions, HSPI_HomeKitControllerLite]], System.Collections.Immutable",
                   "$values": [
                     "pr",
                     "ev"

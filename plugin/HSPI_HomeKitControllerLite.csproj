@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Hspi</RootNamespace>
-    <AssemblyName>HSPI_HomeKitController</AssemblyName>
+    <AssemblyName>HSPI_HomeKitControllerLite</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -344,7 +344,7 @@
   <Target Name="ZipFinalFiles" DependsOnTargets="Build;" AfterTargets="Build;ZipDllFiles;ZipHtmlFiles" Condition="'$(Configuration)' == 'Release'">
     <RemoveDir Directories="$(ArtifactsDirectory)" />
     <MakeDir Directories="$(ArtifactsDirectory)" />
-    <GetAssemblyIdentity AssemblyFiles="$(OutputPath)\HSPI_HomeKitController.exe">
+    <GetAssemblyIdentity AssemblyFiles="$(OutputPath)\HSPI_HomeKitControllerLite.exe">
       <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />
     </GetAssemblyIdentity>
     <PropertyGroup>
@@ -353,8 +353,8 @@
       <OutVersion>$([System.Text.RegularExpressions.Regex]::Match($(In), $(Pattern)))</OutVersion>
     </PropertyGroup>
     <ItemGroup>
-      <ReleaseFiles Include="$(OutputPath)\HSPI_HomeKitController.exe" />
-      <ReleaseFiles Include="$(OutputPath)\HSPI_HomeKitController.exe.config" />
+      <ReleaseFiles Include="$(OutputPath)\HSPI_HomeKitControllerLite.exe" />
+      <ReleaseFiles Include="$(OutputPath)\HSPI_HomeKitControllerLite.exe.config" />
       <ReleaseFiles Include="$(OutputPath)\install.txt" />
       <ReleaseFiles Include="$(OutputPath)\html.zip" />
       <ReleaseFiles Include="$(OutputPath)\dlls.zip" />

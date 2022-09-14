@@ -1,11 +1,11 @@
 {
   "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
   "Relationship": 2,
-  "Interface": "HomeKitController",
+  "Interface": "HomeKitControllerLite",
   "Misc": 4352,
   "UserAccess": "Any",
   "Location2": "Plugin",
-  "Location": "HomeKit Controller",
+  "Location": "HomeKit Controller Lite",
   "Name": "HumiditySensor",
   "DeviceType": {
     "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",

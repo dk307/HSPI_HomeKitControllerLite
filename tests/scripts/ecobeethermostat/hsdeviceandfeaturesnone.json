@@ -26,11 +26,11 @@
   "9386": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "Name": "Connected",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
