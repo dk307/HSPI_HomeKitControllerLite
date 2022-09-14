@@ -54,7 +54,7 @@ jobs:
         uses: gittools/actions/gitversion/execute@v0.9.7
    
       - name: Build Solution
-        run: msbuild.exe HSPI_HomeKitController.sln /p:platform="x86" /p:configuration="Release"
+        run: msbuild.exe HSPI_HomeKitControllerLite.sln /p:platform="x86" /p:configuration="Release"
 
       - name: Upload Binaries
         if: github.ref != 'refs/heads/main'
