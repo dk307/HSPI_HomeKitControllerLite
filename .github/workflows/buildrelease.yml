@@ -42,7 +42,7 @@ jobs:
         run: cd $GITHUB_WORKSPACE
 
       - name: Restore Packages
-        run: nuget restore HSPI_HomeKitController.sln
+        run: nuget restore HSPI_HomeKitControllerLite.sln
 
       - name: Determine and update version
         with:
@@ -54,7 +54,7 @@ jobs:
         uses: gittools/actions/gitversion/execute@v0.9.7
    
       - name: Build Solution
-        run: msbuild.exe HSPI_HomeKitController.sln /p:platform="x86" /p:configuration="Release"
+        run: msbuild.exe HSPI_HomeKitControllerLite.sln /p:platform="x86" /p:configuration="Release"
 
       - name: Upload Binaries
         if: github.ref != 'refs/heads/main'
@@ -62,7 +62,7 @@ jobs:
         with:
           name: Binaries
           path: |
-            .\plugin\bin\x86\Release\HSPI_HomeKitController_*.zip
+            .\plugin\bin\x86\Release\HSPI_HomeKitControllerLite_*.zip
             .\plugin\bin\x86\Release\updater_override.json
 
       - name: Release development build
@@ -74,6 +74,6 @@ jobs:
           name: "Development Build"
           fail_on_unmatched_files: true
           files: |
-           .\plugin\bin\x86\Release\HSPI_HomeKitController_*.zip
+           .\plugin\bin\x86\Release\HSPI_HomeKitControllerLite_*.zip
            .\plugin\bin\x86\Release\updater_override.json
  

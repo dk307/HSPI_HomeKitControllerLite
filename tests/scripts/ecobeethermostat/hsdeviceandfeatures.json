@@ -26,11 +26,11 @@
   "9386": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "Name": "Connected",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
@@ -55,7 +55,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Offline",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\offline.png",
+            "Graphic": "HomeKitControllerLite\\images\\offline.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -75,7 +75,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Online",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\online.png",
+            "Graphic": "HomeKitControllerLite\\images\\online.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -107,11 +107,11 @@
   "9387": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -142,7 +142,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Off",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\heatcooloff.png",
+            "Graphic": "HomeKitControllerLite\\images\\heatcooloff.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -162,7 +162,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Heating",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\heating.png",
+            "Graphic": "HomeKitControllerLite\\images\\heating.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -182,7 +182,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Cooling",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\cooling.png",
+            "Graphic": "HomeKitControllerLite\\images\\cooling.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -208,11 +208,11 @@
   "9388": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -243,7 +243,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Off",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\heatcooloff.png",
+            "Graphic": "HomeKitControllerLite\\images\\heatcooloff.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -263,7 +263,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Heating",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\heating.png",
+            "Graphic": "HomeKitControllerLite\\images\\heating.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -283,7 +283,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Cooling",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\cooling.png",
+            "Graphic": "HomeKitControllerLite\\images\\cooling.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -303,7 +303,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Auto",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\heatcoolauto.png",
+            "Graphic": "HomeKitControllerLite\\images\\heatcoolauto.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -466,11 +466,11 @@
   "9389": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -505,7 +505,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\temperature.png",
+            "Graphic": "HomeKitControllerLite\\images\\temperature.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -537,11 +537,11 @@
   "9390": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -576,7 +576,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\temperature.png",
+            "Graphic": "HomeKitControllerLite\\images\\temperature.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -649,11 +649,11 @@
   "9391": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -684,7 +684,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Celsius",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\celsius.png",
+            "Graphic": "HomeKitControllerLite\\images\\celsius.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -704,7 +704,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Fahrenheit",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\fahrenheit.png",
+            "Graphic": "HomeKitControllerLite\\images\\fahrenheit.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -803,11 +803,11 @@
   "9392": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -842,7 +842,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\temperaturechange.png",
+            "Graphic": "HomeKitControllerLite\\images\\temperaturechange.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -915,11 +915,11 @@
   "9393": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -954,7 +954,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\temperaturechange.png",
+            "Graphic": "HomeKitControllerLite\\images\\temperaturechange.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -1027,11 +1027,11 @@
   "9394": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1062,7 +1062,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\humidity.png",
+            "Graphic": "HomeKitControllerLite\\images\\humidity.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -1094,11 +1094,11 @@
   "9395": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1129,7 +1129,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\humidity.png",
+            "Graphic": "HomeKitControllerLite\\images\\humidity.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -1202,11 +1202,11 @@
   "9396": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1234,11 +1234,11 @@
   "9397": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1269,7 +1269,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Manual On",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\manualonfan.png",
+            "Graphic": "HomeKitControllerLite\\images\\manualonfan.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1289,7 +1289,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Auto",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\autofan.png",
+            "Graphic": "HomeKitControllerLite\\images\\autofan.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1388,11 +1388,11 @@
   "9398": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1423,7 +1423,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Inactive",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\inactivefan.png",
+            "Graphic": "HomeKitControllerLite\\images\\inactivefan.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1443,7 +1443,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Idle",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\idlefan.png",
+            "Graphic": "HomeKitControllerLite\\images\\idlefan.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1463,7 +1463,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Blowing Air",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\blowingairfan.png",
+            "Graphic": "HomeKitControllerLite\\images\\blowingairfan.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1489,11 +1489,11 @@
   "9399": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1524,7 +1524,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Home",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\home.png",
+            "Graphic": "HomeKitControllerLite\\images\\home.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1544,7 +1544,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Sleep",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\sleep.png",
+            "Graphic": "HomeKitControllerLite\\images\\sleep.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1564,7 +1564,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Away",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\away.png",
+            "Graphic": "HomeKitControllerLite\\images\\away.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1584,7 +1584,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "On Hold",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\paused.png",
+            "Graphic": "HomeKitControllerLite\\images\\paused.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1610,11 +1610,11 @@
   "9400": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1649,7 +1649,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\temperaturechange2.png",
+            "Graphic": "HomeKitControllerLite\\images\\temperaturechange2.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -1722,11 +1722,11 @@
   "9401": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1761,7 +1761,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\temperaturechange2.png",
+            "Graphic": "HomeKitControllerLite\\images\\temperaturechange2.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -1834,11 +1834,11 @@
   "9402": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1873,7 +1873,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\temperaturechange2.png",
+            "Graphic": "HomeKitControllerLite\\images\\temperaturechange2.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -1946,11 +1946,11 @@
   "9403": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1985,7 +1985,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\temperaturechange2.png",
+            "Graphic": "HomeKitControllerLite\\images\\temperaturechange2.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -2058,11 +2058,11 @@
   "9404": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -2097,7 +2097,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\temperaturechange2.png",
+            "Graphic": "HomeKitControllerLite\\images\\temperaturechange2.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -2170,11 +2170,11 @@
   "9405": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -2209,7 +2209,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\temperaturechange2.png",
+            "Graphic": "HomeKitControllerLite\\images\\temperaturechange2.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -2282,11 +2282,11 @@
   "9406": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 528640,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -2417,11 +2417,11 @@
   "9407": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -2449,11 +2449,11 @@
   "9408": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 528640,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -2520,11 +2520,11 @@
   "9409": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -2555,7 +2555,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\default.png",
+            "Graphic": "HomeKitControllerLite\\images\\default.png",
             "IsRange": true,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -2581,11 +2581,11 @@
   "9410": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -2616,7 +2616,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\default.png",
+            "Graphic": "HomeKitControllerLite\\images\\default.png",
             "IsRange": true,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -2642,11 +2642,11 @@
   "9411": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -2677,7 +2677,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Off",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\off.png",
+            "Graphic": "HomeKitControllerLite\\images\\off.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -2697,7 +2697,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "On",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\on.png",
+            "Graphic": "HomeKitControllerLite\\images\\on.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -2723,11 +2723,11 @@
   "9412": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -2758,7 +2758,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\fanspeed.png",
+            "Graphic": "HomeKitControllerLite\\images\\fanspeed.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -2831,11 +2831,11 @@
   "9413": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -2866,7 +2866,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\fanspeed.png",
+            "Graphic": "HomeKitControllerLite\\images\\fanspeed.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -2898,11 +2898,11 @@
   "9414": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",

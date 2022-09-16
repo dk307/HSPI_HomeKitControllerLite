@@ -26,11 +26,11 @@
   "9386": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "Name": "Connected",
     "DeviceType": {
       "$type": "HomeSeer.PluginSdk.Devices.Identification.TypeInfo, PluginSdk",
@@ -66,11 +66,11 @@
   "9387": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -106,11 +106,11 @@
   "9388": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -154,11 +154,11 @@
   "9389": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -204,11 +204,11 @@
   "9390": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -262,11 +262,11 @@
   "9391": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -310,11 +310,11 @@
   "9392": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -368,11 +368,11 @@
   "9393": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -426,11 +426,11 @@
   "9394": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -472,11 +472,11 @@
   "9395": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -526,11 +526,11 @@
   "9396": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -558,11 +558,11 @@
   "9397": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -606,11 +606,11 @@
   "9398": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -646,11 +646,11 @@
   "9399": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -686,11 +686,11 @@
   "9400": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -744,11 +744,11 @@
   "9401": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -802,11 +802,11 @@
   "9402": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -860,11 +860,11 @@
   "9403": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -918,11 +918,11 @@
   "9404": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -976,11 +976,11 @@
   "9405": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1034,11 +1034,11 @@
   "9406": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 528640,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1072,11 +1072,11 @@
   "9407": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1104,11 +1104,11 @@
   "9408": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 528640,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1142,11 +1142,11 @@
   "9409": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1182,11 +1182,11 @@
   "9410": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1222,11 +1222,11 @@
   "9411": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1262,11 +1262,11 @@
   "9412": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4352,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1316,11 +1316,11 @@
   "9413": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1362,11 +1362,11 @@
   "9414": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1394,11 +1394,11 @@
   "9415": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 528640,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1497,11 +1497,11 @@
   "9416": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1529,11 +1529,11 @@
   "9417": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1561,11 +1561,11 @@
   "9418": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1593,11 +1593,11 @@
   "9419": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1625,11 +1625,11 @@
   "9420": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1657,11 +1657,11 @@
   "9421": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1689,11 +1689,11 @@
   "9422": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1724,7 +1724,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Not Detected",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\motionnotdetected.png",
+            "Graphic": "HomeKitControllerLite\\images\\motionnotdetected.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1744,7 +1744,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Detected",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\motiondetected.png",
+            "Graphic": "HomeKitControllerLite\\images\\motiondetected.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1770,11 +1770,11 @@
   "9423": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1802,11 +1802,11 @@
   "9424": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1837,7 +1837,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Off",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\off.png",
+            "Graphic": "HomeKitControllerLite\\images\\off.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1857,7 +1857,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "On",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\on.png",
+            "Graphic": "HomeKitControllerLite\\images\\on.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1883,11 +1883,11 @@
   "9425": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1918,7 +1918,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Normal",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\batterynormal.png",
+            "Graphic": "HomeKitControllerLite\\images\\batterynormal.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1938,7 +1938,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Detected",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\batterylow.png",
+            "Graphic": "HomeKitControllerLite\\images\\batterylow.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -1964,11 +1964,11 @@
   "9426": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -1999,7 +1999,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\default.png",
+            "Graphic": "HomeKitControllerLite\\images\\default.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
@@ -2031,11 +2031,11 @@
   "9427": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -2066,7 +2066,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Not Detected",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\occupancynotdetected.png",
+            "Graphic": "HomeKitControllerLite\\images\\occupancynotdetected.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -2086,7 +2086,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "Detected",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\occupancydetected.png",
+            "Graphic": "HomeKitControllerLite\\images\\occupancydetected.png",
             "IsRange": false,
             "HasAdditionalData": false,
             "TargetRange": {
@@ -2112,11 +2112,11 @@
   "9428": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -2144,11 +2144,11 @@
   "9429": {
     "$type": "System.Collections.Generic.Dictionary`2[[HomeSeer.PluginSdk.Devices.EProperty, PluginSdk],[System.Object, mscorlib]], mscorlib",
     "Relationship": 4,
-    "Interface": "HomeKitController",
+    "Interface": "HomeKitControllerLite",
     "Misc": 4368,
     "UserAccess": "Any",
     "Location2": "Plugin",
-    "Location": "HomeKit Controller",
+    "Location": "HomeKit Controller Lite",
     "PlugExtraData": [
       {
         "key": "device.type",
@@ -2179,7 +2179,7 @@
             "$type": "HomeSeer.PluginSdk.Devices.StatusGraphic, PluginSdk",
             "Label": "",
             "ControlUse": 0,
-            "Graphic": "HomeKitController\\images\\default.png",
+            "Graphic": "HomeKitControllerLite\\images\\default.png",
             "IsRange": true,
             "HasAdditionalData": true,
             "TargetRange": {
