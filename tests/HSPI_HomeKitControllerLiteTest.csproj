@@ -159,7 +159,7 @@
       <Version>1.4.2</Version>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.45</Version>
+      <Version>1.11.46</Version>
     </PackageReference>
     <PackageReference Include="HtmlSanitizer">
       <Version>7.1.542</Version>
