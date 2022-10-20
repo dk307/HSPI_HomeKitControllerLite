@@ -6,16 +6,16 @@
  "Version":"4.0.0.0",
  "Packages":[
   {
-    "PackageName": "HomeKit Controller",
-    "EXEFile": "HSPI_HomeKitController.exe",
-    "ID": "HomeKitController",
+    "PackageName": "HomeKit Controller Lite",
+    "EXEFile": "HSPI_HomeKitControllerLite.exe",
+    "ID": "HomeKitControllerLite",
     "Version": "<#=version#>",
     "UC": 63,
-    "ZipFile": "HSPI_HomeKitController_<#=version#>.zip",
+    "ZipFile": "HSPI_HomeKitControllerLite_<#=version#>.zip",
     "Author": "dk307",
     "Price": "Free",
     "ReleaseNotesURL": "https://github.com/dk307/HSPI_HomeKitController",
-    "ShortDescription": "HomeKit Controller For Homeseer 4",
+    "ShortDescription": "HomeKit Controller Lite For Homeseer 4",
     "SupportURL": "https://github.com/dk307/HSPI_HomeKitController/issues",
     "Tags": [
       "Free",
