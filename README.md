@@ -1,6 +1,6 @@
-# Homekit Conttoller Lite Plugin
+# Homekit Controller Lite Plugin
 Homeseer 4 plugin to add and control IP based homekit devices directly without intermediatory. This plugin acts as homekit controller.
-It does not intent to be a complete and polished as Apple's homekit controller. It creates devices in the homeseer corrspending to accessories exposed by the device.
+It does not intent to be a complete and polished as Apple's homekit controller. It creates devices in the homeseer coresponding to accessories exposed by the homekit device.
 
 
 ## Build State
