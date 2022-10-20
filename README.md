@@ -7,8 +7,8 @@ It does not intent to be a complete and polished as Apple's homekit controller. 
 
 [![Build Release](https://github.com/dk307/HSPI_HomeKitControllerLite/actions/workflows/buildrelease.yml/badge.svg)](https://github.com/dk307/HSPI_HomeKitControllerLite/actions/workflows/buildrelease.yml)
 [![Unit Tests](https://github.com/dk307/HSPI_HomeKitControllerLite/actions/workflows/tests.yml/badge.svg)](https://github.com/dk307/HSPI_HomeKitControllerLite/actions/workflows/tests.yml)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=dk307_HSPI_HomeKitControllerLite&metric=coverage)](https://sonarcloud.io/summary/new_code?id=dk307_HSPI_HomeKitControllerLite)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dk307_HSPI_HomeKitControllerLite&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=dk307_HSPI_HomeKitControllerLite)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=dk307_HSPI_HomeKitControllerLite&metric=coverage)](https://sonarcloud.io/summary/new_code?id=dk307_HSPI_HomeKitController)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dk307_HSPI_HomeKitControllerLite&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=dk307_HSPI_HomeKitController)
 
 ## Features
 
