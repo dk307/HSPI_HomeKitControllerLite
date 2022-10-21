@@ -1,6 +1,6 @@
 # Homekit Controller Lite Plugin
-Homeseer 4 plugin to add and control IP based homekit devices directly without intermediatory. This plugin acts as homekit controller.
-It does not intent to be a complete and polished as Apple's homekit controller. It creates devices in the homeseer coresponding to accessories exposed by the homekit device.
+Homeseer 4 plugin to add and control IP based homekit devices directly without intermediary. This plugin acts as a homekit controller.
+It does not intend to be as complete and polished as Apple's homekit controller. It creates devices in the homeseer corresponding to accessories & characteristics exposed by the homekit device.
 
 
 ## Build State
@@ -13,11 +13,10 @@ It does not intent to be a complete and polished as Apple's homekit controller. 
 ## Features
 
 * Pair and unpair IP based homekit devices
-* Supports setting values in homekit devices via homeseer devices. 
-* Listens to the events in the homekit devices and updates the corresonding homeseer devices.
-* Few custom icons from icon8 for some characteristics
+* Supports setting values in homekit devices via homeseer devices.
+* Listens to the events in the homekit devices and updates the corresponding homeseer devices & features.
 
-## Tested
+## Tested With
 * Ecobee Thermostat
 * Philips Hue
 * Various open source homekit servers.
