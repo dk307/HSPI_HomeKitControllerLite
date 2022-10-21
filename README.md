@@ -7,14 +7,15 @@ It does not intend to be as complete and polished as Apple's homekit controller.
 
 [![Build Release](https://github.com/dk307/HSPI_HomeKitControllerLite/actions/workflows/buildrelease.yml/badge.svg)](https://github.com/dk307/HSPI_HomeKitControllerLite/actions/workflows/buildrelease.yml)
 [![Unit Tests](https://github.com/dk307/HSPI_HomeKitControllerLite/actions/workflows/tests.yml/badge.svg)](https://github.com/dk307/HSPI_HomeKitControllerLite/actions/workflows/tests.yml)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=dk307_HSPI_HomeKitControllerLite&metric=coverage)](https://sonarcloud.io/summary/new_code?id=dk307_HSPI_HomeKitController)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dk307_HSPI_HomeKitControllerLite&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=dk307_HSPI_HomeKitController)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=dk307_HSPI_HomeKitController&metric=coverage)](https://sonarcloud.io/summary/new_code?id=dk307_HSPI_HomeKitController)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dk307_HSPI_HomeKitController&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=dk307_HSPI_HomeKitController)
 
 ## Features
 
 * Pair and unpair IP based homekit devices
 * Supports setting values in homekit devices via homeseer devices.
 * Listens to the events in the homekit devices and updates the corresponding homeseer devices & features.
+* Select which characteristics show up as feature devices.
 
 ## Tested With
 * Ecobee Thermostat
