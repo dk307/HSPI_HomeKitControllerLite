@@ -1,4 +1,4 @@
-﻿namespace HSPI_HomeKitController
+﻿namespace HSPI_HomeKitControllerLite
 {
     /// <summary>
     /// This enables HomeSeer to load the plugin directly.
