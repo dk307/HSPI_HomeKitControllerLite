@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using Serilog;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using static System.FormattableString;
@@ -25,8 +26,6 @@ namespace Hspi.Pages
             return PostBackProcAsync(data, hsController, cancellationToken).ResultForSync();
         }
 
-        private sealed record Result(string? ErrorMessage = null, object? Data = null);
-
         private static async ValueTask<string> Discover(CancellationToken cancellationToken)
         {
             var discoveredDevices = await HomeKitDiscover.DiscoverIPs(TimeSpan.FromSeconds(5), cancellationToken);
@@ -39,7 +38,8 @@ namespace Hspi.Pages
                                                                     JObject requestObject,
                                                                     CancellationToken cancellationToken)
         {
-            var pincode = requestObject["pincode"]?.ToString();
+            var pincode = requestObject["pincode"]?.ToString()?.Trim();
+
             var discoveredDevice = requestObject["data"]?.ToObject<DiscoveredDevice>();
             var existingRefId = (int?)requestObject["refId"];
 
@@ -47,6 +47,12 @@ namespace Hspi.Pages
             {
                 throw new ArgumentException("Invalid data for pairing");
             }
+
+            if (!pinRegEx.IsMatch(pincode))
+            {
+                throw new ArgumentException("Invalid pincode format");
+            }
+
             var pairingInfo = await InsecureConnection.StartNewPairing(discoveredDevice, pincode, cancellationToken).ConfigureAwait(false);
             using SecureConnection secureConnection = new(pairingInfo);
 
@@ -71,7 +77,6 @@ namespace Hspi.Pages
                     Log.Error("No Aid 1 accessor found for {name}", discoveredDevice.DisplayName);
                     throw new InvalidOperationException(Invariant($"No Aid 1 accessory found for {discoveredDevice.DisplayName}"));
                 }
-
 
                 int refId = HsHomeKitDeviceFactory.CreateDevice(hsController,
                                                                 pairingInfo,
@@ -108,5 +113,7 @@ namespace Hspi.Pages
         }
 
         public const string PageName = "AddOrRepairDevice.html";
+        private static Regex pinRegEx = new Regex(@"^\d\d\d-\d\d-\d\d\d$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.Singleline);
+        private sealed record Result(string? ErrorMessage = null, object? Data = null);
     }
 }

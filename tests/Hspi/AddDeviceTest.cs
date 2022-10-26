@@ -88,6 +88,53 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
+        public async Task AddDeviceFailsforInvalidPinFormat()
+        {
+            string pin = "133-34-295";
+            using var hapAccessory = await TestHelper.CreateTemperatureUnPairedAccessory(pin, cancellationTokenSource.Token)
+                                                     .ConfigureAwait(false);
+
+            var plugIn = TestHelper.CreatePlugInMock();
+            var hsControllerMock =
+                TestHelper.SetupHsControllerAndSettings(plugIn, new Dictionary<string, string>());
+
+            // Capture create device data
+            NewDeviceData newDataForDevice = null;
+            hsControllerMock.Setup(x => x.CreateDevice(It.IsAny<NewDeviceData>()))
+                            .Callback<NewDeviceData>(r => newDataForDevice = r)
+                            .Returns(1);
+
+            Assert.IsTrue(plugIn.Object.InitIO());
+
+            //discover
+            string data = plugIn.Object.PostBackProc(AddOrRepairDeviceHandler.PageName, "{\"action\":\"search\"}", string.Empty, 0);
+
+            var result = JsonConvert.DeserializeObject<JObject>(data);
+
+            Assert.IsNotNull(result);
+            Assert.IsNull((string)result["ErrorMessage"]);
+            Assert.AreEqual(1, (result["Data"] as JArray).Count);
+
+            JObject pairRequest = new();
+
+            pairRequest.Add("action", new JValue("pair"));
+            pairRequest.Add("pincode", new JValue(pin.Replace('-', ' ')));
+            pairRequest.Add("refId", new JValue(-1));
+            pairRequest.Add("data", (result["Data"] as JArray)[0]);
+
+            //add with wrong pin
+            string data2 = plugIn.Object.PostBackProc(AddOrRepairDeviceHandler.PageName, pairRequest.ToString(), string.Empty, 0);
+
+            var result2 = JsonConvert.DeserializeObject<JObject>(data2);
+
+            Assert.IsNotNull(result2);
+            Assert.IsNotNull((string)result2["ErrorMessage"]);
+            StringAssert.Contains((string)result2["ErrorMessage"], "Invalid pincode format");
+
+            plugIn.Object.ShutdownIO();
+        }
+
+        [TestMethod]
         public async Task AddDeviceIgnoresAlreadyPairedOnesAsync()
         {
             using var hapAccessory = await TestHelper.CreateTemperaturePairedAccessory(cancellationTokenSource.Token)

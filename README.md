@@ -15,7 +15,7 @@ It does not intend to be as complete and polished as Apple's homekit controller.
 * Pair and unpair IP based homekit devices
 * Supports setting values in homekit devices via homeseer devices.
 * Listens to the events in the homekit devices and updates the corresponding homeseer devices & features.
-* Select which characteristics show up as feature devices.
+* Select which characteristics show up as feature in homeseer evices.
 
 ## Tested With
 * Ecobee Thermostat
