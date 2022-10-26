@@ -15,7 +15,7 @@ namespace Hspi
             Log.Information("Starting");
             try
             {
-                using var plugin = new HSPI_HomeKitController.HSPI();
+                using var plugin = new HSPI_HomeKitControllerLite.HSPI();
                 plugin.Connect(args);
             }
             finally

@@ -23,7 +23,7 @@
                 <div data-step-label="Add or Repair device" class="step-title waves-effect waves-dark">Step 1</div>
                 <div class="step-new-content">
 					Select a device to repair or add a new device
-					{{ devicelist=plugin_function 'HomeKitController' 'GetDeviceList' [] }}
+					{{ devicelist=plugin_function 'HomeKitControllerLite' 'GetDeviceList' [] }}
                     <select class='mdb-select md-form' id='device-select' searchable="Search for a device here..." required>
 						<option value='-1' selected>Add a New Device</option>
 						{{ for device in devicelist }}
@@ -116,7 +116,7 @@
             $.ajax({
                 type: "POST",
                 async: "true",
-                url: '/HomeKitController/AddOrRepairDevice.html',
+                url: '/HomeKitControllerLite/AddOrRepairDevice.html',
                 cache: false,
                 data: data,
                 success: function (response) {
@@ -177,7 +177,7 @@
             $.ajax({
                 type: "POST",
                 async: "true",
-                url: '/HomeKitController/AddOrRepairDevice.html',
+                url: '/HomeKitControllerLite/AddOrRepairDevice.html',
                 cache: false,
                 data: data,
                 success: function (response) {
