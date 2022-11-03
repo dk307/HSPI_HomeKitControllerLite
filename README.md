@@ -31,4 +31,4 @@ It does not intend to be as complete and polished as Apple's homekit controller.
 * If you want additional features, select them through the detail page for the device. Only the text based & number based one are supported.
 <img src="/asserts/page.png">
 
-* You can also select the polling period for the characteristics which don't support events.
+* You can also change the polling period for the characteristics which don't support events in detail page of the device.
