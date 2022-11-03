@@ -25,9 +25,10 @@ It does not intend to be as complete and polished as Apple's homekit controller.
 
 ## Instructions
 * Add a new Device using Homekit Controller Lite Menu. 
-** Make sure you enter the pincode in xxx-xx-xxx format. 
-** You can also re-pair a existing device using same menu and selecting it in first option.
+  * Make sure you enter the pincode in xxx-xx-xxx format. 
+  * You can also re-pair an existing device using same menu and selecting it in first option.
 * By default, only the primary service characteristics are added. 
 * If you want additional features, select them through the detail page for the device. 
 <img src="/asserts/page.png">
+
 * You can also select the polling period for the characteristics which don't support events.
