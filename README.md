@@ -20,4 +20,14 @@ It does not intend to be as complete and polished as Apple's homekit controller.
 ## Tested With
 * Ecobee Thermostat
 * Philips Hue
+* Few Meross outlets
 * Various open source homekit servers.
+
+## Instructions
+* Add a new Device using Homekit Controller Lite Menu. 
+  * Make sure you enter the pincode in xxx-xx-xxx format.
+  * You can also re-pair an existing device using same menu and selecting it in first option.
+* By default, only the primary service characteristics are added as features. If you want additional features, select them through the detail page for the device. Only the text based & number based ones are supported.
+<img src="/asserts/page.png">
+
+* You can also change the polling period for the characteristics which don't support events in detail page of the device.
