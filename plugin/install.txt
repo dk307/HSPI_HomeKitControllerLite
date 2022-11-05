@@ -1,7 +1,5 @@
 ﻿HSPI_HomeKitControllerLite.exe,.,0
 HSPI_HomeKitControllerLite.exe.config,.,0
-.,[DELALL],.\Data\HomeKitControllerLite\db
-db.zip,[UNZIPOVER],.\Data\HomeKitControllerLite\db
 .,[DELALL],.\bin\HomeKitControllerLite
 dlls.zip,[UNZIPOVER],.\bin\HomeKitControllerLite
 .,[DELALL],.\html\HomeKitControllerLite
