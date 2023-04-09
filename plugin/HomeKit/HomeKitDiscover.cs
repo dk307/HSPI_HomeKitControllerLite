@@ -70,19 +70,20 @@ namespace HomeKit
 
         private static bool IsValidHomeKitDevice(IZeroconfHost device)
         {
-            if (device.IPAddress.Length == 0)
+            if (device.IPAddress == null || device.IPAddress.Length == 0)
             {
                 return false;
             }
 
-            var hapKey = device.Services.Keys.FirstOrDefault(x => x.EndsWith(DiscoveredDevice.HapProtocol));
+            var hapKey = device.Services?.Keys?.FirstOrDefault(x => x.EndsWith(DiscoveredDevice.HapProtocol));
 
             if (hapKey != null)
             {
-                //  create a flat list of all properties of  service
-                var service = device.Services[hapKey];
-                var properties = service.Properties.SelectMany(x => x.Keys).ToList();
-                return properties.Contains("c#") &&  // Current configuration number
+                //  create a flat list  of all properties of  service
+                var service = device.Services?[hapKey];
+                var properties = service?.Properties?.SelectMany(x => x.Keys).ToList();
+                return (properties != null) && 
+                       properties.Contains("c#") &&  // Current configuration number
                        properties.Contains("md") &&  // Model name of the accessory
                        properties.Contains("s#") &&  // Current state number
                        properties.Contains("id");    // Device ID
