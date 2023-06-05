@@ -209,6 +209,11 @@ namespace Hspi.DeviceData
 
             if (readable)
             {
+                if (maxValue < minValue)
+                {
+                    Log.Warning("MaxValue is less than MinValue for {aid} on HomeKit Device", characteristic.Iid);
+                    throw new InvalidOperationException("Invalid device characteristic");
+                }
                 var rangeIcon = rangeOptions?.Icon;
                 StatusGraphic statusGraphic = new(GetImagePath(rangeIcon ?? GetDefaultIcon(hsController, characteristic)),
                                                   minValue,
