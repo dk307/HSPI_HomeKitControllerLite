@@ -140,8 +140,8 @@ namespace HSPI_HomeKitControllerTest
         public void VerifyNameAndId()
         {
             var plugin = new PlugIn();
-            Assert.AreEqual(plugin.Id, PlugInData.PlugInId);
-            Assert.AreEqual(plugin.Name, PlugInData.PlugInName);
+            Assert.AreEqual(PlugInData.PlugInId, plugin.Id);
+            Assert.AreEqual(PlugInData.PlugInName, plugin.Name);
         }
 
         private readonly CancellationTokenSource cancellationTokenSource = new();
