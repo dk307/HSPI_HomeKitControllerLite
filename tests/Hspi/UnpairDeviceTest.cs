@@ -21,9 +21,9 @@ namespace HSPI_HomeKitControllerTest
             using var hapAccessory =
                 await TestHelper.CreateTemperaturePairedAccessory(cancellationTokenSource.Token).ConfigureAwait(false);
             AsyncProducerConsumerQueue<bool> connectionStatus = new();
-            var (plugIn, deviceOrFeatureData) = await TestHelper.StartPluginWithHapAccessory(hapAccessory,
-                                                                                             connectionStatus,
-                                                                                             cancellationTokenSource.Token);
+            var (plugIn, _) = await TestHelper.StartPluginWithHapAccessory(hapAccessory,
+                                                                           connectionStatus,
+                                                                           cancellationTokenSource.Token);
 
             JObject pairRequest = new();
             pairRequest.Add("action", new JValue("unpair"));

@@ -113,7 +113,7 @@ namespace Hspi.Pages
         }
 
         public const string PageName = "AddOrRepairDevice.html";
-        private static Regex pinRegEx = new Regex(@"^\d\d\d-\d\d-\d\d\d$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.Singleline);
+        private static Regex pinRegEx = new Regex(@"^\d\d\d-\d\d-\d\d\d$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.Singleline, TimeSpan.FromSeconds(60));
         private sealed record Result(string? ErrorMessage = null, object? Data = null);
     }
 }
