@@ -11,7 +11,7 @@ namespace HSPI_HomeKitControllerTest
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
         {
-            Logger.ConfigureLogging(false, false);
+            Logger.ConfigureLogging(Serilog.Events.LogEventLevel.Warning, false);
             Log.Information("Starting Tests");
         }
 

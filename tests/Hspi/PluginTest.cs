@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Nito.AsyncEx;
 using Serilog;
+using Serilog.Events;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,14 +21,18 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [DataTestMethod]
-        [DataRow(true)]
-        [DataRow(false)]
-        public void CheckDebugLevelSettingChange(bool initialValue)
+        [DataRow(LogEventLevel.Information, false)]
+        [DataRow(LogEventLevel.Warning, false)]
+        [DataRow(LogEventLevel.Fatal, false)]
+        [DataRow(LogEventLevel.Information, true)]
+        [DataRow(LogEventLevel.Verbose, false)]
+        [DataRow(LogEventLevel.Debug, true)]
+        public void CheckLogLevelSettingChange(LogEventLevel logEventLevel, bool logToFile)
         {
             var settingsFromIni = new Dictionary<string, string>
             {
-                { "LoggingDebugId", initialValue.ToString() },
-                { "LogToFileId", initialValue.ToString() }
+                { "LogLevelId", (logEventLevel == LogEventLevel.Verbose ? LogEventLevel.Fatal : LogEventLevel.Verbose).ToString() },
+                { "LogToFileId", logToFile.ToString() }
             };
 
             var (plugInMock, _) = TestHelper.CreateMockPluginAndHsController(settingsFromIni);
@@ -35,14 +40,18 @@ namespace HSPI_HomeKitControllerTest
             PlugIn plugIn = plugInMock.Object;
 
             var settingsCollection = new SettingsCollection
-            {
-                // invert all default values
-                SettingsPages.CreateDefault(enableDebugLoggingDefault : !initialValue,
-                                            logToFileDefault : !initialValue)
+            { 
+                SettingsPages.CreateDefault(logEventLevel, logToFile)
             };
 
             Assert.IsTrue(plugIn.SaveJuiSettingsPages(settingsCollection.ToJsonString()));
-            Assert.AreEqual(Log.Logger.IsEnabled(Serilog.Events.LogEventLevel.Debug), !initialValue);
+
+            Assert.AreEqual(Log.Logger.IsEnabled(LogEventLevel.Fatal), logEventLevel <= LogEventLevel.Fatal);
+            Assert.AreEqual(Log.Logger.IsEnabled(LogEventLevel.Error), logEventLevel <= LogEventLevel.Error);
+            Assert.AreEqual(Log.Logger.IsEnabled(LogEventLevel.Warning), logEventLevel <= LogEventLevel.Warning);
+            Assert.AreEqual(Log.Logger.IsEnabled(LogEventLevel.Information), logEventLevel <= LogEventLevel.Information);
+            Assert.AreEqual(Log.Logger.IsEnabled(LogEventLevel.Debug), logEventLevel <= LogEventLevel.Debug);
+            Assert.AreEqual(Log.Logger.IsEnabled(LogEventLevel.Verbose), logEventLevel <= LogEventLevel.Verbose);
             plugInMock.Verify();
         }
 
@@ -51,7 +60,7 @@ namespace HSPI_HomeKitControllerTest
         {
             var settingsFromIni = new Dictionary<string, string>()
             {
-                { SettingsPages.LoggingDebugId, true.ToString()},
+                { SettingsPages.LoggingLevelId, ((int)LogEventLevel.Information).ToString()},
                 { SettingsPages.LogToFileId, true.ToString()},
             };
 
@@ -66,7 +75,7 @@ namespace HSPI_HomeKitControllerTest
 
             var settings = settingPages[SettingsPages.SettingPageId].ToValueMap();
 
-            Assert.AreEqual(settings[SettingsPages.LoggingDebugId], true.ToString());
+            Assert.AreEqual(settings[SettingsPages.LoggingLevelId], ((int)LogEventLevel.Information).ToString());
             Assert.AreEqual(settings[SettingsPages.LogToFileId], true.ToString());
         }
 
