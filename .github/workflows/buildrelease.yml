@@ -24,7 +24,7 @@ jobs:
         uses: seanmiddleditch/gha-setup-vsdevenv@v4
     
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.5
+        uses: NuGet/setup-nuget@v1.2.0
    
       - name: Cache Nuget Packages
         uses: actions/cache@v2
