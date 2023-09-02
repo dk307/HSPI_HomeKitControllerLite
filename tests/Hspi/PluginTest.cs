@@ -31,7 +31,7 @@ namespace HSPI_HomeKitControllerTest
         {
             var settingsFromIni = new Dictionary<string, string>
             {
-                { "LogLevelId", logEventLevel.ToString() },
+                { "LogLevelId", (logEventLevel == LogEventLevel.Verbose ? LogEventLevel.Fatal : LogEventLevel.Verbose).ToString() },
                 { "LogToFileId", logToFile.ToString() }
             };
 
@@ -40,10 +40,8 @@ namespace HSPI_HomeKitControllerTest
             PlugIn plugIn = plugInMock.Object;
 
             var settingsCollection = new SettingsCollection
-            {
-                // invert all default values
-                SettingsPages.CreateDefault(logEventLevel == LogEventLevel.Verbose ? LogEventLevel.Fatal : LogEventLevel.Verbose,
-                                            !logToFile)
+            { 
+                SettingsPages.CreateDefault(logEventLevel, logToFile)
             };
 
             Assert.IsTrue(plugIn.SaveJuiSettingsPages(settingsCollection.ToJsonString()));
