@@ -60,7 +60,7 @@ namespace HSPI_HomeKitControllerTest
         {
             var settingsFromIni = new Dictionary<string, string>()
             {
-                { SettingsPages.LoggingLevelId, true.ToString()},
+                { SettingsPages.LoggingLevelId, ((int)LogEventLevel.Information).ToString()},
                 { SettingsPages.LogToFileId, true.ToString()},
             };
 
@@ -75,7 +75,7 @@ namespace HSPI_HomeKitControllerTest
 
             var settings = settingPages[SettingsPages.SettingPageId].ToValueMap();
 
-            Assert.AreEqual(settings[SettingsPages.LoggingLevelId], true.ToString());
+            Assert.AreEqual(settings[SettingsPages.LoggingLevelId], ((int)LogEventLevel.Information).ToString());
             Assert.AreEqual(settings[SettingsPages.LogToFileId], true.ToString());
         }
 
