@@ -244,6 +244,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.HighPerformance">
+      <Version>7.0.3</Version>
+    </PackageReference>
     <PackageReference Include="Destructurama.Attributed">
       <Version>3.0.0</Version>
     </PackageReference>
@@ -251,12 +254,9 @@
       <Version>1.4.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
-      <Version>7.0.1</Version>
+      <Version>7.0.4</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance">
-      <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="MSBuildTasks">
       <Version>1.5.0.235</Version>
