@@ -32,7 +32,7 @@ jobs:
         uses: seanmiddleditch/gha-setup-vsdevenv@v4
     
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.5
+        uses: NuGet/setup-nuget@v1.2.0
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -43,9 +43,11 @@ jobs:
         run: pip install  HAP-python==4.3.0
 
       - name: Set up JDK 11 for Sonarcloud
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
-          java-version: 1.11
+          distribution: 'zulu'
+          java-version: '17'
+          java-package: jdk
    
       - name: Cache Nuget Packages
         uses: actions/cache@v2
