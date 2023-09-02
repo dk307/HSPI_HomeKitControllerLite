@@ -36,7 +36,7 @@ jobs:
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.10.2
         with:
-         versionSpec: '5.5.0'
+         versionSpec: '5.10.0'
 
       - name: Navigate to Workspace
         run: cd $GITHUB_WORKSPACE
