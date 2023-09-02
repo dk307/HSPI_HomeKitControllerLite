@@ -201,7 +201,7 @@ namespace Hspi
             bool debugLevel = settingsPages.DebugLoggingEnabled;
             bool logToFile = settingsPages.LogtoFileEnabled;
             this.LogDebug = debugLevel;
-            Logger.ConfigureLogging(LogDebug, logToFile, HomeSeerSystem);
+            Logger.ConfigureLogging(settingsPages.LogLevel, logToFile, HomeSeerSystem);
         }
 
         public override EPollResponse UpdateStatusNow(int devOrFeatRef)

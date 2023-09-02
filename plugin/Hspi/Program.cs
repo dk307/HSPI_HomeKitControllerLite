@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using Serilog.Events;
 
 #nullable enable
 
@@ -11,7 +12,7 @@ namespace Hspi
     {
         private static void Main(string[] args)
         {
-            Logger.ConfigureLogging(false, false);
+            Logger.ConfigureLogging(LogEventLevel.Warning, false);
             Log.Information("Starting");
             try
             {
