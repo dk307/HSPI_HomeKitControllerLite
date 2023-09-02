@@ -34,7 +34,7 @@ jobs:
          restore-keys: ${{ runner.os }}-nuget-
 
       - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v0.9.7
+        uses: gittools/actions/gitversion/setup@v0.10.2
         with:
          versionSpec: '5.5.0'
 
