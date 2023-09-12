@@ -215,9 +215,8 @@ namespace Hspi.DeviceData
                     throw new InvalidOperationException("Invalid device characteristic");
                 }
                 var rangeIcon = rangeOptions?.Icon;
-                StatusGraphic statusGraphic = new(GetImagePath(rangeIcon ?? GetDefaultIcon(hsController, characteristic)),
-                                                  minValue,
-                                                  maxValue);
+                string imagePath = GetImagePath(rangeIcon ?? GetDefaultIcon(hsController, characteristic));
+                StatusGraphic statusGraphic = new(imagePath, minValue, maxValue);
                 statusGraphic.TargetRange.DecimalPlaces = decimalPlaces;
                 AddStatusGraphic(newData, statusGraphic);
             }
@@ -338,7 +337,8 @@ namespace Hspi.DeviceData
                 if (readable)
                 {
                     string iconFileName = GetIcon(hsController, buttonMapping, characteristic, value);
-                    StatusGraphic statusGraphic = new(GetImagePath(iconFileName),
+                    string imagePath = GetImagePath(iconFileName);
+                    StatusGraphic statusGraphic = new(imagePath,
                                                       value,
                                                       GetButtonText(buttonMapping, characteristic, value));
                     AddStatusGraphic(newData, statusGraphic);
@@ -487,7 +487,7 @@ namespace Hspi.DeviceData
 
             if (defaultIconName != null)
             {
-                var iconPath = Path.Combine(hsController.GetAppPath(), GetImagePath(defaultIconName));
+                var iconPath = Path.Combine(hsController.GetAppPath(), "html", GetImagePath(defaultIconName));
 
                 if (File.Exists(iconPath))
                 {
