@@ -516,7 +516,7 @@ namespace Hspi.DeviceData
         {
             if (buttonMapping != null)
             {
-                return buttonMapping?.Icon ?? GetDefaultIcon(hsController, characteristic);
+                return buttonMapping.Icon ?? GetDefaultIcon(hsController, characteristic);
             }
 
             if (characteristic.IsBooleanFormatType)
@@ -575,6 +575,7 @@ namespace Hspi.DeviceData
 
             Log.Information("Repaired device {friendlyName}", hsDevice.NameForLog);
         }
+
         private const string DefaultIcon = "default";
         private const string OffIcon = "off";
         private const string OnIcon = "on";

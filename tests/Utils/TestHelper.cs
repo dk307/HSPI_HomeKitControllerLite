@@ -72,7 +72,7 @@ namespace HSPI_HomeKitControllerTest
             return hapAccessory;
         }
 
-        public static async Task<MultiSensorSensorAccessory> 
+        public static async Task<MultiSensorSensorAccessory>
             CreateMultiSensorUnpairedAccessory(string pin, CancellationToken token)
         {
             var hapAccessory = new MultiSensorSensorAccessory();

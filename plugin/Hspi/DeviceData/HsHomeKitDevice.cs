@@ -1,12 +1,12 @@
-﻿using HomeSeer.PluginSdk;
+﻿using System;
+using System.Collections.Generic;
+using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
 using Hspi.Exceptions;
 using Hspi.Utils;
 using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
-using System;
-using System.Collections.Generic;
 using static System.FormattableString;
 
 #nullable enable
@@ -89,22 +89,24 @@ namespace Hspi.DeviceData
 
         protected void UpdateDeviceValue(in double? data)
         {
-            if (Log.IsEnabled(LogEventLevel.Information))
-            {
-                var existingValue = Convert.ToDouble(HS.GetPropertyByRef(RefId, EProperty.Value));
-
-                Log.Write(existingValue != data ? LogEventLevel.Information : LogEventLevel.Debug,
-                          "Updated value {value} for the {name}", data, NameForLog);
-            }
+            var existingValue = Convert.ToDouble(HS.GetPropertyByRef(RefId, EProperty.Value));
 
             if (data.HasValue)
             {
+                Log.Write(LogEventLevel.Information, "Updating value {value} for the {name}", data, NameForLog);
                 HS.UpdatePropertyByRef(RefId, EProperty.InvalidValue, false);
 
                 // only this call triggers events
-                if (!HS.UpdateFeatureValueByRef(RefId, data.Value))
+                if (existingValue != data.Value)
                 {
-                    throw new InvalidOperationException($"Failed to update device {NameForLog}");
+                    if (!HS.UpdateFeatureValueByRef(RefId, data.Value))
+                    {
+                        throw new InvalidOperationException($"Failed to update device {NameForLog}");
+                    }
+                }
+                else
+                {
+                    Log.Debug("Not updating value {value} for the {name} as old value is same", data, NameForLog);
                 }
             }
             else
@@ -115,17 +117,19 @@ namespace Hspi.DeviceData
 
         protected void UpdateDeviceValue(string? data)
         {
-            if (Log.IsEnabled(LogEventLevel.Information))
-            {
-                var existingValue = Convert.ToString(HS.GetPropertyByRef(RefId, EProperty.StatusString));
+            var existingValue = Convert.ToString(HS.GetPropertyByRef(RefId, EProperty.StatusString));
 
-                Log.Write(existingValue != data ? LogEventLevel.Information : LogEventLevel.Debug,
-                          "Updated value {value} for the {name}", data, NameForLog);
+            if (existingValue != data)
+            {
+                Log.Information("Updating value {value} for the {name}", data, NameForLog);
+                if (!HS.UpdateFeatureValueStringByRef(RefId, data ?? string.Empty))
+                {
+                    throw new InvalidOperationException($"Failed to update device {NameForLog}");
+                }
             }
-
-            if (!HS.UpdateFeatureValueStringByRef(RefId, data ?? string.Empty))
+            else
             {
-                throw new InvalidOperationException($"Failed to update device {NameForLog}");
+                Log.Debug("Not updating value {value} for the {name} as old value is same", data, NameForLog);
             }
             HS.UpdatePropertyByRef(RefId, EProperty.InvalidValue, false);
         }
