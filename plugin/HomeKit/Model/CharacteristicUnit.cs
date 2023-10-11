@@ -16,12 +16,15 @@ namespace HomeKit.Model
         Percentage,
 
         [EnumMember(Value = "arcdegrees")]
+        [Unit("°")]
         ArcDegrees,
 
         [EnumMember(Value = "lux")]
+        [Unit("lux")]
         Lux,
 
         [EnumMember(Value = "seconds")]
+        [Unit("s")]
         Seconds,
     }
 }
