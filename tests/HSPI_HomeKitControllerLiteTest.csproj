@@ -156,10 +156,10 @@
       <Version>1.4.2</Version>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.46</Version>
+      <Version>1.11.54</Version>
     </PackageReference>
     <PackageReference Include="Moq">
-      <Version>4.18.2</Version>
+      <Version>4.20.69</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
       <Version>3.1.1</Version>
@@ -168,10 +168,10 @@
       <Version>3.1.1</Version>
     </PackageReference>
     <PackageReference Include="Serilog">
-      <Version>2.12.0</Version>
+      <Version>3.0.1</Version>
     </PackageReference>
     <PackageReference Include="SonarAnalyzer.CSharp">
-      <Version>9.8.0.76515</Version>
+      <Version>9.11.0.78383</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
