@@ -273,7 +273,7 @@ namespace HSPI_HomeKitControllerTest
         {
             while (!token.IsCancellationRequested && expected != valueFtn())
             {
-                await Task.Delay(500, token).ConfigureAwait(false);
+                await Task.Delay(50, token).ConfigureAwait(false);
             }
             Assert.AreEqual(expected, valueFtn());
         }
