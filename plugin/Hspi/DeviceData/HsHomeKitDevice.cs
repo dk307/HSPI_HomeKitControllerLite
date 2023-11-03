@@ -1,12 +1,12 @@
-﻿using HomeSeer.PluginSdk;
+﻿using System;
+using System.Collections.Generic;
+using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
 using Hspi.Exceptions;
 using Hspi.Utils;
 using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
-using System;
-using System.Collections.Generic;
 using static System.FormattableString;
 
 #nullable enable
@@ -55,25 +55,17 @@ namespace Hspi.DeviceData
                                                string tag,
                                                params JsonConverter[] converters)
         {
-            if (plugInExtra == null ||
-                !plugInExtra.ContainsNamed(tag))
+            if (plugInExtra == null || !plugInExtra.ContainsNamed(tag))
             {
                 throw new HsDeviceInvalidException(Invariant($"{tag} type not found"));
             }
 
-            var stringData = plugInExtra[tag];
-            if (stringData == null)
-            {
-                throw new HsDeviceInvalidException(Invariant($"{tag} type not found"));
-            }
-
+            var stringData = plugInExtra[tag] ??
+                             throw new HsDeviceInvalidException(Invariant($"{tag} type not found"));
             try
             {
-                var typeData = JsonConvert.DeserializeObject<T>(stringData, converters);
-                if (typeData == null)
-                {
-                    throw new HsDeviceInvalidException(Invariant($"{tag} not a valid Json value"));
-                }
+                var typeData = JsonConvert.DeserializeObject<T>(stringData, converters)
+                               ?? throw new HsDeviceInvalidException(Invariant($"{tag} not a valid Json value"));
                 return typeData;
             }
             catch (Exception ex) when (!ex.IsCancelException())
@@ -97,7 +89,7 @@ namespace Hspi.DeviceData
                           "Updated value {value} for the {name}", data, NameForLog);
             }
 
-            if (data.HasValue && !double.IsNaN(data.Value))
+            if (data.HasValue && HasValue(data.Value))
             {
                 HS.UpdatePropertyByRef(RefId, EProperty.InvalidValue, false);
 
@@ -110,6 +102,11 @@ namespace Hspi.DeviceData
             else
             {
                 HS.UpdatePropertyByRef(RefId, EProperty.InvalidValue, true);
+            }
+
+            static bool HasValue(double value)
+            {
+                return !double.IsNaN(value) && !double.IsInfinity(value);
             }
         }
 
