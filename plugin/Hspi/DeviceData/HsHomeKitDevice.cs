@@ -97,7 +97,7 @@ namespace Hspi.DeviceData
                           "Updated value {value} for the {name}", data, NameForLog);
             }
 
-            if (data.HasValue)
+            if (data.HasValue && !double.IsNaN(data.Value))
             {
                 HS.UpdatePropertyByRef(RefId, EProperty.InvalidValue, false);
 
