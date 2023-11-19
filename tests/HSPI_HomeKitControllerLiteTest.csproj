@@ -19,7 +19,7 @@
     <TestProjectType>UnitTest</TestProjectType>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
     <SonarQubeTestProject>True</SonarQubeTestProject>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -166,6 +166,11 @@
     </PackageReference>
     <PackageReference Include="MSTest.TestFramework">
       <Version>3.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="PolySharp">
+      <Version>1.13.2</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Serilog">
       <Version>3.1.1</Version>
