@@ -211,7 +211,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Include="Shared\Hspi\CompilerHelper.cs" />
     <Compile Include="Shared\Hspi\HSPIBase.cs" />
     <Compile Include="Shared\Hspi\Logger2.cs" />
     <Compile Include="Shared\Hspi\Utils\EnumHelper.cs" />
@@ -245,7 +244,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.HighPerformance">
-      <Version>8.2.1</Version>
+      <Version>8.2.2</Version>
     </PackageReference>
     <PackageReference Include="Destructurama.Attributed">
       <Version>3.1.0</Version>
@@ -254,7 +253,7 @@
       <Version>1.4.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
-      <Version>7.0.4</Version>
+      <Version>8.0.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -269,17 +268,22 @@
     <PackageReference Include="NSec.Cryptography">
       <Version>20.2.0</Version>
     </PackageReference>
+    <PackageReference Include="PolySharp">
+      <Version>1.13.2</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Serilog">
-      <Version>3.0.1</Version>
+      <Version>3.1.1</Version>
     </PackageReference>
     <PackageReference Include="Serilog.Sinks.Console">
-      <Version>4.1.0</Version>
+      <Version>5.0.0</Version>
     </PackageReference>
     <PackageReference Include="Serilog.Sinks.File">
       <Version>5.0.0</Version>
     </PackageReference>
     <PackageReference Include="System.Collections.Immutable">
-      <Version>7.0.0</Version>
+      <Version>8.0.0</Version>
     </PackageReference>
     <PackageReference Include="System.Net.Http">
       <Version>4.3.4</Version>
