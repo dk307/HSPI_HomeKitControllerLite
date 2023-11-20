@@ -80,7 +80,7 @@ namespace HSPI_HomeKitControllerTest
         }
 
         [TestMethod]
-        public async Task GetDeviceList()
+        public async Task GetHomekitDeviceList()
         {
             using var hapAccessory =
                 await TestHelper.CreateTemperaturePairedAccessory(cancellationTokenSource.Token).ConfigureAwait(false);
@@ -89,10 +89,10 @@ namespace HSPI_HomeKitControllerTest
                                                                            connectionStatus,
                                                                            cancellationTokenSource.Token);
 
-            var deviceList = plugIn.Object.GetDeviceList();
+            var deviceList = plugIn.Object.GetHomekitDeviceList();
             Assert.IsNotNull(deviceList);
             Assert.AreEqual(1, deviceList.Count);
-            Assert.AreEqual("Test", deviceList[HapAccessory.StartDeviceRefId]);
+            Assert.AreEqual(HapAccessory.StartDeviceRefId, deviceList[0]);
         }
 
         [TestMethod]
