@@ -4,6 +4,7 @@ using Hspi.DeviceData;
 using Hspi.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Nito.AsyncEx.Synchronous;
 using Serilog;
 using System;
 using System.Threading;
@@ -20,7 +21,7 @@ namespace Hspi.Pages
                                                   Task<HsHomeKitDeviceManager> hsHomeKitDeviceManagerFtn,
                                                   CancellationToken cancellationToken)
         {
-            return PostBackProcAsync(data, hsController, hsHomeKitDeviceManagerFtn, cancellationToken).ResultForSync();
+            return PostBackProcAsync(data, hsController, hsHomeKitDeviceManagerFtn, cancellationToken).WaitAndUnwrapException();
         }
 
         private sealed record Result(string? ErrorMessage = null, object? Data = null);

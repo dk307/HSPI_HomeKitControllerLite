@@ -30,11 +30,11 @@
                     <li class="step locked active" id="step1">
                         <div data-step-label="Select a HomeKit device" class="step-title waves-effect waves-dark">Device</div>
                         <div class="step-new-content">
-                            {{ devicelist=plugin_function 'HomeKitControllerLite' 'GetDeviceList' [] }}
+                            {{ devicelist=plugin_function 'HomeKitControllerLite' 'GetHomekitDeviceList' [] }}
                             <select class='mdb-select md-form' id='accessory-select' searchable="Search for a device here..." required>
                                 <option value='-1' disabled selected>Select Device</option>
                                 {{ for device in devicelist }}
-                                <option value='{{device.key}}'>{{device.value}}</option>
+                                <option value='{{device}}'>{{device_name_full device true | html.escape}}</option>
                                 {{ end }}
                             </select>
                             <div class="step-actions">

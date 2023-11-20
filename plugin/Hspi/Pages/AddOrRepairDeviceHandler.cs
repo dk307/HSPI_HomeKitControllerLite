@@ -1,16 +1,17 @@
-﻿using HomeKit;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using HomeKit;
 using HomeKit.Model;
 using HomeSeer.PluginSdk;
 using Hspi.DeviceData;
 using Hspi.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Nito.AsyncEx.Synchronous;
 using Serilog;
-using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using static System.FormattableString;
 
 #nullable enable
@@ -23,7 +24,7 @@ namespace Hspi.Pages
                                                   IHsController hsController,
                                                   CancellationToken cancellationToken)
         {
-            return PostBackProcAsync(data, hsController, cancellationToken).ResultForSync();
+            return PostBackProcAsync(data, hsController, cancellationToken).WaitAndUnwrapException();
         }
 
         private static async ValueTask<string> Discover(CancellationToken cancellationToken)

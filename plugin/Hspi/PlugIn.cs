@@ -1,4 +1,8 @@
-﻿using HomeSeer.Jui.Views;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using HomeSeer.Jui.Views;
 using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Devices.Controls;
@@ -6,11 +10,8 @@ using Hspi.DeviceData;
 using Hspi.Pages;
 using Hspi.Utils;
 using Nito.AsyncEx;
+using Nito.AsyncEx.Synchronous;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 
 #nullable enable
 
@@ -76,7 +77,7 @@ namespace Hspi
         {
             try
             {
-                SetIOMultiAsync().ResultForSync();
+                SetIOMultiAsync().WaitAndUnwrapException();
             }
             catch (Exception ex)
             {
@@ -210,7 +211,7 @@ namespace Hspi
 
             try
             {
-                bool processed = UpdateStatusNowAsync().ResultForSync();
+                bool processed = UpdateStatusNowAsync().WaitAndUnwrapException();
                 return processed ? EPollResponse.Ok : EPollResponse.NotFound;
             }
             catch (Exception ex)
@@ -227,15 +228,11 @@ namespace Hspi
         }
 
         // used by scrbian
-        public IDictionary<int, string> GetDeviceList()
+        public IList<int> GetHomekitDeviceList()
         {
-            var result = new Dictionary<int, string>();
-            foreach (var refId in HomeSeerSystem.GetRefsByInterface(PlugInData.PlugInId, true))
-            {
-                result.Add(refId, HsHomeKitDevice.GetNameForLog(HomeSeerSystem, refId));
-            }
-            return result;
+            return HomeSeerSystem.GetRefsByInterface(PlugInData.PlugInId, true);
         }
+
 
         private readonly AsyncLock dataLock = new();
         private volatile HsHomeKitDeviceManager? deviceManager;
