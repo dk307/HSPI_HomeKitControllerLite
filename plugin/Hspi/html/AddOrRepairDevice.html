@@ -55,7 +55,7 @@
                     </div>
                     <div class="step-actions" style="margin-top: 32px;">
                         <button class="waves-effect waves-dark btn btn-sm btn-secondary previous-step">BACK</button>
-                        <button class="waves-effect waves-dark btn btn-sm btn-primary next-step">SELECT</button>
+                        <button class="waves-effect waves-dark btn btn-sm btn-primary next-step" id="select-accessory-button">SELECT</button>
                     </div>
                 </div>
             </li>
@@ -126,6 +126,7 @@
 					var selectHtml = "";
 					if (errorMessage != null) {
 						selectHtml = "<p>" + errorMessage + "</p>";
+						$('#select-accessory-button').hide();
 					} else {
 						discoveredAccessories = result.Data;
 						

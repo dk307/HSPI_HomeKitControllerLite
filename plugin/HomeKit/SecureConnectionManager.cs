@@ -28,11 +28,7 @@ namespace HomeKit
         {
             get
             {
-                var connectionCopy = connection;
-                if (connectionCopy is null)
-                {
-                    throw new InvalidOperationException($"Not connected to the Homekit Device");
-                }
+                var connectionCopy = connection ?? throw new InvalidOperationException($"Not connected to the Homekit Device");
                 return connectionCopy;
             }
         }
