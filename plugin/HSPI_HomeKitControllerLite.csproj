@@ -80,7 +80,7 @@
     <ManifestCertificateThumbprint>72662FD964D95BFE9FD27373AF263D1DCA0E25E2</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>

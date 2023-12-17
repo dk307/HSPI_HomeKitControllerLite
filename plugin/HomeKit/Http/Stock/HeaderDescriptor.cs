@@ -27,6 +27,7 @@ namespace System.Net.Http.Headers
         public KnownHeader? KnownHeader => _knownHeader;
         public string Name => _headerName;
         public HttpHeaderParser? Parser => _knownHeader?.Parser;
+
         public static bool operator !=(HeaderDescriptor left, HeaderDescriptor right) => !left.Equals(right);
 
         public static bool operator ==(HeaderDescriptor left, HeaderDescriptor right) => left.Equals(right);
@@ -58,7 +59,6 @@ namespace System.Net.Http.Headers
             return new HeaderDescriptor(_knownHeader.Name);
         }
 
-        [Diagnostics.CodeAnalysis.SuppressMessage("Blocker Code Smell", "S3877:Exceptions should not be thrown from unexpected methods", Justification = "<Pending>")]
         public override bool Equals(object obj) => throw new InvalidOperationException();
 
         public bool Equals(HeaderDescriptor other) =>
