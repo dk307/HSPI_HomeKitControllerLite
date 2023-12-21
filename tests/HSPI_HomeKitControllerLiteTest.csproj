@@ -156,7 +156,7 @@
       <Version>1.4.2</Version>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.54</Version>
+      <Version>1.11.56</Version>
     </PackageReference>
     <PackageReference Include="Moq">
       <Version>4.20.69</Version>
